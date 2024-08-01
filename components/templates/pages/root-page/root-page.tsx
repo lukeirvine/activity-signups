@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from '@/components/organisms/nav/navbar/navbar';
 import SideNav from '@/components/organisms/nav/side-nav/side-nav';
 import React, { ReactNode } from 'react';
