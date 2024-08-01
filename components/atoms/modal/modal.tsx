@@ -1,8 +1,11 @@
+import { XMarkIcon } from '@heroicons/react/16/solid';
 import React, { ReactNode, useEffect } from 'react';
 
 type ModalProps = {
 	id: string;
   onClose?: () => void;
+  title?: string;
+  children: ReactNode;
 };
 
 export const showModal = (id: string) => {
@@ -10,7 +13,7 @@ export const showModal = (id: string) => {
   dialogElement?.showModal();
 }
 
-const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose }) => {
+const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose, title, children }) => {
   useEffect(() => {
     const dialogElement = document.getElementById(id);
 
@@ -29,11 +32,13 @@ const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose }) => {
   
   return <dialog id={id} className="modal">
     <div className="modal-box">
-      <h3 className="text-lg font-bold">Hello!</h3>
-      <p className="py-4">Press ESC key or click the button below to close</p>
-      <div className="modal-action">
+      <h3 className="text-lg font-bold">{title}</h3>
+      {children}
+      <div className="absolute top-5 right-5">
         <form method="dialog">
-          <button className="btn">Close</button>
+          <button className="btn btn-ghost btn-sm">
+            <XMarkIcon className="w-5 h-5" />
+          </button>
         </form>
       </div>
     </div>

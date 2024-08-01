@@ -1,6 +1,7 @@
 import Modal, { showModal } from '@/components/atoms/modal/modal';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import React, { ReactNode } from 'react';
+import AddWeekModal from '../../modals/add-week-modal/add-week-modal';
 
 type SideNavProps = {
 };
@@ -15,9 +16,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = () => {
         </button>
       </li>
     </ul>
-    <Modal
-      id="add_week_modal"
-    ></Modal>
+    <AddWeekModal id="add_week_modal" />
   </>
 };
 
