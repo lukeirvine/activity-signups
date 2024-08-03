@@ -1,4 +1,3 @@
-import Modal, { showModal } from '@/components/atoms/modal/modal';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import React, { ReactNode } from 'react';
 import AddWeekModal from '../../modals/add-week-modal/add-week-modal';
