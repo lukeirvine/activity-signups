@@ -2,6 +2,7 @@ import Button from '@/components/atoms/button/button';
 import InputGroup from '@/components/atoms/form/input-group/input-group';
 import TextInput from '@/components/atoms/form/text-input/text-input';
 import Modal from '@/components/atoms/modal/modal';
+import { setDoc } from '@/helpers/firebase';
 import { createTextChangeEvent } from '@/helpers/forms';
 import useFormHooks from '@/hooks/use-form-hooks';
 import { DatePicker, DatePickerValue } from '@tremor/react';
@@ -41,13 +42,24 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 		requiredFields,
 		initialize: () => formData,
 		onSubmit: async () => {
-			console.log("VALUES", values);
+			const result = await setDoc({
+				collectionId: "weeks",
+				data: {
+					name: values.name,
+					startDate: values.startDate,
+				},
+			});
+			if (!result.success) {
+				setFormState((state) => ({
+					...state,
+					submitError: [result.error || "Error saving week."],
+					isSubmitting: false,
+				}));
+			} else {
+				onClose();
+			}
 		}
 	});
-
-	useEffect(() => {
-		console.log("VALUES", values);
-	}, [values])
 	
 	return <Modal
 		// id="add_week_modal"
@@ -83,13 +95,20 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 						/>
 					</InputGroup>
 				</div>
-				<Button
-					loading={isSubmitting}
-					disabled={showDisabled}
-					className="w-full"
-				>
-					Save
-				</Button>
+				<div>
+					<Button
+						loading={isSubmitting}
+						disabled={showDisabled}
+						className="w-full"
+					>
+						Save
+					</Button>
+					{showSubmitError && (
+						<div className="label">
+							<span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
+						</div>
+					)}
+				</div>
 			</div>
 		</form>
 	</Modal>;
