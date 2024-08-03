@@ -1,7 +1,10 @@
 import TextInput from '@/components/atoms/form/text-input/text-input';
 import Modal from '@/components/atoms/modal/modal';
 import useFormHooks from '@/hooks/use-form-hooks';
+import { DatePicker } from '@tremor/react';
 import React, { ReactNode, useMemo } from 'react';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 type MyComponentProps = {
 	id: string;
@@ -53,6 +56,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
 				error={!!errorMessages?.name}
 				errorMessage={errorMessages?.name}
 			/>
+			<DatePicker />
 		</form>
 	</Modal>;
 };
