@@ -1,6 +1,6 @@
 import InputGroup from '@/components/atoms/form/input-group/input-group';
 import TextInput from '@/components/atoms/form/text-input/text-input';
-import Modal from '@/components/atoms/modal/modal';
+import Modal from '@/components/atoms/headless-modal/headless-modal';
 import useFormHooks from '@/hooks/use-form-hooks';
 import { DatePicker } from '@tremor/react';
 import React, { ReactNode, useMemo } from 'react';
@@ -8,7 +8,8 @@ import React, { ReactNode, useMemo } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 
 type MyComponentProps = {
-	id: string;
+	isOpen: boolean,
+	onClose: () => void,
 };
 
 interface AddWeekData {
@@ -16,7 +17,7 @@ interface AddWeekData {
 	startDate: Date,
 }
 
-const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
+const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose }) => {
 	const requiredFields: (keyof AddWeekData)[] = useMemo(() => {
 		return ["name", "startDate"];
 	}, []);
@@ -43,9 +44,10 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
 	})
 	
 	return <Modal
-		className="overflow-visible"
-		id="add_week_modal"
-		title="Add Week"
+		// id="add_week_modal"
+		// title="Add Week"
+		isOpen={isOpen}
+		onClose={onClose}
 	>
 		<form method="post" onSubmit={handleSubmit} noValidate>
 			<div className="flex flex-col gap-2 mt-2 mb-8">

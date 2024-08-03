@@ -7,16 +7,20 @@ type SideNavProps = {
 };
 
 const SideNav: React.FC<Readonly<SideNavProps>> = () => {
+  const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
   return <>
     <ul className="menu bg-base-200 w-56 h-full">
       <li>
-        <button className="btn btn-ghost" onClick={() => showModal("add_week_modal")}>
+        <button className="btn btn-ghost" onClick={() => setIsAddWeekModalOpen(true)}>
           <PlusIcon className="w-5 h-5" />
           Add Week
         </button>
       </li>
     </ul>
-    <AddWeekModal id="add_week_modal" />
+    <AddWeekModal 
+      isOpen={isAddWeekModalOpen}
+      onClose={() => setIsAddWeekModalOpen(false)}
+    />
   </>
 };
 
