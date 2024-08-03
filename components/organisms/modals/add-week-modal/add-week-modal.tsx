@@ -8,16 +8,16 @@ type MyComponentProps = {
 };
 
 interface AddWeekData {
-	nickname: string,
+	name: string,
 	startDate: Date,
 }
 
 const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
 	const requiredFields: (keyof AddWeekData)[] = useMemo(() => {
-		return ["nickname", "startDate"];
+		return ["name", "startDate"];
 	}, []);
 	const formData: AddWeekData = {
-		nickname: "",
+		name: "",
 		startDate: new Date(),
 	};
 	const {
@@ -44,14 +44,14 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
 	>
 		<form method="post" onSubmit={handleSubmit} noValidate>
 			<TextInput
-				id="nickname"
-				name="nickname"
-				label="Nickname"
-				placeholder="Enter a nickname"
-				value={values.nickname}
+				id="name"
+				name="name"
+				label="Name"
+				placeholder="Junior Camp"
+				value={values.name}
 				onChange={handleChange}
-				error={!!errorMessages?.nickname}
-				errorMessage={errorMessages?.nickname}
+				error={!!errorMessages?.name}
+				errorMessage={errorMessages?.name}
 			/>
 		</form>
 	</Modal>;
