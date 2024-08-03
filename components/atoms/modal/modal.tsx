@@ -6,6 +6,7 @@ type ModalProps = {
   onClose?: () => void;
   title?: string;
   children: ReactNode;
+  className?: string;
 };
 
 export const showModal = (id: string) => {
@@ -13,7 +14,7 @@ export const showModal = (id: string) => {
   dialogElement?.showModal();
 }
 
-const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose, title, children }) => {
+const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose, title, children, className }) => {
   useEffect(() => {
     const dialogElement = document.getElementById(id);
 
@@ -30,7 +31,7 @@ const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose, title, children })
     };
   }, []);
   
-  return <dialog id={id} className="modal">
+  return <dialog id={id} className={`modal ${className}`}>
     <div className="modal-box">
       <h3 className="text-lg font-bold">{title}</h3>
       {children}

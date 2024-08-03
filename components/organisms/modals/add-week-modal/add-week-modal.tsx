@@ -1,3 +1,4 @@
+import InputGroup from '@/components/atoms/form/input-group/input-group';
 import TextInput from '@/components/atoms/form/text-input/text-input';
 import Modal from '@/components/atoms/modal/modal';
 import useFormHooks from '@/hooks/use-form-hooks';
@@ -42,21 +43,34 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ id }) => {
 	})
 	
 	return <Modal
+		className="overflow-visible"
 		id="add_week_modal"
 		title="Add Week"
 	>
 		<form method="post" onSubmit={handleSubmit} noValidate>
-			<TextInput
-				id="name"
-				name="name"
-				label="Name"
-				placeholder="Junior Camp"
-				value={values.name}
-				onChange={handleChange}
-				error={!!errorMessages?.name}
-				errorMessage={errorMessages?.name}
-			/>
-			<DatePicker />
+			<div className="flex flex-col gap-2 mt-2 mb-8">
+				<InputGroup
+					label="Start Date"
+					error={!!errorMessages?.startDate}
+					errorMessage={errorMessages?.startDate}
+				>
+					<DatePicker />
+				</InputGroup>
+				<InputGroup
+					label="Week Name"
+					error={!!errorMessages?.name}
+					errorMessage={errorMessages?.name}
+				>
+					<TextInput
+						id="name"
+						name="name"
+						placeholder="Junior Camp"
+						value={values.name}
+						onChange={handleChange}
+						error={!!errorMessages?.name}
+					/>
+				</InputGroup>
+			</div>
 		</form>
 	</Modal>;
 };
