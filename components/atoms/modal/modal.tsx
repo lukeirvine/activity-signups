@@ -29,7 +29,7 @@ const Modal: React.FC<Readonly<ModalProps>> = ({ id, onClose, title, children, c
     return () => {
       dialogElement?.removeEventListener('close', handleClose);
     };
-  }, []);
+  }, [id, onClose]);
   
   return <dialog id={id} className={`modal ${className}`}>
     <div className="modal-box">
