@@ -6,6 +6,7 @@ import { setDoc } from '@/helpers/firebase';
 import { createTextChangeEvent } from '@/helpers/forms';
 import useFormHooks from '@/hooks/use-form-hooks';
 import { DatePicker, DatePickerValue } from '@tremor/react';
+import { FormError, FormErrors } from '@/hooks/use-form-validation';
 import React, { ReactNode, useEffect, useMemo } from 'react';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,6 +19,26 @@ type MyComponentProps = {
 interface AddWeekData {
 	name: string,
 	startDate: string | undefined,
+}
+
+const customValidate = ({
+	values,
+}: {
+	values: AddWeekData;
+}): FormErrors<AddWeekData> => {
+	let errors: FormErrors<AddWeekData> = {};
+
+	const startDate = new Date(parseInt(values.startDate || ""));
+	// make sure startDate is a sunday at midnight
+	if (startDate.getDay() !== 0 || startDate.getHours() !== 0 || startDate.getMinutes() !== 0) {
+		const error: FormError = {
+			type: "custom",
+			message: "Start date must be a Sunday",
+		};
+		errors.startDate = error;
+	}
+
+	return errors;
 }
 
 const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose }) => {
@@ -41,6 +62,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 	} = useFormHooks({
 		requiredFields,
 		initialize: () => formData,
+		onValidate: customValidate,
 		onSubmit: async () => {
 			const result = await setDoc({
 				collectionId: "weeks",
