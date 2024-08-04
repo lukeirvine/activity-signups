@@ -7,9 +7,15 @@ type FirebaseWriteResponse = {
   error?: string;
 }
 
-type FirebaseWriteParams = {
+type FirebaseSetParams = {
   collectionId: string;
   docId?: string;
+  data: any;
+};
+
+type FirebaseUpdateParams = {
+  collectionId: string;
+  docId: string;
   data: any;
 };
 
@@ -17,9 +23,10 @@ export const setDoc = async ({
   collectionId,
   docId,
   data,
-}: FirebaseWriteParams): Promise<FirebaseWriteResponse> => {
+}: FirebaseSetParams): Promise<FirebaseWriteResponse> => {
   try {
-    await firebaseSetDoc(doc(fireStore, collectionId, docId || uuid()), data);
+    const newId = uuid();
+    await firebaseSetDoc(doc(fireStore, collectionId, docId || newId), {...data, id: newId});
     return { success: true };
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -31,9 +38,9 @@ export const updateDoc = async ({
   collectionId,
   docId,
   data,
-}: FirebaseWriteParams): Promise<FirebaseWriteResponse> => {
+}: FirebaseUpdateParams): Promise<FirebaseWriteResponse> => {
   try {
-    await firebaseUpdateDoc(doc(fireStore, collectionId, docId || uuid()), data);
+    await firebaseUpdateDoc(doc(fireStore, collectionId, docId), data);
     return { success: true };
   } catch (error) {
     console.error("Error updating document: ", error);

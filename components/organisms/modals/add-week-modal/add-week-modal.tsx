@@ -59,6 +59,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 		showDisabled,
 		showSubmitError,
 		submitError,
+		reset,
 	} = useFormHooks({
 		requiredFields,
 		initialize: () => formData,
@@ -78,6 +79,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 					isSubmitting: false,
 				}));
 			} else {
+				reset();
 				onClose();
 			}
 		}

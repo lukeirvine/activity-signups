@@ -1,4 +1,4 @@
-import { collection, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
+import { collection, getDoc, getDocs, onSnapshot, query, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { fireStore } from "@/utils/Fire";
 
@@ -14,7 +14,7 @@ export const useReadDoc = ({
   collectionId,
   docId,
 }: FirebaseDocRequestParams) => {
-  const [doc, setDoc] = useState<any>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,15 +24,15 @@ export const useReadDoc = ({
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setDoc(docSnap.data());
+        setData(docSnap.data());
       } else {
-        setDoc(undefined);
+        setData(undefined);
       }
       setLoading(false);
     })();
   }, [collectionId, docId]);
 
-  return { doc, loading };
+  return { data, loading };
 }
 
 export const useListenDoc = ({

@@ -14,7 +14,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = () => {
     <ul className="menu bg-base-200 w-56 h-full">
       {weeks && Object.values(weeks).map((week, i) => {
         return <li key={i}>
-          <a href="#" className="">{week.name}</a>
+          <a href={`${week.id}`} className="">{week.name}</a>
           <ul>
             
           </ul>
