@@ -136,6 +136,7 @@ const config: Config = {
     },
   ],
   plugins: [
+    require("@tailwindcss/typography"),
     require('daisyui'),
     require('@headlessui/tailwindcss'), 
     require('@tailwindcss/forms'),
