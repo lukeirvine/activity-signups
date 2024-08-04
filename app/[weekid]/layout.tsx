@@ -1,6 +1,7 @@
 "use client";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
+import WeekLayout from "@/components/templates/layouts/week-layout/week-layout";
 import { useReadDoc } from "@/hooks/use-firebase";
 import { useParams, useRouter } from "next/navigation";
 
@@ -13,20 +14,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: week, loading: weekLoading } = useReadDoc({ collectionId: 'weeks', docId: weekId });
 
   return (
-    <PageContainer>
-      <div className="flex flex-col gap-4">
-        <div>
-          {week && <div className="prose">
-            <h1>{week.name}</h1>
-          </div>}
-          {week === undefined && <div className="prose">
-            <h1>Week Not Found</h1>
-          </div>}
-          {weekLoading && <div className="skeleton w-full max-w-xs h-10"></div>}
-        </div>
-        <TabNav />
-      </div>
+    <WeekLayout>
       {children}
-    </PageContainer>
+    </WeekLayout>
   )
 }
