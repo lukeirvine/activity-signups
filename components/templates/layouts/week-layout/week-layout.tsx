@@ -46,6 +46,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
         isOpen={isAddWeekModalOpen}
         onClose={() => setIsAddWeekModalOpen(false)}
         weekStartDate={new Date(parseInt(week.startDate))}
+        weekId={weekId}
       />}
     </>
   )

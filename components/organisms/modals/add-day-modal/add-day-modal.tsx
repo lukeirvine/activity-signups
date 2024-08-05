@@ -6,28 +6,20 @@ import InputGroup from '@/components/atoms/form/input-group/input-group';
 import { DatePicker } from '@tremor/react';
 import { createTextChangeEvent } from '@/helpers/forms';
 import Button from '@/components/atoms/button/button';
+import { setDoc } from '@/helpers/firebase';
 
 type AddDayModalProps = {
 	isOpen: boolean,
   onClose: () => void,
   weekStartDate: Date,
+  weekId: string,
 };
 
 interface AddDayData {
   date: string | undefined,
 }
 
-const customValidate = ({
-  values,
-}: {
-  values: AddDayData;
-}): FormErrors<AddDayData> => {
-  let errors: FormErrors<AddDayData> = {};
-
-  return errors;
-}
-
-const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, weekStartDate }) => {
+const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, weekStartDate, weekId }) => {
   const weekEndDate = useMemo(() => {
     const endDate = new Date(weekStartDate);
     endDate.setDate(endDate.getDate() + 6);
@@ -55,7 +47,23 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, we
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
-
+      const result = await setDoc({
+        collectionId: `weeks/${weekId}/days`,
+        data: {
+          date: values.date,
+          weekId
+        }
+      });
+      if (!result.success) {
+        setFormState((state) => ({
+          ...state,
+          submitError: [result.error || "Error saving day."],
+          isSubmitting: false,
+        }));
+      } else {
+        reset();
+        onClose();
+      }
     }
   })
   
