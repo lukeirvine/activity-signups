@@ -27,8 +27,14 @@ const customValidate = ({
   return errors;
 }
 
-const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose }) => {
-	const requiredFields: (keyof AddDayData)[] = useMemo(() => {
+const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, weekStartDate }) => {
+  const weekEndDate = useMemo(() => {
+    const endDate = new Date(weekStartDate);
+    endDate.setDate(endDate.getDate() + 6);
+    return endDate;
+  }, [weekStartDate]);
+
+  const requiredFields: (keyof AddDayData)[] = useMemo(() => {
 		return ["date"];
 	}, []);
 	const formData: AddDayData = {
@@ -59,32 +65,36 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose }) 
     onClose={onClose}
   >
     <form method="post" onSubmit={handleSubmit} noValidate>
-      <div>
-        <InputGroup
-          label="Date"
-          error={!!errorMessages?.date}
-          errorMessage={errorMessages?.date}
-        >
-          <DatePicker
-            value={values.date === undefined ? undefined : new Date(parseInt(values.date))}
-            onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "startDate"))}
-          />
-        </InputGroup>
+      <div className="flex flex-col gap-6">
+        <div>
+          <InputGroup
+            label="Date"
+            error={!!errorMessages?.date}
+            errorMessage={errorMessages?.date}
+          >
+            <DatePicker
+              value={values.date === undefined ? undefined : new Date(parseInt(values.date))}
+              onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "date"))}
+              minDate={weekStartDate}
+              maxDate={weekEndDate}
+            />
+          </InputGroup>
+        </div>
+        <div>
+          <Button
+            loading={isSubmitting}
+            disabled={showDisabled}
+            className="w-full"
+          >
+            Save
+          </Button>
+          {showSubmitError && (
+            <div className="label">
+              <span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
+            </div>
+          )}
+        </div>
       </div>
-      <div>
-					<Button
-						loading={isSubmitting}
-						disabled={showDisabled}
-						className="w-full"
-					>
-						Save
-					</Button>
-					{showSubmitError && (
-						<div className="label">
-							<span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
-						</div>
-					)}
-				</div>
     </form>
   </Modal>
 };
