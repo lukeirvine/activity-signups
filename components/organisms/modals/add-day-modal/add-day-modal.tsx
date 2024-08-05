@@ -8,6 +8,7 @@ import { createTextChangeEvent } from '@/helpers/forms';
 import Button from '@/components/atoms/button/button';
 import { setDoc } from '@/helpers/firebase';
 import { getEndDateFromStartDate } from '@/helpers/utils';
+import BasicForm from '@/components/molecules/basic-form/basic-form';
 
 type AddDayModalProps = {
 	isOpen: boolean,
@@ -71,38 +72,26 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, we
     isOpen={isOpen}
     onClose={onClose}
   >
-    <form method="post" onSubmit={handleSubmit} noValidate>
-      <div className="flex flex-col gap-6">
-        <div>
-          <InputGroup
-            label="Date"
-            error={!!errorMessages?.date}
-            errorMessage={errorMessages?.date}
-          >
-            <DatePicker
-              value={values.date === undefined ? undefined : new Date(parseInt(values.date))}
-              onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "date"))}
-              minDate={weekStartDate}
-              maxDate={weekEndDate}
-            />
-          </InputGroup>
-        </div>
-        <div>
-          <Button
-            loading={isSubmitting}
-            disabled={showDisabled}
-            className="w-full"
-          >
-            Save
-          </Button>
-          {showSubmitError && (
-            <div className="label">
-              <span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </form>
+    <BasicForm
+      handleSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
+      showDisabled={showDisabled}
+      showSubmitError={showSubmitError}
+      submitError={submitError}
+    >
+      <InputGroup
+        label="Date"
+        error={!!errorMessages?.date}
+        errorMessage={errorMessages?.date}
+      >
+        <DatePicker
+          value={values.date === undefined ? undefined : new Date(parseInt(values.date))}
+          onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "date"))}
+          minDate={weekStartDate}
+          maxDate={weekEndDate}
+        />
+      </InputGroup>
+    </BasicForm>
   </Modal>
 };
 

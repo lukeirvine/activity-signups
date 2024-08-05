@@ -10,6 +10,7 @@ import { FormError, FormErrors } from '@/hooks/use-form-validation';
 import React, { ReactNode, useEffect, useMemo } from 'react';
 
 import "react-datepicker/dist/react-datepicker.css";
+import BasicForm from '@/components/molecules/basic-form/basic-form';
 
 type MyComponentProps = {
 	isOpen: boolean,
@@ -91,50 +92,38 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 		isOpen={isOpen}
 		onClose={onClose}
 	>
-		<form method="post" onSubmit={handleSubmit} noValidate>
-			<div className="flex flex-col gap-6">
-				<div className="flex flex-col gap-2">
-					<InputGroup
-						label="Start Date"
-						error={!!errorMessages?.startDate}
-						errorMessage={errorMessages?.startDate}
-					>
-						<DatePicker
-							value={values.startDate === undefined ? undefined : new Date(parseInt(values.startDate))}
-							onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "startDate"))}
-						/>
-					</InputGroup>
-					<InputGroup
-						label="Week Name"
-						error={!!errorMessages?.name}
-						errorMessage={errorMessages?.name}
-					>
-						<TextInput
-							id="name"
-							name="name"
-							placeholder="Name"
-							value={values.name}
-							onChange={handleChange}
-							error={!!errorMessages?.name}
-						/>
-					</InputGroup>
-				</div>
-				<div>
-					<Button
-						loading={isSubmitting}
-						disabled={showDisabled}
-						className="w-full"
-					>
-						Save
-					</Button>
-					{showSubmitError && (
-						<div className="label">
-							<span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
-						</div>
-					)}
-				</div>
-			</div>
-		</form>
+		<BasicForm
+			handleSubmit={handleSubmit}
+			isSubmitting={isSubmitting}
+			showDisabled={showDisabled}
+			showSubmitError={showSubmitError}
+			submitError={submitError}
+		>
+			<InputGroup
+				label="Start Date"
+				error={!!errorMessages?.startDate}
+				errorMessage={errorMessages?.startDate}
+			>
+				<DatePicker
+					value={values.startDate === undefined ? undefined : new Date(parseInt(values.startDate))}
+					onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "startDate"))}
+				/>
+			</InputGroup>
+			<InputGroup
+				label="Week Name"
+				error={!!errorMessages?.name}
+				errorMessage={errorMessages?.name}
+			>
+				<TextInput
+					id="name"
+					name="name"
+					placeholder="Name"
+					value={values.name}
+					onChange={handleChange}
+					error={!!errorMessages?.name}
+				/>
+			</InputGroup>
+		</BasicForm>
 	</Modal>;
 };
 
