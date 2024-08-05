@@ -19,3 +19,13 @@ export function convertDateToDay(date: Date): string {
   }
   throw new Error("Invalid day");
 }
+
+export function stringToDate(date: string): Date {
+  return new Date(parseInt(date));
+}
+
+export function getEndDateFromStartDate(startDate: Date): Date {
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 6);
+  return endDate;
+}

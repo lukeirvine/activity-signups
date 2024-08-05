@@ -7,6 +7,7 @@ import { DatePicker } from '@tremor/react';
 import { createTextChangeEvent } from '@/helpers/forms';
 import Button from '@/components/atoms/button/button';
 import { setDoc } from '@/helpers/firebase';
+import { getEndDateFromStartDate } from '@/helpers/utils';
 
 type AddDayModalProps = {
 	isOpen: boolean,
@@ -21,9 +22,7 @@ interface AddDayData {
 
 const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, weekStartDate, weekId }) => {
   const weekEndDate = useMemo(() => {
-    const endDate = new Date(weekStartDate);
-    endDate.setDate(endDate.getDate() + 6);
-    return endDate;
+    return getEndDateFromStartDate(weekStartDate);
   }, [weekStartDate]);
 
   const requiredFields: (keyof AddDayData)[] = useMemo(() => {

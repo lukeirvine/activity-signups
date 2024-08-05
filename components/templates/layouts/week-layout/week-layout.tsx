@@ -6,6 +6,7 @@ import { PlusIcon } from '@heroicons/react/16/solid';
 import { useParams } from 'next/navigation';
 import { Week } from '@/types/firebase-types';
 import React, { ReactNode } from 'react';
+import { getEndDateFromStartDate, stringToDate } from '@/helpers/utils';
 
 type WeekLayoutProps = {
 	children: ReactNode;
@@ -25,13 +26,16 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
       <PageContainer>
         <div className="flex flex-col gap-4">
           <div>
-            {week && <div className="prose">
+            {week && <div className="prose m-0 p-0">
               <div className="flex items-center gap-4">
                 <h1 className="p-0 m-0">{week.name}</h1>
                 <button className="btn btn-ghost" onClick={() => setIsAddWeekModalOpen(true)}>
                   <PlusIcon className="w-5 h-5" />
                 </button>
               </div>
+              <p className="m-0">
+                {stringToDate(week.startDate).toLocaleDateString()} - {getEndDateFromStartDate(stringToDate((week.startDate))).toLocaleDateString()}
+              </p>
             </div>}
             {week === undefined && <div className="prose">
               <h1>Week Not Found</h1>
