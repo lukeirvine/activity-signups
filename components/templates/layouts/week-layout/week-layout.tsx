@@ -4,6 +4,7 @@ import TabNav from '@/components/organisms/nav/tab-nav/tab-nav';
 import { useReadDoc } from '@/hooks/use-firebase';
 import { PlusIcon } from '@heroicons/react/16/solid';
 import { useParams } from 'next/navigation';
+import { Week } from '@/types/firebase-types';
 import React, { ReactNode } from 'react';
 
 type WeekLayoutProps = {
@@ -15,7 +16,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const { weekid: rawWeekId } = params;
   const weekId = typeof rawWeekId === 'string' ? rawWeekId : rawWeekId[0];
 
-  const { data: week, loading: weekLoading } = useReadDoc({ collectionId: 'weeks', docId: weekId });
+  const { data: week, loading: weekLoading } = useReadDoc<Week>({ collectionId: 'weeks', docId: weekId });
 
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
 
@@ -41,10 +42,11 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
         </div>
         {children}
       </PageContainer>
-      <AddDayModal
+      {week && <AddDayModal
         isOpen={isAddWeekModalOpen}
         onClose={() => setIsAddWeekModalOpen(false)}
-      />
+        weekStartDate={new Date(parseInt(week.startDate))}
+      />}
     </>
   )
 };

@@ -10,6 +10,7 @@ import Button from '@/components/atoms/button/button';
 type AddDayModalProps = {
 	isOpen: boolean,
   onClose: () => void,
+  weekStartDate: Date,
 };
 
 interface AddDayData {

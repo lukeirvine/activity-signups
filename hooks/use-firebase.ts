@@ -10,12 +10,17 @@ interface FirebaseDocRequestParams extends FirebaseCollectionRequestParams {
   docId: string;
 };
 
-export const useReadDoc = ({
+interface FirebaseDocReturn<T> {
+  data: T | null | undefined;
+  loading: boolean;
+}
+
+export function useReadDoc<T>({
   collectionId,
   docId,
-}: FirebaseDocRequestParams) => {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+}: FirebaseDocRequestParams): FirebaseDocReturn<T> {
+  const [data, setData] = useState<T | null | undefined>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
@@ -24,7 +29,7 @@ export const useReadDoc = ({
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setData(docSnap.data());
+        setData(docSnap.data() as T);
       } else {
         setData(undefined);
       }
@@ -35,19 +40,19 @@ export const useReadDoc = ({
   return { data, loading };
 }
 
-export const useListenDoc = ({
+export function useListenDoc<T>({
   collectionId,
   docId,
-}: FirebaseDocRequestParams) => {
-  const [doc, setDoc] = useState<any>(null);
+}: FirebaseDocRequestParams): FirebaseDocReturn<T> {
+  const [data, setData] = useState<T | null | undefined>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(fireStore, collectionId, docId), (doc: any) => {
       if (doc.exists()) {
-        setDoc(doc.data());
+        setData(doc.data() as T);
       } else {
-        setDoc(undefined);
+        setData(undefined);
       }
       setLoading(false);
     });
@@ -57,7 +62,7 @@ export const useListenDoc = ({
     }
   }, [collectionId, docId]);
 
-  return { doc, loading };
+  return { data, loading };
 };
 
 export const useReadCollection = ({
