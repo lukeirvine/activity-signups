@@ -12,15 +12,15 @@ type SideNavProps = {
 const SideNav: React.FC<Readonly<SideNavProps>> = () => {
   const { docs: weeks, loading: weeksLoading } = useListenCollection<Week>({ collectionId: 'weeks' });
   const params = useParams();
-  const { weekid: rawWeekId } = params;
-  const weekId = typeof rawWeekId === 'string' ? rawWeekId : rawWeekId[0];
+  const { weekid: weekId } = params;
+  console.log("SIDE NAV", weekId);
   
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
   return <>
     <ul className="menu bg-base-200 w-56 h-full">
       {weeks && Object.values(weeks).map((week, i) => {
         return <li key={i}>
-          <Link href={`${week.id}`} className={`${week.id === weekId ? "active" : ""}`}>{week.name}</Link>
+          <Link href={`/${week.id}`} className={`${week.id === weekId ? "active" : ""}`}>{week.name}</Link>
           <ul>
             
           </ul>
