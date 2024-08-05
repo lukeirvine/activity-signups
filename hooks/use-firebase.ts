@@ -89,7 +89,11 @@ export function useReadCollection<T>({
         console.log(doc.id, " => ", doc.data());
         data[doc.id] = doc.data() as T;
       });
-      setDocs(data);
+      if (Object.keys(data).length === 0) {
+        setDocs(undefined);
+      } else {
+        setDocs(data);
+      }
       setLoading(false);
     })();
   }, [collectionId]);
@@ -110,7 +114,11 @@ export function useListenCollection<T>({
       querySnapshot.forEach((doc) => {
         docs[doc.id] = doc.data() as T;
       });
-      setDocs(docs);
+      if (Object.keys(docs).length === 0) {
+        setDocs(undefined);
+      } else {
+        setDocs(docs);
+      }
       setLoading(false);
     });
 

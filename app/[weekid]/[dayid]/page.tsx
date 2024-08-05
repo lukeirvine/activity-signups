@@ -1,4 +1,5 @@
 "use client";
+import DayPage from "@/components/templates/pages/day-page/day-page";
 import { convertDateToDay } from "@/helpers/utils";
 import { useReadDoc } from "@/hooks/use-firebase";
 import { Day } from "@/types/firebase-types";
@@ -11,9 +12,5 @@ export default function Page() {
 
   const { data: day, loading: dayLoading } = useReadDoc<Day>({ collectionId: `weeks/${weekid}/days`, docId: dayId });
   
-  return (
-    <div>
-      {day && <div>Day: {convertDateToDay(new Date(parseInt(day.date)))}</div>}
-    </div>
-  );
+  return <DayPage />;
 }
