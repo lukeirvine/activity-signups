@@ -15,6 +15,15 @@ interface FirebaseDocReturn<T> {
   loading: boolean;
 }
 
+interface FirebaseCollection<T> {
+  [key: string]: T;
+}
+
+interface FirebaseCollectionReturn<T> {
+  docs: FirebaseCollection<T> | null | undefined;
+  loading: boolean;
+}
+
 export function useReadDoc<T>({
   collectionId,
   docId,
@@ -65,20 +74,20 @@ export function useListenDoc<T>({
   return { data, loading };
 };
 
-export const useReadCollection = ({
+export function useReadCollection<T>({
   collectionId,
-}: FirebaseCollectionRequestParams) => {
-  const [docs, setDocs] = useState<any[]>([]);
+}: FirebaseCollectionRequestParams): FirebaseCollectionReturn<T> {
+  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const querySnapshot = await getDocs(collection(fireStore, collectionId));
-      const data: any = {}
+      const data: FirebaseCollection<T> = {};
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
-        data[doc.id] = doc.data();
+        data[doc.id] = doc.data() as T;
       });
       setDocs(data);
       setLoading(false);
@@ -88,18 +97,18 @@ export const useReadCollection = ({
   return { docs, loading };
 }
 
-export const useListenCollection = ({
+export function useListenCollection<T>({
   collectionId,
-}: FirebaseCollectionRequestParams) => {
-  const [docs, setDocs] = useState<any[]>([]);
+}: FirebaseCollectionRequestParams): FirebaseCollectionReturn<T> {
+  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const q = query(collection(fireStore, collectionId));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const docs: any = {};
+      const docs: FirebaseCollection<T> = {};
       querySnapshot.forEach((doc) => {
-        docs[doc.id] = doc.data();
+        docs[doc.id] = doc.data() as T;
       });
       setDocs(docs);
       setLoading(false);

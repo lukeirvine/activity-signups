@@ -4,12 +4,13 @@ import AddWeekModal from '../../modals/add-week-modal/add-week-modal';
 import { useListenCollection, useReadCollection } from '@/hooks/use-firebase';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { Week } from '@/types/firebase-types';
 
 type SideNavProps = {
 };
 
 const SideNav: React.FC<Readonly<SideNavProps>> = () => {
-  const { docs: weeks, loading: weeksLoading } = useListenCollection({ collectionId: 'weeks' });
+  const { docs: weeks, loading: weeksLoading } = useListenCollection<Week>({ collectionId: 'weeks' });
   const params = useParams();
   const { weekid: rawWeekId } = params;
   const weekId = typeof rawWeekId === 'string' ? rawWeekId : rawWeekId[0];
