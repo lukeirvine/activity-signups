@@ -1,38 +1,41 @@
-import Modal from '@/components/atoms/modal/modal';
-import useFormHooks from '@/hooks/use-form-hooks';
-import React, { ReactNode, useMemo } from 'react';
-import { FormErrors } from '@/hooks/use-form-validation';
-import InputGroup from '@/components/atoms/form/input-group/input-group';
-import { DatePicker } from '@tremor/react';
-import { createTextChangeEvent } from '@/helpers/forms';
-import Button from '@/components/atoms/button/button';
-import { setDoc } from '@/helpers/firebase';
-import { getEndDateFromStartDate } from '@/helpers/utils';
-import BasicForm from '@/components/molecules/basic-form/basic-form';
-import { Day } from '@/types/firebase-types';
+import React, { useMemo } from "react";
+import { DatePicker } from "@tremor/react";
+import Modal from "@/components/atoms/modal/modal";
+import useFormHooks from "@/hooks/use-form-hooks";
+import InputGroup from "@/components/atoms/form/input-group/input-group";
+import { createTextChangeEvent } from "@/helpers/forms";
+import { setDoc } from "@/helpers/firebase";
+import { getEndDateFromStartDate } from "@/helpers/utils";
+import BasicForm from "@/components/molecules/basic-form/basic-form";
+import { Day } from "@/types/firebase-types";
 
 type AddDayModalProps = {
-	isOpen: boolean,
-  onClose: () => void,
-  weekStartDate: Date,
-  weekId: string,
+  isOpen: boolean;
+  onClose: () => void;
+  weekStartDate: Date;
+  weekId: string;
 };
 
 interface AddDayData {
-  date: string | undefined,
+  date: string | undefined;
 }
 
-const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, weekStartDate, weekId }) => {
+const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
+  isOpen,
+  onClose,
+  weekStartDate,
+  weekId,
+}) => {
   const weekEndDate = useMemo(() => {
     return getEndDateFromStartDate(weekStartDate);
   }, [weekStartDate]);
 
   const requiredFields: (keyof AddDayData)[] = useMemo(() => {
-		return ["date"];
-	}, []);
-	const formData: AddDayData = {
-		date: undefined,
-	};
+    return ["date"];
+  }, []);
+  const formData: AddDayData = {
+    date: undefined,
+  };
   const {
     values,
     handleChange,
@@ -52,8 +55,8 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, we
         collectionId: `weeks/${weekId}/days`,
         data: {
           date: values.date || "",
-          weekId
-        }
+          weekId,
+        },
       });
       if (!result.success) {
         setFormState((state) => ({
@@ -65,35 +68,44 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, we
         reset();
         onClose();
       }
-    }
-  })
-  
-  return <Modal
-    title="Add Day"
-    isOpen={isOpen}
-    onClose={onClose}
-  >
-    <BasicForm
-      handleSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      showDisabled={showDisabled}
-      showSubmitError={showSubmitError}
-      submitError={submitError}
-    >
-      <InputGroup
-        label="Date"
-        error={!!errorMessages?.date}
-        errorMessage={errorMessages?.date}
+    },
+  });
+
+  return (
+    <Modal title="Add Day" isOpen={isOpen} onClose={onClose}>
+      <BasicForm
+        handleSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        showDisabled={showDisabled}
+        showSubmitError={showSubmitError}
+        submitError={submitError}
       >
-        <DatePicker
-          value={values.date === undefined ? undefined : new Date(parseInt(values.date))}
-          onValueChange={(value) => handleChange(createTextChangeEvent(value ? value.getTime().toString() : undefined, "date"))}
-          minDate={weekStartDate}
-          maxDate={weekEndDate}
-        />
-      </InputGroup>
-    </BasicForm>
-  </Modal>
+        <InputGroup
+          label="Date"
+          error={!!errorMessages?.date}
+          errorMessage={errorMessages?.date}
+        >
+          <DatePicker
+            value={
+              values.date === undefined
+                ? undefined
+                : new Date(parseInt(values.date))
+            }
+            onValueChange={(value) =>
+              handleChange(
+                createTextChangeEvent(
+                  value ? value.getTime().toString() : undefined,
+                  "date",
+                ),
+              )
+            }
+            minDate={weekStartDate}
+            maxDate={weekEndDate}
+          />
+        </InputGroup>
+      </BasicForm>
+    </Modal>
+  );
 };
 
 export default AddDayModal;

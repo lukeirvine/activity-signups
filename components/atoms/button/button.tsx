@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 type ButtonProps = {
-	children: ReactNode;
+  children: ReactNode;
   loading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
@@ -15,13 +15,19 @@ const Button: React.FC<Readonly<ButtonProps>> = ({
   onClick,
   className,
 }) => {
-	return <button
-    className={`btn btn-primary ${className}`}
-    onClick={onClick}
-    disabled={disabled}
-  >
-    {loading ? <span className="loading loading-spinner loading-xs" /> : children}
-  </button>
+  return (
+    <button
+      className={`btn btn-primary ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {loading ? (
+        <span className="loading loading-spinner loading-xs" />
+      ) : (
+        children
+      )}
+    </button>
+  );
 };
 
 export default Button;

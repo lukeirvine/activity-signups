@@ -1,5 +1,4 @@
-import React, { ReactNode } from 'react';
-import InputGroup from '../input-group/input-group';
+import React from "react";
 
 type TextInputProps = {
   id?: string;
@@ -24,16 +23,18 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
   type = "text",
   error,
 }) => {
-	return <input
-    id={id}
-    type={type}
-    name={name}
-    placeholder={placeholder}
-    value={value}
-    onChange={onChange}
-    disabled={disabled}
-    className={`input px-3 text-sm input-bordered w-full ${className} ${error ? 'input-error' : ''}`}
-  />
+  return (
+    <input
+      id={id}
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      className={`input px-3 text-sm input-bordered w-full ${className} ${error ? "input-error" : ""}`}
+    />
+  );
 };
 
 export default TextInput;

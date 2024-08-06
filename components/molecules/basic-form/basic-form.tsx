@@ -1,8 +1,8 @@
-import Button from '@/components/atoms/button/button';
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
+import Button from "@/components/atoms/button/button";
 
 type BasicFormProps = {
-	children: ReactNode;
+  children: ReactNode;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
   showDisabled: boolean;
@@ -18,12 +18,10 @@ const BasicForm: React.FC<Readonly<BasicFormProps>> = ({
   showSubmitError,
   submitError,
 }) => {
-	return (
+  return (
     <form method="post" onSubmit={handleSubmit} noValidate>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          {children}
-        </div>
+        <div className="flex flex-col gap-2">{children}</div>
         <div>
           <Button
             loading={isSubmitting}
@@ -34,13 +32,15 @@ const BasicForm: React.FC<Readonly<BasicFormProps>> = ({
           </Button>
           {showSubmitError && (
             <div className="label">
-              <span className="label-text-alt text-error">{submitError ? submitError[0] : ''}</span>
+              <span className="label-text-alt text-error">
+                {submitError ? submitError[0] : ""}
+              </span>
             </div>
           )}
         </div>
       </div>
     </form>
-  )
+  );
 };
 
 export default BasicForm;
