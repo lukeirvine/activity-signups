@@ -2,10 +2,11 @@ import { useParams } from "next/navigation";
 import React from "react";
 import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
-import { Activity, Day } from "@/types/firebase-types";
+import { Activities, Activity, Day } from "@/types/firebase-types";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
+import { printActivitiesPDF } from "@/helpers/print";
 
 type DayPageProps = {};
 
@@ -24,6 +25,13 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
 
   const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
+  const [isPrintLoading, setIsPrintLoading] = React.useState(false);
+
+  const handlePrintPDF = async (activities: Activities) => {
+    setIsPrintLoading(true);
+    await printActivitiesPDF(activities);
+    setIsPrintLoading(false);
+  };
 
   return (
     <div>
@@ -52,9 +60,10 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
               icon={CloudArrowUpIcon}
             />
             <IconButton
-              onClick={() => {}}
+              onClick={() => handlePrintPDF(activities)}
               tooltip="Print PDF"
               icon={PrinterIcon}
+              loading={isPrintLoading}
             />
           </div>
           <ActivityTable activities={activities} />

@@ -24,3 +24,5 @@ export interface Activity {
   timeCreated: string;
   timeUpdated: string;
 }
+
+export type Activities = { [key: string]: Activity };
