@@ -12,6 +12,7 @@ export interface Day {
 
 export interface Activity {
   id?: string;
+  index: number;
   name: string;
   period: number[];
   headcount: number;

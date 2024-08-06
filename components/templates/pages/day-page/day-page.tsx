@@ -1,7 +1,8 @@
 import { useParams } from "next/navigation";
 import React from "react";
-import { useReadCollection, useReadDoc } from "@/hooks/use-firebase";
+import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import { Activity, Day } from "@/types/firebase-types";
+import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 
 type DayPageProps = {};
 
@@ -15,7 +16,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     docId: dayId,
   });
   const { docs: activities, loading: activitiesLoading } =
-    useReadCollection<Activity>({
+    useListenCollection<Activity>({
       collectionId: `weeks/${weekid}/days/${dayId}/activities`,
     });
 
@@ -31,6 +32,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       {activities === undefined && (
         <div className="py-8 prose">
           <h2>No activities</h2>
+        </div>
+      )}
+      {activities && (
+        <div className="mt-4">
+          <ActivityTable activities={activities} />
         </div>
       )}
     </div>

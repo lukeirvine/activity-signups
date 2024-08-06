@@ -17,9 +17,10 @@ export const parseCsvToActivity = (file: File, weekId: string, dayId: string): P
             const rows = results.data as Array<{ [key: string]: string }>;
             const activities: Activity[] = [];
 
-            rows.forEach(row => {
+            rows.forEach((row, index) => {
               const activity: Activity = {
                 id: uuid(),
+                index,
                 name: row['name']?.trim() || '',
                 period: row['period']?.split(',').map(num => parseInt(num.trim())) || [],
                 headcount: parseInt(row['headcount']?.trim() || '0'),
