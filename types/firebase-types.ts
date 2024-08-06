@@ -13,11 +13,13 @@ export interface Day {
 export interface Activity {
   id?: string;
   name: string;
-  period: number;
+  period: number[];
   headcount: number;
   dayId: string;
   weekId: string;
   secondaryHeadcountName: string;
   secondaryHeadcount: number;
   notes: string;
+  timeCreated: string;
+  timeUpdated: string;
 }
