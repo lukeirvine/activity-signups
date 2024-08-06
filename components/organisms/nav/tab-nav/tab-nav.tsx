@@ -24,7 +24,7 @@ const TabNav: React.FC<Readonly<TabNavProps>> = () => {
 
 	return <div className="flex">
     {days && <div role="tablist" className="tabs tabs-bordered">
-      {Object.values(days).map((day, index) => (
+      {Object.values(days).sort((a, b) => (parseInt(a.date) - parseInt(b.date))).map((day, index) => (
         <Link key={index} role="tab" className={`tab ${day.id === dayid ? "tab-active" : ""}`} href={`/${weekid}/${day.id}`}>{convertDateToDay(new Date(parseInt(day.date)))}</Link>
       ))}
     </div>}
