@@ -104,6 +104,11 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({
 
   return (
     <Modal title="Upload CSV" isOpen={isOpen} onClose={onClose}>
+      <div className="prose">
+        <p className="text-warning">
+          This will overwrite any activities on this day.
+        </p>
+      </div>
       <BasicForm
         handleSubmit={handleSubmit}
         isSubmitting={isSubmitting}

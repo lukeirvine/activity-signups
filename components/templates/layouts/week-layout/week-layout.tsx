@@ -1,14 +1,12 @@
 import { PlusIcon } from "@heroicons/react/16/solid";
 import { useParams } from "next/navigation";
 import React, { ReactNode } from "react";
-import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import AddDayModal from "@/components/organisms/modals/add-day-modal/add-day-modal";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
 import { useReadDoc } from "@/hooks/use-firebase";
 import { Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
-import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -25,7 +23,6 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   });
 
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
-  const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
 
   return (
     <>
@@ -43,14 +40,6 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                         onClick={() => setIsAddWeekModalOpen(true)}
                       >
                         <PlusIcon className="w-7 h-7" />
-                      </button>
-                    </div>
-                    <div className="tooltip" data-tip="Upload CSV">
-                      <button
-                        className="btn btn-ghost btn-sm px-2"
-                        onClick={() => setIsUploadCSVModalOpen(true)}
-                      >
-                        <CloudArrowUpIcon className="w-7 h-7" />
                       </button>
                     </div>
                   </div>
@@ -82,12 +71,6 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
           onClose={() => setIsAddWeekModalOpen(false)}
           weekStartDate={new Date(parseInt(week.startDate))}
           weekId={weekId}
-        />
-      )}
-      {rawWeekId && dayid && (
-        <UploadCSVModal
-          isOpen={isUploadCSVModalOpen}
-          onClose={() => setIsUploadCSVModalOpen(false)}
         />
       )}
     </>

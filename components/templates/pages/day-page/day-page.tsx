@@ -1,8 +1,10 @@
 import { useParams } from "next/navigation";
 import React from "react";
+import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import { Activity, Day } from "@/types/firebase-types";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
+import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 
 type DayPageProps = {};
 
@@ -20,7 +22,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       collectionId: `weeks/${weekid}/days/${dayId}/activities`,
     });
 
-  console.log("ACTS", activities);
+  const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
 
   return (
     <div>
@@ -31,13 +33,35 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       )}
       {activities === undefined && (
         <div className="py-8 prose">
-          <h2>No activities</h2>
+          <h2 className="mb-2">No activities</h2>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsUploadCSVModalOpen(true)}
+          >
+            Upload CSV
+          </button>
         </div>
       )}
       {activities && (
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col items-start">
+          <div className="prose">
+            <div className="tooltip" data-tip="Upload CSV">
+              <button
+                className="btn btn-ghost btn-sm px-2"
+                onClick={() => setIsUploadCSVModalOpen(true)}
+              >
+                <CloudArrowUpIcon className="w-7 h-7" />
+              </button>
+            </div>
+          </div>
           <ActivityTable activities={activities} />
         </div>
+      )}
+      {weekid && dayid && (
+        <UploadCSVModal
+          isOpen={isUploadCSVModalOpen}
+          onClose={() => setIsUploadCSVModalOpen(false)}
+        />
       )}
     </div>
   );
