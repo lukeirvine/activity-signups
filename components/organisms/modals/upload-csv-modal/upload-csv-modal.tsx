@@ -6,6 +6,8 @@ import BasicForm from "@/components/molecules/basic-form/basic-form";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { FormErrors } from "@/hooks/use-form-validation";
 import { parseCsvToActivity } from "@/helpers/csv";
+import { setCollection } from "@/helpers/firebase";
+import { Activity } from "@/types/firebase-types";
 
 type UploadCSVModalProps = {
   isOpen: boolean;
@@ -65,12 +67,40 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({
     onValidate: customValidate,
     onSubmit: async () => {
       const file = values.file;
+      console.log("FILE", file, typeof file);
       if (file) {
-        const activity = parseCsvToActivity(file, weekId, dayId);
-        console.log("ACTIVITY", activity);
+        const activities = await parseCsvToActivity(file, weekId, dayId);
+        console.log("ACTIVITY", activities);
+        const result = await setCollection<Activity>({
+          collectionId: `weeks/${weekId}/days/${dayId}/activities`,
+          data: activities,
+        });
+        if (!result.success) {
+          setFormState((state) => ({
+            ...state,
+            submitError: [result.error || "Error saving activities."],
+            isSubmitting: false,
+          }));
+        } else {
+          reset();
+          onClose();
+        }
       }
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setFormState((prevState) => ({
+        ...prevState,
+        values: {
+          ...prevState.values,
+          file: file,
+        },
+      }));
+    }
+  };
 
   return (
     <Modal title="Upload CSV" isOpen={isOpen} onClose={onClose}>
@@ -90,7 +120,7 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({
             type="file"
             name="file"
             className="file-input input-bordered w-full"
-            onChange={handleChange}
+            onChange={handleFileChange}
             accept=".csv"
           />
         </InputGroup>

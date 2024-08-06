@@ -1,5 +1,5 @@
 import { fireStore } from "@/utils/Fire";
-import { doc, setDoc as firebaseSetDoc, updateDoc as firebaseUpdateDoc } from "firebase/firestore";
+import { doc, setDoc as firebaseSetDoc, updateDoc as firebaseUpdateDoc, writeBatch } from "firebase/firestore";
 import uuid from "react-uuid";
 
 type FirebaseWriteResponse = {
@@ -44,6 +44,25 @@ export async function updateDoc<T>({
     return { success: true };
   } catch (error) {
     console.error("Error updating document: ", error);
+    return { success: false, error: "An error occurred" };
+  }
+}
+
+export async function setCollection<T>({
+  collectionId,
+  data,
+}: { collectionId: string; data: T[] }): Promise<FirebaseWriteResponse> {
+  try {
+    const batch = writeBatch(fireStore);
+    data.forEach((item) => {
+      const newId = uuid();
+      const docRef = doc(fireStore, collectionId, newId);
+      batch.set(docRef, {...item, id: newId});
+    });
+    await batch.commit();
+    return { success: true };
+  } catch (error) {
+    console.error("Error adding documents: ", error);
     return { success: false, error: "An error occurred" };
   }
 }
