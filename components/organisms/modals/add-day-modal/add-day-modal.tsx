@@ -9,6 +9,7 @@ import Button from '@/components/atoms/button/button';
 import { setDoc } from '@/helpers/firebase';
 import { getEndDateFromStartDate } from '@/helpers/utils';
 import BasicForm from '@/components/molecules/basic-form/basic-form';
+import { Day } from '@/types/firebase-types';
 
 type AddDayModalProps = {
 	isOpen: boolean,
@@ -47,10 +48,10 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({ isOpen, onClose, we
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
-      const result = await setDoc({
+      const result = await setDoc<Day>({
         collectionId: `weeks/${weekId}/days`,
         data: {
-          date: values.date,
+          date: values.date || "",
           weekId
         }
       });

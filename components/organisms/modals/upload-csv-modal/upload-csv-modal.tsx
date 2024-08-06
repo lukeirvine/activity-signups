@@ -68,8 +68,6 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({ isOpen, onClo
     isOpen={isOpen}
     onClose={onClose}
   >
-    <div>Week: {weekid}</div>
-    <div>Day: {dayid}</div>
     <BasicForm
       handleSubmit={handleSubmit}
       isSubmitting={isSubmitting}
@@ -79,6 +77,8 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({ isOpen, onClo
     >
       <InputGroup
         label="CSV File"
+        error={!!errorMessages?.file}
+        errorMessage={errorMessages?.file}
       >
         <input
           type="file"

@@ -7,23 +7,23 @@ type FirebaseWriteResponse = {
   error?: string;
 }
 
-type FirebaseSetParams = {
+type FirebaseSetParams<T> = {
   collectionId: string;
   docId?: string;
-  data: any;
+  data: T;
 };
 
-type FirebaseUpdateParams = {
+type FirebaseUpdateParams<T> = {
   collectionId: string;
   docId: string;
-  data: any;
+  data: T;
 };
 
-export const setDoc = async ({
+export async function setDoc<T>({
   collectionId,
   docId,
   data,
-}: FirebaseSetParams): Promise<FirebaseWriteResponse> => {
+}: FirebaseSetParams<T>): Promise<FirebaseWriteResponse> {
   try {
     const newId = uuid();
     await firebaseSetDoc(doc(fireStore, collectionId, docId || newId), {...data, id: newId});
@@ -34,13 +34,13 @@ export const setDoc = async ({
   }
 }
 
-export const updateDoc = async ({
+export async function updateDoc<T>({
   collectionId,
   docId,
   data,
-}: FirebaseUpdateParams): Promise<FirebaseWriteResponse> => {
+}: FirebaseUpdateParams<T>): Promise<FirebaseWriteResponse> {
   try {
-    await firebaseUpdateDoc(doc(fireStore, collectionId, docId), data);
+    await firebaseUpdateDoc(doc(fireStore, collectionId, docId), data as Partial<T>);
     return { success: true };
   } catch (error) {
     console.error("Error updating document: ", error);

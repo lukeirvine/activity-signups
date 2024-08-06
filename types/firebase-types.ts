@@ -1,17 +1,17 @@
 export interface Week {
-  id: string;
+  id?: string;
   name: string;
   startDate: string;
 }
 
 export interface Day {
-  id: string;
+  id?: string;
   date: string;
   weekId: string;
 }
 
 export interface Activity {
-  id: string;
+  id?: string;
   name: string;
   period: number;
   headcount: number;

@@ -11,6 +11,7 @@ import React, { ReactNode, useEffect, useMemo } from 'react';
 
 import "react-datepicker/dist/react-datepicker.css";
 import BasicForm from '@/components/molecules/basic-form/basic-form';
+import { Week } from '@/types/firebase-types';
 
 type MyComponentProps = {
 	isOpen: boolean,
@@ -66,11 +67,11 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({ isOpen, onClose })
 		initialize: () => formData,
 		onValidate: customValidate,
 		onSubmit: async () => {
-			const result = await setDoc({
+			const result = await setDoc<Week>({
 				collectionId: "weeks",
 				data: {
 					name: values.name,
-					startDate: values.startDate,
+					startDate: values.startDate || "",
 				},
 			});
 			if (!result.success) {
