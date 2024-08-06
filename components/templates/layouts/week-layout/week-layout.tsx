@@ -7,6 +7,7 @@ import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
 import { useReadDoc } from "@/hooks/use-firebase";
 import { Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
+import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -34,14 +35,11 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                 <div className="flex items-center gap-6">
                   <h1 className="p-0 m-0">{week.name}</h1>
                   <div className="flex items-center">
-                    <div className="tooltip" data-tip="Add Day">
-                      <button
-                        className="btn btn-ghost btn-sm px-2"
-                        onClick={() => setIsAddWeekModalOpen(true)}
-                      >
-                        <PlusIcon className="w-7 h-7" />
-                      </button>
-                    </div>
+                    <IconButton
+                      onClick={() => setIsAddWeekModalOpen(true)}
+                      tooltip="Add Day"
+                      icon={PlusIcon}
+                    />
                   </div>
                 </div>
                 <p className="m-0">

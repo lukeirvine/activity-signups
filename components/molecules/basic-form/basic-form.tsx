@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import Button from "@/components/atoms/button/button";
+import Button from "@/components/atoms/buttons/button/button";
 
 type BasicFormProps = {
   children: ReactNode;

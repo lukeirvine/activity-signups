@@ -1,10 +1,11 @@
 import { useParams } from "next/navigation";
 import React from "react";
-import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
+import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import { Activity, Day } from "@/types/firebase-types";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
+import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 
 type DayPageProps = {};
 
@@ -44,15 +45,17 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       )}
       {activities && (
         <div className="mt-4 flex flex-col items-start">
-          <div className="prose">
-            <div className="tooltip" data-tip="Upload CSV">
-              <button
-                className="btn btn-ghost btn-sm px-2"
-                onClick={() => setIsUploadCSVModalOpen(true)}
-              >
-                <CloudArrowUpIcon className="w-7 h-7" />
-              </button>
-            </div>
+          <div className="prose flex gap-2">
+            <IconButton
+              onClick={() => setIsUploadCSVModalOpen(true)}
+              tooltip="Upload CSV"
+              icon={CloudArrowUpIcon}
+            />
+            <IconButton
+              onClick={() => {}}
+              tooltip="Print PDF"
+              icon={PrinterIcon}
+            />
           </div>
           <ActivityTable activities={activities} />
         </div>
