@@ -14,13 +14,16 @@ export interface Activity {
   id?: string;
   index: number;
   name: string;
+  cost: string;
+  highlightedText: string;
+  department: string;
   period: number[];
   headcount: number;
   dayId: string;
   weekId: string;
   secondaryHeadcountName: string;
   secondaryHeadcount: number;
-  notes: string;
+  notes: string[];
   timeCreated: string;
   timeUpdated: string;
 }

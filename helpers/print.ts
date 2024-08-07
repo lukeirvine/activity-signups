@@ -24,7 +24,14 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
   const pageWidth = 8.5 * 72; // 612 points
   const pageHeight = 11 * 72; // 792 points
 
-  Object.values(activities).sort((a, b) => a.period[0] - b.period[0]).forEach(activity => {
+  Object.values(activities).sort((a, b) => {
+    // sort by period[0] first, then by department
+    if (a.period[0] < b.period[0]) return -1;
+    if (a.period[0] > b.period[0]) return 1;
+    if (a.department < b.department) return -1;
+    if (a.department > b.department) return 1;
+    return 0;
+  }).forEach(activity => {
     const page = pdfDoc.addPage([pageWidth, pageHeight]);
     const { width, height } = page.getSize();
     
@@ -51,17 +58,22 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
       });
     };
 
-    drawCenteredText(`${activity.name}`, ypos, sansSerifFont, titleSize);
+    drawCenteredText(`${activity.name}${activity.cost?.length > 0 ? ` - ${activity.cost}` : ''}`, ypos, sansSerifFont, titleSize);
     ypos -= 30;
     
-    drawCenteredText(`Activity ${activity.period.join(', ')}`, ypos, sansSerifFont, fontSize);
-    ypos -= 20;
+    if (activity.notes.length > 0 && activity.notes[0].length > 0) {
+      activity.notes.forEach((note) => {
+        drawCenteredText(`${note}`, ypos, sansSerifFont, fontSize, rgb(1, 0, 0));
+        ypos -= 15;
+      })
+      ypos -= 10;
+    }
 
-    drawCenteredText(`${activity.notes}`, ypos, sansSerifFont, fontSize, rgb(1, 0, 0));
+    drawCenteredText(`Activity ${activity.period[0]}${activity.period.length > 1 ? ` - ${activity.period[activity.period.length - 1]}` : ''}`, ypos, sansSerifFont, fontSize);
     ypos -= 40;
 
     // Highlight "First & Last Name"
-    const highlightText = "First & Last Name";
+    const highlightText = activity.highlightedText.length > 0 ? activity.highlightedText : "First & Last Name";
     const highlightWidth = sansSerifFont.widthOfTextAtSize(highlightText, fontSize) + 8;
     const highlightHeight = fontSize + 8;
     const highlightX = ml - 4;

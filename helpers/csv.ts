@@ -22,13 +22,16 @@ export const parseCsvToActivity = (file: File, weekId: string, dayId: string): P
                 id: uuid(),
                 index,
                 name: row['Name']?.trim() || '',
+                cost: row['Cost']?.trim() || '',
+                highlightedText: row['Highlighted Text']?.trim() || '',
+                department: row['Department']?.trim() || '',
                 period: row['Period']?.split(',').map(num => parseInt(num.trim())) || [],
                 headcount: parseInt(row['Headcount']?.trim() || '0'),
                 dayId,
                 weekId,
                 secondaryHeadcountName: row['Secondary Headcount Name']?.trim() || '',
                 secondaryHeadcount: parseInt(row['Secondary Headcount']?.trim() || '0'),
-                notes: row['Notes']?.trim() || '',
+                notes: row['Notes']?.split(';').map((note) => note.trim()) || [],
                 timeCreated: new Date().toISOString(),
                 timeUpdated: new Date().toISOString()
               };

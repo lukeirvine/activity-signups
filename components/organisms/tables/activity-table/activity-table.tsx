@@ -29,7 +29,12 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
             .map((activity) => {
               return (
                 <tr key={activity.id}>
-                  <td>{activity.period}</td>
+                  <td>
+                    {activity.period[0]}
+                    {activity.period.length > 1
+                      ? `-${activity.period[activity.period.length - 1]}`
+                      : ""}
+                  </td>
                   <td>{activity.name}</td>
                   <td>{activity.headcount}</td>
                   <td>{activity.secondaryHeadcountName}</td>
