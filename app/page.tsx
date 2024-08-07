@@ -1,3 +1,4 @@
+"use client";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 
 export default function Home() {

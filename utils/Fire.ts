@@ -11,7 +11,6 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
-import { getAnalytics } from 'firebase/analytics';
 
 // will use firebase emulator if set to true
 export var useEmulator = true;
@@ -33,8 +32,7 @@ const app = initializeApp(firebaseConfig);
 export const fireAuth = getAuth(app);
 export const fireStore = getFirestore(app);
 export const fireFuncs = getFunctions(app);
-export const analytics = getAnalytics(app);
-if (window.location.hostname === "localhost" && useEmulator) {
+if (process.env.NODE_ENV === "development" && useEmulator) {
   connectAuthEmulator(fireAuth, "http://localhost:9099");
   connectFirestoreEmulator(fireStore, 'localhost', 8001);
   connectFunctionsEmulator(fireFuncs, "localhost", 5001);
