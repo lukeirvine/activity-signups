@@ -87,14 +87,12 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
         >
           <DatePicker
             value={
-              values.date === undefined
-                ? undefined
-                : new Date(parseInt(values.date))
+              values.date === undefined ? undefined : new Date(values.date)
             }
             onValueChange={(value) =>
               handleChange(
                 createTextChangeEvent(
-                  value ? value.getTime().toString() : undefined,
+                  value ? value.toISOString() : undefined,
                   "date",
                 ),
               )

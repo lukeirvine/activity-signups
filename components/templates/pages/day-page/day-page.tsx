@@ -39,7 +39,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const exportFileName =
     day && week
-      ? `activities-${week?.name}-${convertDateToDay(new Date(parseInt(day?.date || "")))}`
+      ? `activities-${week?.name}-${convertDateToDay(new Date(day?.date || ""))}`
       : "";
 
   const handlePrintPDF = async (activities: Activities) => {

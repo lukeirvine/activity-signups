@@ -29,7 +29,7 @@ const customValidate = ({
 }): FormErrors<AddWeekData> => {
   let errors: FormErrors<AddWeekData> = {};
 
-  const startDate = new Date(parseInt(values.startDate || ""));
+  const startDate = new Date(values.startDate || "");
   // make sure startDate is a sunday at midnight
   if (
     startDate.getDay() !== 0 ||
@@ -116,12 +116,12 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
             value={
               values.startDate === undefined
                 ? undefined
-                : new Date(parseInt(values.startDate))
+                : new Date(values.startDate)
             }
             onValueChange={(value) =>
               handleChange(
                 createTextChangeEvent(
-                  value ? value.getTime().toString() : undefined,
+                  value ? value.toISOString() : undefined,
                   "startDate",
                 ),
               )

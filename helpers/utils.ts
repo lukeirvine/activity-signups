@@ -21,7 +21,7 @@ export function convertDateToDay(date: Date): string {
 }
 
 export function stringToDate(date: string): Date {
-  return new Date(parseInt(date));
+  return new Date(date);
 }
 
 export function getEndDateFromStartDate(startDate: Date): Date {
