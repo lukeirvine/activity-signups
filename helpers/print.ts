@@ -72,32 +72,34 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
     drawCenteredText(`Activity ${activity.period[0]}${activity.period.length > 1 ? ` - ${activity.period[activity.period.length - 1]}` : ''}`, ypos, sansSerifFont, fontSize);
     ypos -= 40;
 
-    // Highlight "First & Last Name"
-    const highlightText = activity.highlightedText.length > 0 ? activity.highlightedText : "First & Last Name";
-    const highlightWidth = sansSerifFont.widthOfTextAtSize(highlightText, fontSize) + 8;
-    const highlightHeight = fontSize + 8;
-    const highlightX = ml - 4;
-    const highlightY = ypos - (highlightHeight / 2) + 4;
+    if (activity.headcount > 0) {
+      // Highlight "First & Last Name"
+      const highlightText = activity.highlightedText.length > 0 ? activity.highlightedText : "First & Last Name";
+      const highlightWidth = sansSerifFont.widthOfTextAtSize(highlightText, fontSize) + 8;
+      const highlightHeight = fontSize + 8;
+      const highlightX = ml - 4;
+      const highlightY = ypos - (highlightHeight / 2) + 4;
 
-    // Draw the yellow rectangle
-    page.drawRectangle({
-      x: highlightX,
-      y: highlightY,
-      width: highlightWidth,
-      height: highlightHeight,
-      color: rgb(1, 1, 0), // Yellow color
-      opacity: 0.5,
-    });
+      // Draw the yellow rectangle
+      page.drawRectangle({
+        x: highlightX,
+        y: highlightY,
+        width: highlightWidth,
+        height: highlightHeight,
+        color: rgb(1, 1, 0), // Yellow color
+        opacity: 0.5,
+      });
 
-    // Draw the text over the rectangle
-    page.drawText(highlightText, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: sansSerifFont,
-      color: rgb(0, 0, 0),
-    });
-    ypos -= 40;
+      // Draw the text over the rectangle
+      page.drawText(highlightText, {
+        x: ml,
+        y: ypos,
+        size: fontSize,
+        font: sansSerifFont,
+        color: rgb(0, 0, 0),
+      });
+      ypos -= 40;
+    }
 
     for (let i = 0; i < activity.headcount; i++) {
       page.drawText(`${i + 1}`, {
