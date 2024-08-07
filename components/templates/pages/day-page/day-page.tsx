@@ -37,7 +37,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
         headcount: 12,
         secondaryHeadcountName: "",
         secondaryHeadcount: 0,
-        notes: "",
+        notes: "Must ride with a buddy",
         timeCreated: new Date().toISOString(),
         timeUpdated: new Date().toISOString(),
         dayId: "asdf",

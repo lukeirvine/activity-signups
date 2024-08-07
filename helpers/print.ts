@@ -38,7 +38,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
     let ypos = height - mt;
 
     // Helper function to draw centered text
-    const drawCenteredText = (text: string, y: number, font: any, size: number) => {
+    const drawCenteredText = (text: string, y: number, font: any, size: number, color = rgb(0, 0, 0)) => {
       const textWidth = font.widthOfTextAtSize(text, size);
       const x = (width - textWidth) / 2;
       page.drawText(text, {
@@ -46,7 +46,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
         y,
         size,
         font,
-        color: rgb(0, 0, 0),
+        color,
       });
     };
 
@@ -56,12 +56,15 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
     drawCenteredText(`Activity ${activity.period.join(', ')}`, ypos, sansSerifFont, fontSize);
     ypos -= 40;
 
+    drawCenteredText(`${activity.notes}`, ypos, sansSerifFont, fontSize, rgb(1, 0, 0));
+    ypos -= 20;
+
     // Highlight "First & Last Name"
     const highlightText = "First & Last Name";
-    const highlightWidth = sansSerifFont.widthOfTextAtSize(highlightText, fontSize);
-    const highlightHeight = fontSize + 4;
-    const highlightX = ml;
-    const highlightY = ypos - highlightHeight + 4;
+    const highlightWidth = sansSerifFont.widthOfTextAtSize(highlightText, fontSize) + 8;
+    const highlightHeight = fontSize + 8;
+    const highlightX = ml - 4;
+    const highlightY = ypos - (highlightHeight / 2) + 4;
 
     // Draw the yellow rectangle
     page.drawRectangle({
@@ -118,14 +121,6 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
       color: rgb(0, 0, 0),
     });
     ypos -= 20;
-
-    page.drawText(`Notes: ${activity.notes}`, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0, 0),
-    });
   });
 
   const pdfBytes = await pdfDoc.save();
