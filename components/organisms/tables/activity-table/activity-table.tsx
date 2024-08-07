@@ -39,7 +39,11 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
                   <td>{activity.headcount}</td>
                   <td>{activity.secondaryHeadcountName}</td>
                   <td>{activity.secondaryHeadcount}</td>
-                  <td>{activity.notes}</td>
+                  <td>
+                    {activity.notes.map((note, index) => (
+                      <div key={index}>{note}</div>
+                    ))}
+                  </td>
                 </tr>
               );
             })}

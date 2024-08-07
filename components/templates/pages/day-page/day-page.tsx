@@ -79,7 +79,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
         </div>
       )}
       {activities && (
-        <div className="mt-4 flex flex-col items-start">
+        <div className="mt-4 mb-12 flex flex-col items-start">
           <div className="prose flex gap-2">
             <IconButton
               onClick={() => setIsUploadCSVModalOpen(true)}

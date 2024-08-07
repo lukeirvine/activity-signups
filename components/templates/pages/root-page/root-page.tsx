@@ -11,14 +11,14 @@ type RootPageProps = {
 const RootPage: React.FC<Readonly<RootPageProps>> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <div className="flex-grow flex">
-        <div>
+      <div className="fixed top-0 w-screen" style={{ zIndex: "100" }}>
+        <Navbar />
+      </div>
+      <div className="h-screen pt-16 bg-base-100">
+        <div className="fixed top-0 left-0 h-screen pt-16">
           <SideNav />
         </div>
-        <div className="flex-grow">
-          <div className="bg-base-100 h-full">{children}</div>
-        </div>
+        <div className="h-full pl-56">{children}</div>
       </div>
     </div>
   );
