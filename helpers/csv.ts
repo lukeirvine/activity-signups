@@ -21,14 +21,14 @@ export const parseCsvToActivity = (file: File, weekId: string, dayId: string): P
               const activity: Activity = {
                 id: uuid(),
                 index,
-                name: row['name']?.trim() || '',
-                period: row['period']?.split(',').map(num => parseInt(num.trim())) || [],
-                headcount: parseInt(row['headcount']?.trim() || '0'),
+                name: row['Name']?.trim() || '',
+                period: row['Period']?.split(',').map(num => parseInt(num.trim())) || [],
+                headcount: parseInt(row['Headcount']?.trim() || '0'),
                 dayId,
                 weekId,
-                secondaryHeadcountName: row['secondaryHeadcountName']?.trim() || '',
-                secondaryHeadcount: parseInt(row['secondaryHeadcount']?.trim() || '0'),
-                notes: row['notes']?.trim() || '',
+                secondaryHeadcountName: row['Secondary Headcount Name']?.trim() || '',
+                secondaryHeadcount: parseInt(row['Secondary Headcount']?.trim() || '0'),
+                notes: row['Notes']?.trim() || '',
                 timeCreated: new Date().toISOString(),
                 timeUpdated: new Date().toISOString()
               };

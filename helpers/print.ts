@@ -9,7 +9,7 @@ async function fetchFont(url: string): Promise<Uint8Array> {
   return new Uint8Array(arrayBuffer);
 }
 
-export async function printActivitiesPDF(activities: { [key: string]: Activity }) {
+export async function printActivitiesPDF(activities: { [key: string]: Activity }, filename: string) {
   const pdfDoc = await PDFDocument.create();
 
   pdfDoc.registerFontkit(fontkit);
@@ -143,5 +143,5 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
 
   // Use FileSaver to save the PDF
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  saveAs(blob, 'activities.pdf');
+  saveAs(blob, filename);
 }

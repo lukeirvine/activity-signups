@@ -29,3 +29,12 @@ export function getEndDateFromStartDate(startDate: Date): Date {
   endDate.setDate(endDate.getDate() + 6);
   return endDate;
 }
+
+export function downloadCSV(data: string, filename: string): void {
+  const blob = new Blob([data], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+}

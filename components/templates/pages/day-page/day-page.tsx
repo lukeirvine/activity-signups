@@ -1,12 +1,17 @@
 import { useParams } from "next/navigation";
 import React from "react";
-import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import {
+  CloudArrowDownIcon,
+  CloudArrowUpIcon,
+  PrinterIcon,
+} from "@heroicons/react/24/outline";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
-import { Activities, Activity, Day } from "@/types/firebase-types";
+import { Activities, Activity, Day, Week } from "@/types/firebase-types";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import { printActivitiesPDF } from "@/helpers/print";
+import { convertDateToDay, downloadCSV } from "@/helpers/utils";
 
 type DayPageProps = {};
 
@@ -14,10 +19,15 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const params = useParams();
   const { dayid, weekid } = params;
   const dayId = typeof dayid === "string" ? dayid : dayid[0];
+  const weekId = typeof weekid === "string" ? weekid : weekid[0];
 
   const { data: day, loading: dayLoading } = useReadDoc<Day>({
     collectionId: `weeks/${weekid}/days`,
     docId: dayId,
+  });
+  const { data: week, loading: weekLoading } = useReadDoc<Week>({
+    collectionId: "weeks",
+    docId: weekId,
   });
   const { docs: activities, loading: activitiesLoading } =
     useListenCollection<Activity>({
@@ -27,25 +37,27 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
 
+  const exportFileName =
+    day && week
+      ? `activities-${week?.name}-${convertDateToDay(new Date(parseInt(day?.date || "")))}`
+      : "";
+
   const handlePrintPDF = async (activities: Activities) => {
     setIsPrintLoading(true);
-    await printActivitiesPDF(activities);
-    // await printActivitiesPDF({
-    //   asdf: {
-    //     name: "Wakeboard/Waterski",
-    //     period: [1],
-    //     headcount: 12,
-    //     secondaryHeadcountName: "",
-    //     secondaryHeadcount: 0,
-    //     notes: "Must ride with a buddy",
-    //     timeCreated: new Date().toISOString(),
-    //     timeUpdated: new Date().toISOString(),
-    //     dayId: "asdf",
-    //     weekId: "asdf",
-    //     index: 0,
-    //   },
-    // });
+    await printActivitiesPDF(activities, exportFileName + ".pdf");
     setIsPrintLoading(false);
+  };
+
+  const handleDownloadCSV = async () => {
+    let csv = `Period,Name,Headcount,Secondary Headcount Name,Secondary Headcount,Notes\n`;
+    const data = Object.values(activities || {})
+      ?.map((activity) => {
+        return `"${activity.period.join(",")}","${activity.name}","${activity.headcount}","${activity.secondaryHeadcountName}","${activity.secondaryHeadcount}","${activity.notes}"`;
+      })
+      .join("\n");
+    csv += data;
+
+    downloadCSV(csv, exportFileName + ".csv");
   };
 
   return (
@@ -74,6 +86,13 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
               tooltip="Upload CSV"
               icon={CloudArrowUpIcon}
             />
+            {activities && weekId && dayId && (
+              <IconButton
+                onClick={handleDownloadCSV}
+                tooltip="Download CSV"
+                icon={CloudArrowDownIcon}
+              />
+            )}
             <IconButton
               onClick={() => handlePrintPDF(activities)}
               tooltip="Print PDF"

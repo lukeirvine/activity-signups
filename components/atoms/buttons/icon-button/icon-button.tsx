@@ -14,7 +14,7 @@ const IconButton: React.FC<Readonly<IconButtonProps>> = ({
   loading,
 }) => {
   return (
-    <div className="tooltip" data-tip="Upload CSV">
+    <div className="tooltip" data-tip={tooltip}>
       <button className="btn btn-ghost btn-sm px-2" onClick={onClick}>
         {!loading && <Icon className="w-7 h-7" />}
         {loading && <div className="loading loading-spinner loading-sm"></div>}
