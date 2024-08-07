@@ -39,6 +39,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                       onClick={() => setIsAddWeekModalOpen(true)}
                       tooltip="Add Day"
                       icon={PlusIcon}
+                      tooltipPosition="bottom"
                     />
                   </div>
                 </div>
