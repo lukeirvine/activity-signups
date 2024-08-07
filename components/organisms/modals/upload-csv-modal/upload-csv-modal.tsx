@@ -6,7 +6,7 @@ import BasicForm from "@/components/molecules/basic-form/basic-form";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { FormErrors } from "@/hooks/use-form-validation";
 import { parseCsvToActivity } from "@/helpers/csv";
-import { setCollection } from "@/helpers/firebase";
+import { deleteCollection, setCollection } from "@/helpers/firebase";
 import { Activity } from "@/types/firebase-types";
 
 type UploadCSVModalProps = {
@@ -70,8 +70,21 @@ const UploadCSVModal: React.FC<Readonly<UploadCSVModalProps>> = ({
       console.log("FILE", file, typeof file);
       if (file) {
         const activities = await parseCsvToActivity(file, weekId, dayId);
-        console.log("ACTIVITY", activities);
-        const result = await setCollection<Activity>({
+
+        // delete existing activities
+        let result = await deleteCollection<Activity>({
+          collectionId: `weeks/${weekId}/days/${dayId}/activities`,
+        });
+        if (!result.success) {
+          setFormState((state) => ({
+            ...state,
+            submitError: [result.error || "Error saving activities."],
+            isSubmitting: false,
+          }));
+          return;
+        }
+
+        result = await setCollection<Activity>({
           collectionId: `weeks/${weekId}/days/${dayId}/activities`,
           data: activities,
         });
