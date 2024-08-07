@@ -29,22 +29,22 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const handlePrintPDF = async (activities: Activities) => {
     setIsPrintLoading(true);
-    // await printActivitiesPDF(activities);
-    await printActivitiesPDF({
-      asdf: {
-        name: "Wakeboard/Waterski",
-        period: [1],
-        headcount: 12,
-        secondaryHeadcountName: "",
-        secondaryHeadcount: 0,
-        notes: "Must ride with a buddy",
-        timeCreated: new Date().toISOString(),
-        timeUpdated: new Date().toISOString(),
-        dayId: "asdf",
-        weekId: "asdf",
-        index: 0,
-      },
-    });
+    await printActivitiesPDF(activities);
+    // await printActivitiesPDF({
+    //   asdf: {
+    //     name: "Wakeboard/Waterski",
+    //     period: [1],
+    //     headcount: 12,
+    //     secondaryHeadcountName: "",
+    //     secondaryHeadcount: 0,
+    //     notes: "Must ride with a buddy",
+    //     timeCreated: new Date().toISOString(),
+    //     timeUpdated: new Date().toISOString(),
+    //     dayId: "asdf",
+    //     weekId: "asdf",
+    //     index: 0,
+    //   },
+    // });
     setIsPrintLoading(false);
   };
 

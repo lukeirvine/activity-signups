@@ -24,7 +24,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
   const pageWidth = 8.5 * 72; // 612 points
   const pageHeight = 11 * 72; // 792 points
 
-  Object.values(activities).forEach(activity => {
+  Object.values(activities).sort((a, b) => a.period[0] - b.period[0]).forEach(activity => {
     const page = pdfDoc.addPage([pageWidth, pageHeight]);
     const { width, height } = page.getSize();
     
@@ -32,6 +32,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
     const fontSize = 12;
 
     const ml = 50;
+    const mr = 50;
     const mt = 120;
 
     let xpos = ml;
@@ -54,10 +55,10 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
     ypos -= 30;
     
     drawCenteredText(`Activity ${activity.period.join(', ')}`, ypos, sansSerifFont, fontSize);
-    ypos -= 40;
+    ypos -= 20;
 
     drawCenteredText(`${activity.notes}`, ypos, sansSerifFont, fontSize, rgb(1, 0, 0));
-    ypos -= 20;
+    ypos -= 40;
 
     // Highlight "First & Last Name"
     const highlightText = "First & Last Name";
@@ -84,43 +85,58 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
       font: sansSerifFont,
       color: rgb(0, 0, 0),
     });
-    ypos -= 20;
+    ypos -= 40;
 
-    page.drawText(`Period: ${activity.period.join(', ')}`, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0, 0),
-    });
-    ypos -= 20;
+    for (let i = 0; i < activity.headcount; i++) {
+      page.drawText(`${i + 1}`, {
+        x: ml + 20,
+        y: ypos,
+        size: fontSize,
+        font: sansSerifFont,
+        color: rgb(0, 0, 0),
+      });
+      ypos -= 5;
 
-    page.drawText(`Headcount: ${activity.headcount}`, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0, 0),
-    });
-    ypos -= 20;
+      page.drawLine({
+        start: { x: xpos, y: ypos },
+        // end mr away from the right edge
+        end: { x: width - mr, y: ypos },
+        thickness: 1,
+        color: rgb(0, 0, 0),
+      });
+      ypos -= 30;
+    }
 
-    page.drawText(`Secondary Headcount Name: ${activity.secondaryHeadcountName}`, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0, 0),
-    });
-    ypos -= 20;
+    if (activity.secondaryHeadcount > 0) {
+      page.drawText(`${activity.secondaryHeadcountName}`, {
+        x: ml,
+        y: ypos,
+        size: fontSize,
+        font: sansSerifFont,
+        color: rgb(0, 0, 0),
+      });
+      ypos -= 30;
 
-    page.drawText(`Secondary Headcount: ${activity.secondaryHeadcount}`, {
-      x: ml,
-      y: ypos,
-      size: fontSize,
-      font: timesRomanFont,
-      color: rgb(0, 0, 0),
-    });
-    ypos -= 20;
+      for (let i = 0; i < activity.secondaryHeadcount; i++) {
+        page.drawText(`${i + 1 + activity.headcount}`, {
+          x: xpos + 20,
+          y: ypos,
+          size: fontSize,
+          font: sansSerifFont,
+          color: rgb(0, 0, 0),
+        });
+        ypos -= 5;
+
+        page.drawLine({
+          start: { x: xpos, y: ypos },
+          // end mr away from the right edge
+          end: { x: width - mr, y: ypos },
+          thickness: 1,
+          color: rgb(0, 0, 0),
+        });
+        ypos -= 30;
+      }
+    }
   });
 
   const pdfBytes = await pdfDoc.save();
