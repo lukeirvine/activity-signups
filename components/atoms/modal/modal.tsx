@@ -2,6 +2,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import React, { Fragment, ReactNode, useEffect, useState } from "react";
+import CardTitle from "../text/card-title/card-title";
 
 type Variant = "narrow" | "default";
 
@@ -103,8 +104,8 @@ const Modal: React.FC<Readonly<ModalProps>> = ({
                 className={`flex-grow sm:flex-none relative sm:bottom-auto w-full mx-auto rounded-t-lg sm:rounded-tremor-default ${containerStyle} ${variantStyles[variant].container}`}
               >
                 {title && (
-                  <Dialog.Title className="text-lg font-bold mb-2">
-                    {title}
+                  <Dialog.Title>
+                    <CardTitle>{title}</CardTitle>
                   </Dialog.Title>
                 )}
                 {children}

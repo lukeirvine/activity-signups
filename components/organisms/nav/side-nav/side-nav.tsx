@@ -25,7 +25,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = () => {
             return (
               <li key={i}>
                 <Link
-                  href={`/${week.id}`}
+                  href={`/dashboard/${week.id}`}
                   className={`${week.id === weekId ? "active" : ""}`}
                 >
                   {week.name}
