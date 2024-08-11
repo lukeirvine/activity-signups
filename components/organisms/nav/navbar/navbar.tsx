@@ -11,6 +11,13 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
           <p className="text-xl">Activity Signups</p>
         </Link>
       </div>
+      <div className="navbar-end">
+        <ul className="menu menu-horizontal">
+          <li>
+            <Link href="/auth/login">Log In</Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

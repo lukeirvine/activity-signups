@@ -1,9 +1,10 @@
-import RootPage from "@/components/templates/pages/root-page/root-page";
+"use client";
+import DashboardPage from "@/components/templates/pages/dashboard-page/dashboard-page";
 
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <RootPage>{children}</RootPage>;
+  return <DashboardPage>{children}</DashboardPage>;
 }
