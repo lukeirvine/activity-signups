@@ -31,7 +31,7 @@ export const parseCsvToActivity = (file: File, weekId: string, dayId: string): P
                 weekId,
                 secondaryHeadcountName: row['Secondary Headcount Name']?.trim() || '',
                 secondaryHeadcount: parseInt(row['Secondary Headcount']?.trim() || '0'),
-                notes: row['Notes']?.split(';').map((note) => note.trim()) || [],
+                notes: row['Notes']?.split(';').map((note) => note.trim()) || [""],
                 timeCreated: new Date().toISOString(),
                 timeUpdated: new Date().toISOString()
               };

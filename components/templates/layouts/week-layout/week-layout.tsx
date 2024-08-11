@@ -62,7 +62,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
           </div>
           {week && <TabNav />}
         </div>
-        {children}
+        {week && children}
       </PageContainer>
       {week && (
         <AddDayModal
