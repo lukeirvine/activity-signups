@@ -17,7 +17,7 @@ export function convertDateToDay(date: Date): string {
     case 6:
       return "Saturday";
   }
-  throw new Error("Invalid day");
+  throw new Error(`Invalid day: ${day}`);
 }
 
 export function stringToDate(date: string): Date {

@@ -44,7 +44,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const handlePrintPDF = async (activities: Activities) => {
     setIsPrintLoading(true);
-    await printActivitiesPDF(activities, exportFileName + ".pdf");
+    try {
+      await printActivitiesPDF(activities, exportFileName + ".pdf");
+    } catch (error) {
+      console.error(error);
+    }
     setIsPrintLoading(false);
   };
 
