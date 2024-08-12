@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, TextInput } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect } from "react";
 import useLoginForm from "@/hooks/use-login-form";
 import InputGroup from "@/components/atoms/form/input-group/input-group";
 import BasicForm from "@/components/molecules/basic-form/basic-form";
+import TextInput from "@/components/atoms/form/text-input/text-input";
 
 function LoginForm() {
   const {
@@ -26,10 +26,6 @@ function LoginForm() {
   useEffect(() => {
     document.getElementById("username")?.focus();
   }, []);
-
-  const inputContainerStyle = "flex flex-col gap-2";
-  const inputLabelStyle =
-    "text-tremor-default text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis font-semibold";
 
   return (
     <>
@@ -70,13 +66,12 @@ function LoginForm() {
           />
         </InputGroup>
       </BasicForm>
-      <div className="w-full flex justify-center mt-4">
+      <div className="w-full flex justify-center mt-2">
         <Link
-          href={`/reset-password${values.username.length > 0 ? `?username=${values.username}` : ""}`}
+          href={`/auth/reset-password${values.username.length > 0 ? `?username=${values.username}` : ""}`}
+          className="btn btn-link btn-primary"
         >
-          <Button variant="light" type="button">
-            Forgot Password?
-          </Button>
+          Forgot Password?
         </Link>
       </div>
     </>
