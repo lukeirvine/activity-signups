@@ -38,3 +38,8 @@ export function downloadCSV(data: string, filename: string): void {
     a.download = filename;
     a.click();
 }
+
+export function getInitials(name: string): string {
+  const names = name.split(" ");
+  return names.map((name) => name[0].toUpperCase()).join("");
+}
