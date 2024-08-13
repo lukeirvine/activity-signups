@@ -1,11 +1,17 @@
 import React, { ReactNode } from "react";
 
+type Variant = "primary" | "ghost" | "none";
+
+type Size = "sm" | "md" | "lg";
+
 type ButtonProps = {
   children: ReactNode;
   loading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  variant?: Variant;
+  size?: Size;
 };
 
 const Button: React.FC<Readonly<ButtonProps>> = ({
@@ -14,10 +20,24 @@ const Button: React.FC<Readonly<ButtonProps>> = ({
   disabled,
   onClick,
   className,
+  variant = "primary",
+  size = "md",
 }) => {
+  const btnVariant: Record<Variant, string> = {
+    primary: "btn btn-primary",
+    ghost: "btn btn-ghost",
+    none: "",
+  };
+
+  const btnSize: Record<Size, string> = {
+    sm: "btn-sm",
+    md: "",
+    lg: "btn-lg",
+  };
+
   return (
     <button
-      className={`btn btn-primary ${className}`}
+      className={`${btnVariant[variant]} ${btnSize[size]} ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

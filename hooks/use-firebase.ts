@@ -1,6 +1,7 @@
 import { collection, getDoc, getDocs, onSnapshot, query, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { fireStore } from "@/utils/Fire";
+import { fireAuth, fireStore } from "@/utils/Fire";
+import { signOut } from "firebase/auth";
 
 type FirebaseCollectionRequestParams = {
   collectionId: string;
@@ -128,4 +129,20 @@ export function useListenCollection<T>({
   }, [collectionId]);
 
   return { docs, loading };
+}
+
+export function useSignOut() {
+  const [loading, setLoading] = useState(false);
+
+  const signOutUser = async () => {
+    setLoading(true);
+    await signOut(fireAuth).then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      // An error happened.
+    });
+    setLoading(false);
+  };
+
+  return { signOutUser, loading };
 }

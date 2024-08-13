@@ -2,11 +2,14 @@ import Link from "next/link";
 import React from "react";
 import { getInitials } from "@/helpers/utils";
 import { useCurrentUser } from "@/hooks/use-user";
+import Button from "@/components/atoms/buttons/button/button";
+import { useSignOut } from "@/hooks/use-firebase";
 
 type NavbarProps = {};
 
 const Navbar: React.FC<Readonly<NavbarProps>> = () => {
   const user = useCurrentUser();
+  const { signOutUser, loading: loadingSignOut } = useSignOut();
 
   return (
     <div className="navbar bg-base-100 py-0">
@@ -41,7 +44,14 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a>Logout</a>
+                  <Button
+                    variant="none"
+                    onClick={signOutUser}
+                    loading={loadingSignOut}
+                    disabled={loadingSignOut}
+                  >
+                    Logout
+                  </Button>
                 </li>
               </ul>
             </div>
