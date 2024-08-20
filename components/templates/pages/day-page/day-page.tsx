@@ -1,10 +1,7 @@
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import {
-  CloudArrowDownIcon,
-  CloudArrowUpIcon,
-  PrinterIcon,
-} from "@heroicons/react/24/outline";
+import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import { Activities, Activity, Day, Week } from "@/types/firebase-types";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
@@ -12,11 +9,14 @@ import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/uploa
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import { printActivitiesPDF } from "@/helpers/print";
 import { convertDateToDay, downloadCSV } from "@/helpers/utils";
+import Dropdown from "@/components/atoms/dropdown/dropdown";
+import { deleteCollection, deleteDoc } from "@/helpers/firebase";
 
 type DayPageProps = {};
 
 const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const params = useParams();
+  const router = useRouter();
   const { dayid, weekid } = params;
   const dayId = typeof dayid === "string" ? dayid : dayid[0];
   const weekId = typeof weekid === "string" ? weekid : weekid[0];
@@ -36,6 +36,8 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
+  const [isDeleteDataLoading, setIsDeleteDataLoading] = React.useState(false);
+  const [isDeleteDayLoading, setIsDeleteDayLoading] = React.useState(false);
 
   const exportFileName =
     day && week
@@ -64,6 +66,48 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     downloadCSV(csv, exportFileName + ".csv");
   };
 
+  const handleDeleteData = async () => {
+    setIsDeleteDataLoading(true);
+    await deleteCollection<Activity>({
+      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+    });
+    setIsDeleteDataLoading(false);
+  };
+
+  const handleDeleteDay = async () => {
+    setIsDeleteDayLoading(true);
+    await deleteCollection<Activity>({
+      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+    });
+    await deleteDoc({
+      collectionId: `weeks/${weekid}/days`,
+      docId: dayId,
+    });
+    setIsDeleteDayLoading(false);
+    router.push(`/dashboard/${weekid}`);
+  };
+
+  let actions = [];
+  if (activities) {
+    actions.push({
+      label: "Download CSV",
+      onClick: handleDownloadCSV,
+      loading: false,
+    });
+    actions.push({
+      label: "Delete Data",
+      onClick: handleDeleteData,
+      loading: isDeleteDataLoading,
+    });
+  }
+  if (day) {
+    actions.push({
+      label: "Delete Day",
+      onClick: handleDeleteDay,
+      loading: isDeleteDayLoading,
+    });
+  }
+
   return (
     <div>
       {activitiesLoading && (
@@ -71,42 +115,39 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
           <div className="loading loading-dots loading-lg"></div>
         </div>
       )}
-      {activities === undefined && (
-        <div className="py-8 prose">
-          <h2 className="mb-2">No activities</h2>
-          <button
-            className="btn btn-primary"
+      <div className="mt-4 mb-12 flex flex-col items-start">
+        <div className="flex gap-2">
+          <IconButton
             onClick={() => setIsUploadCSVModalOpen(true)}
-          >
-            Upload CSV
-          </button>
-        </div>
-      )}
-      {activities && (
-        <div className="mt-4 mb-12 flex flex-col items-start">
-          <div className="prose flex gap-2">
-            <IconButton
-              onClick={() => setIsUploadCSVModalOpen(true)}
-              tooltip="Upload CSV"
-              icon={CloudArrowUpIcon}
-            />
-            {activities && weekId && dayId && (
-              <IconButton
-                onClick={handleDownloadCSV}
-                tooltip="Download CSV"
-                icon={CloudArrowDownIcon}
-              />
-            )}
+            tooltip="Upload CSV"
+            icon={CloudArrowUpIcon}
+          />
+          {activities && (
             <IconButton
               onClick={() => handlePrintPDF(activities)}
               tooltip="Print PDF"
               icon={PrinterIcon}
               loading={isPrintLoading}
             />
-          </div>
-          <ActivityTable activities={activities} />
+          )}
+          <Dropdown
+            button={
+              <div className="btn btn-ghost btn-sm px-2">
+                <EllipsisHorizontalIcon className="w-7 h-7" />
+              </div>
+            }
+            items={actions}
+          />
         </div>
-      )}
+        {activities && <ActivityTable activities={activities} />}
+        {activities === undefined && (
+          <div className="py-8 w-full flex justify-center">
+            <div className="prose">
+              <h2 className="mb-2">No activities</h2>
+            </div>
+          </div>
+        )}
+      </div>
       {weekid && dayid && (
         <UploadCSVModal
           isOpen={isUploadCSVModalOpen}
