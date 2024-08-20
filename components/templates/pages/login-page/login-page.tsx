@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import PagePadding from "@/components/atoms/containers/page-padding/page-padding";
 import LoginForm from "@/components/organisms/forms/login-form/login-form";
@@ -14,7 +14,9 @@ const LoginPage: React.FC<Readonly<LoginPageProps>> = () => {
             <div className="prose flex justify-center w-full">
               <h2>Login</h2>
             </div>
-            <LoginForm />
+            <Suspense>
+              <LoginForm />
+            </Suspense>
           </div>
         </div>
       </PageContainer>

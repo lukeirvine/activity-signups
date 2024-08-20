@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import useFormHooks from "./use-form-hooks";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { fireAuth } from "@/utils/Fire";
 
 interface LoginFormData {
