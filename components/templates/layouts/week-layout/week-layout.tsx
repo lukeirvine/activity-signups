@@ -1,6 +1,7 @@
 import { PlusIcon } from "@heroicons/react/16/solid";
-import { useParams } from "next/navigation";
-import React, { ReactNode } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { ReactNode, useState } from "react";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import AddDayModal from "@/components/organisms/modals/add-day-modal/add-day-modal";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
@@ -9,6 +10,8 @@ import { Day, Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import Button from "@/components/atoms/buttons/button/button";
+import Dropdown from "@/components/atoms/dropdown/dropdown";
+import { deleteDoc } from "@/helpers/firebase";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -16,6 +19,7 @@ type WeekLayoutProps = {
 
 const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const params = useParams();
+  const router = useRouter();
   const { weekid: rawWeekId, dayid } = params;
   const weekId = typeof rawWeekId === "string" ? rawWeekId : rawWeekId[0];
 
@@ -28,7 +32,18 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
     collectionId: `weeks/${weekId}/days`,
   });
 
-  const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
+  const [isAddWeekModalOpen, setIsAddWeekModalOpen] = useState(false);
+  const [isDeletingWeek, setIsDeletingWeek] = useState(false);
+
+  const deleteWeek = async () => {
+    setIsDeletingWeek(true);
+    await deleteDoc({
+      collectionId: `weeks`,
+      docId: weekId,
+    });
+    setIsDeletingWeek(false);
+    router.push(`/dashboard`);
+  };
 
   return (
     <>
@@ -36,15 +51,31 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
         <div className="flex flex-col gap-4">
           <div>
             {week && (
-              <div className="prose m-0 p-0">
+              <div className="m-0 p-0">
                 <div className="flex items-center gap-6">
-                  <h1 className="p-0 m-0">{week.name}</h1>
+                  <div className="prose">
+                    <h1 className="p-0 m-0">{week.name}</h1>
+                  </div>
                   <div className="flex items-center">
                     <IconButton
                       onClick={() => setIsAddWeekModalOpen(true)}
                       tooltip="Add Day"
                       icon={PlusIcon}
                       tooltipPosition="bottom"
+                    />
+                    <Dropdown
+                      button={
+                        <div className="btn btn-ghost btn-sm px-2">
+                          <EllipsisHorizontalIcon className="w-7 h-7" />
+                        </div>
+                      }
+                      items={[
+                        {
+                          label: "Delete Week",
+                          onClick: deleteWeek,
+                          loading: isDeletingWeek,
+                        },
+                      ]}
                     />
                   </div>
                 </div>
