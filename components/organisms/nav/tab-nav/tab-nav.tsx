@@ -17,7 +17,9 @@ const TabNav: React.FC<Readonly<TabNavProps>> = ({ days }) => {
 
   useEffect(() => {
     if (dayid === undefined && days && Object.values(days).length > 0) {
-      router.push(`/${weekid}/${Object.values(days || {})[0]?.id}`);
+      router.push(
+        `/${weekid}/${Object.values(days || {}).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]?.id}`,
+      );
     }
   }, [weekid, dayid, days, router]);
 
