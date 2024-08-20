@@ -1,5 +1,6 @@
 import { DatePicker } from "@tremor/react";
 import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import InputGroup from "@/components/atoms/form/input-group/input-group";
 import TextInput from "@/components/atoms/form/text-input/text-input";
 import Modal from "@/components/atoms/modal/modal";
@@ -50,6 +51,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
   isOpen,
   onClose,
 }) => {
+  const router = useRouter();
   const requiredFields: (keyof AddWeekData)[] = useMemo(() => {
     return ["name", "startDate"];
   }, []);
@@ -89,6 +91,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
       } else {
         reset();
         onClose();
+        if (result.uid) router.push(`/dashboard/${result.uid}`);
       }
     },
   });

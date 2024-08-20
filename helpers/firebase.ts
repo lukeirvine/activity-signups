@@ -5,6 +5,7 @@ import uuid from "react-uuid";
 type FirebaseWriteResponse = {
   success: boolean;
   error?: string;
+  uid?: string;
 }
 
 type FirebaseSetParams<T> = {
@@ -24,10 +25,10 @@ export async function setDoc<T>({
   docId,
   data,
 }: FirebaseSetParams<T>): Promise<FirebaseWriteResponse> {
+  const newId = docId || uuid();
   try {
-    const newId = uuid();
-    await firebaseSetDoc(doc(fireStore, collectionId, docId || newId), {...data, id: newId});
-    return { success: true };
+    await firebaseSetDoc(doc(fireStore, collectionId, newId), {...data, id: newId});
+    return { success: true, uid: newId };
   } catch (error) {
     console.error("Error adding document: ", error);
     return { success: false, error: "An error occurred" };

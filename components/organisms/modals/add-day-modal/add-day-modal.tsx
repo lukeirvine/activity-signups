@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { DatePicker } from "@tremor/react";
+import { useRouter } from "next/navigation";
 import Modal from "@/components/atoms/modal/modal";
 import useFormHooks from "@/hooks/use-form-hooks";
 import InputGroup from "@/components/atoms/form/input-group/input-group";
@@ -26,6 +27,7 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
   weekStartDate,
   weekId,
 }) => {
+  const router = useRouter();
   const weekEndDate = useMemo(() => {
     return getEndDateFromStartDate(weekStartDate);
   }, [weekStartDate]);
@@ -67,6 +69,7 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
       } else {
         reset();
         onClose();
+        if (result.uid) router.push(`/dashboard/${weekId}/${result.uid}`);
       }
     },
   });
