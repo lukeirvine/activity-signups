@@ -16,7 +16,7 @@ interface FirebaseDocReturn<T> {
   loading: boolean;
 }
 
-interface FirebaseCollection<T> {
+export interface FirebaseCollection<T> {
   [key: string]: T;
 }
 

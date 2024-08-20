@@ -4,10 +4,11 @@ import React, { ReactNode } from "react";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import AddDayModal from "@/components/organisms/modals/add-day-modal/add-day-modal";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
-import { useReadDoc } from "@/hooks/use-firebase";
-import { Week } from "@/types/firebase-types";
+import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
+import { Day, Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
+import Button from "@/components/atoms/buttons/button/button";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -21,6 +22,10 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const { data: week, loading: weekLoading } = useReadDoc<Week>({
     collectionId: "weeks",
     docId: weekId,
+  });
+
+  const { docs: days, loading: daysLoading } = useListenCollection<Day>({
+    collectionId: `weeks/${weekId}/days`,
   });
 
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
@@ -60,7 +65,20 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
               <div className="skeleton w-full max-w-xs h-10"></div>
             )}
           </div>
-          {week && <TabNav />}
+          {week && <TabNav days={days} />}
+          {!days && !daysLoading && (
+            <div className="w-full flex flex-col items-center">
+              <div className="prose">
+                <h2>No Days</h2>
+              </div>
+              <Button
+                className="btn-link"
+                onClick={() => setIsAddWeekModalOpen(true)}
+              >
+                Add Day to get started
+              </Button>
+            </div>
+          )}
         </div>
         {week && children}
       </PageContainer>
