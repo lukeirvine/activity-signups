@@ -21,19 +21,25 @@ const SideNav: React.FC<Readonly<SideNavProps>> = () => {
     <>
       <ul className="menu bg-base-200 w-56 h-full">
         {weeks &&
-          Object.values(weeks).map((week, i) => {
-            return (
-              <li key={i}>
-                <Link
-                  href={`/dashboard/${week.id}`}
-                  className={`${week.id === weekId ? "active" : ""}`}
-                >
-                  {week.name}
-                </Link>
-                <ul></ul>
-              </li>
-            );
-          })}
+          Object.values(weeks)
+            .sort(
+              (a, b) =>
+                new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime(),
+            )
+            .map((week, i) => {
+              return (
+                <li key={i}>
+                  <Link
+                    href={`/dashboard/${week.id}`}
+                    className={`${week.id === weekId ? "active" : ""}`}
+                  >
+                    {week.name}
+                  </Link>
+                  <ul></ul>
+                </li>
+              );
+            })}
         {weeksLoading && (
           <div className="flex justify-center w-full">
             <div className="loading loading-spinner loading-sm"></div>
