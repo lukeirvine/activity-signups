@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { UserIcon } from "@heroicons/react/24/solid";
 import { getInitials } from "@/helpers/utils";
 import { useCurrentUser } from "@/hooks/use-user";
 import Button from "@/components/atoms/buttons/button/button";
@@ -35,7 +36,11 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
               >
                 <div className="bg-neutral text-neutral-content w-8 rounded-full">
                   <span className="text-xs">
-                    {getInitials(user.displayName || "")}
+                    {user.displayName ? (
+                      getInitials(user.displayName)
+                    ) : (
+                      <UserIcon className="w-5 h-5" />
+                    )}
                   </span>
                 </div>
               </div>
