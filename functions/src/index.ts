@@ -10,9 +10,10 @@
 // import {onRequest} from "firebase-functions/v2/https";
 // import * as logger from "firebase-functions/logger";
 // import functions = require("firebase-functions");
-import {QueryDocumentSnapshot} from "firebase-admin/firestore";
 import {logger} from "firebase-functions";
 import {onDocumentDeleted} from "firebase-functions/v2/firestore";
+import * as firebaseTools from "firebase-tools";
+import * as functions from "firebase-functions";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -23,8 +24,8 @@ import {onDocumentDeleted} from "firebase-functions/v2/firestore";
 // });
 
 exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
-  // The document snapshot of the deleted document
-  const document: QueryDocumentSnapshot | undefined = event.data;
+  const document = event.data;
+  const weekId = event.params.weekId;
 
   if (!document?.exists) {
     logger.error("Document does not exist.");
@@ -32,5 +33,13 @@ exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
   }
 
   console.log("Document deleted", document.id);
-  return;
+  const path = `weeks/${weekId}/days`;
+
+  await firebaseTools.firestore
+    .delete(path, {
+      project: process.env.GCLOUD_PROJECT || "",
+      recursive: true,
+      force: true,
+      token: functions.config().fb.token,
+    });
 });
