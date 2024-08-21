@@ -10,10 +10,13 @@
 // import {onRequest} from "firebase-functions/v2/https";
 // import * as logger from "firebase-functions/logger";
 // import functions = require("firebase-functions");
+import {initializeApp} from "firebase-admin/app";
+initializeApp();
 import {logger} from "firebase-functions";
 import {onDocumentDeleted} from "firebase-functions/v2/firestore";
-import * as firebaseTools from "firebase-tools";
-import * as functions from "firebase-functions";
+// import * as firebaseTools from "firebase-tools";
+// import * as functions from "firebase-functions";
+import {firestore} from "firebase-admin";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -23,9 +26,10 @@ import * as functions from "firebase-functions";
 //   response.send("Hello from Firebase!");
 // });
 
+const db = firestore();
+
 exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
   const document = event.data;
-  const weekId = event.params.weekId;
 
   if (!document?.exists) {
     logger.error("Document does not exist.");
@@ -33,13 +37,39 @@ exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
   }
 
   console.log("Document deleted", document.id);
-  const path = `weeks/${weekId}/days`;
 
-  await firebaseTools.firestore
-    .delete(path, {
-      project: process.env.GCLOUD_PROJECT || "",
-      recursive: true,
-      force: true,
-      token: functions.config().fb.token,
-    });
+  const collections = await document.ref.listCollections();
+
+  for (const collection of collections) {
+    await deleteCollectionRecursive(collection, 100);
+  }
+  return;
 });
+
+function deleteCollectionRecursive(
+  collectionRef: firestore.CollectionReference, batchSize: number
+): Promise<void> {
+  const query = collectionRef.limit(batchSize);
+
+  return query.get().then(async (snapshot) => {
+    if (snapshot.size === 0) {
+      return;
+    }
+
+    const batch = db.batch();
+    for (const doc of snapshot.docs) {
+      const subCollections = await doc.ref.listCollections();
+      for (const subCollection of subCollections) {
+        await deleteCollectionRecursive(subCollection, batchSize);
+      }
+      batch.delete(doc.ref);
+    }
+
+    await batch.commit();
+
+    if (snapshot.size >= batchSize) {
+      // Recursively delete remaining documents
+      return deleteCollectionRecursive(collectionRef, batchSize);
+    }
+  });
+}
