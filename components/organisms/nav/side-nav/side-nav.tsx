@@ -1,64 +1,45 @@
-import { PlusIcon } from "@heroicons/react/16/solid";
 import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import AddWeekModal from "../../modals/add-week-modal/add-week-modal";
+import { usePathname } from "next/navigation";
 import { useListenCollection } from "@/hooks/use-firebase";
 import { Week } from "@/types/firebase-types";
 
-type SideNavProps = {};
+type Item = {
+  label: string;
+  href: string;
+};
 
-const SideNav: React.FC<Readonly<SideNavProps>> = () => {
-  const { docs: weeks, loading: weeksLoading } = useListenCollection<Week>({
-    collectionId: "weeks",
-  });
-  const params = useParams();
-  const { weekid: weekId } = params;
-  console.log("SIDE NAV", weekId);
+type SideNavProps = {
+  items?: Item[];
+  actionButton?: React.ReactNode;
+};
 
-  const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
+const SideNav: React.FC<Readonly<SideNavProps>> = ({ items, actionButton }) => {
+  // get pathname
+  const pathname = usePathname();
+
   return (
     <>
       <ul className="menu bg-base-200 w-56 h-full">
-        {weeks &&
-          Object.values(weeks)
-            .sort(
-              (a, b) =>
-                new Date(a.startDate).getTime() -
-                new Date(b.startDate).getTime(),
-            )
-            .map((week, i) => {
-              return (
-                <li key={i}>
-                  <Link
-                    href={`/dashboard/${week.id}`}
-                    className={`${week.id === weekId ? "active" : ""}`}
-                  >
-                    {week.name}
-                  </Link>
-                  <ul></ul>
-                </li>
-              );
-            })}
-        {weeksLoading && (
+        {items &&
+          items.map((item, i) => (
+            <li key={i}>
+              <Link
+                href={item.href}
+                className={`${pathname.includes(item.href) ? "active" : ""}`}
+              >
+                {item.label}
+              </Link>
+              <ul></ul>
+            </li>
+          ))}
+        {items === undefined && (
           <div className="flex justify-center w-full">
             <div className="loading loading-spinner loading-sm"></div>
           </div>
         )}
-        <li>
-          <button
-            className="btn btn-ghost"
-            onClick={() => setIsAddWeekModalOpen(true)}
-          >
-            <PlusIcon className="w-5 h-5" />
-            Add Week
-          </button>
-        </li>
+        {actionButton}
       </ul>
-      <AddWeekModal
-        isOpen={isAddWeekModalOpen}
-        onClose={() => setIsAddWeekModalOpen(false)}
-      />
     </>
   );
 };
