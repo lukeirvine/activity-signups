@@ -10,13 +10,18 @@ type ActivityTableProps = {
 const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   activities,
 }) => {
+  const dataClass = "whitespace-nowrap";
+
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
+    <div className="overflow-x-auto w-full">
+      <table className="table table-xs">
         <thead>
           <tr>
             <th>Period</th>
             <th>Name</th>
+            <th>Department</th>
+            <th>Cost</th>
+            <th>Highlighted Text</th>
             <th>Headcount</th>
             <th>Secondary Headcount Name</th>
             <th>Secondary Headcount</th>
@@ -29,17 +34,30 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
             .map((activity) => {
               return (
                 <tr key={activity.id}>
-                  <td>
+                  <td className={`${dataClass} text-right`}>
                     {activity.period[0]}
                     {activity.period.length > 1
                       ? `-${activity.period[activity.period.length - 1]}`
                       : ""}
                   </td>
-                  <td>{activity.name}</td>
-                  <td>{activity.headcount}</td>
-                  <td>{activity.secondaryHeadcountName}</td>
-                  <td>{activity.secondaryHeadcount}</td>
-                  <td>
+                  <td className={`${dataClass}`}>{activity.name}</td>
+                  <td className={`${dataClass}`}>{activity.department}</td>
+                  <td className={`${dataClass} text-right`}>
+                    {activity.cost || "--"}
+                  </td>
+                  <td className={`${dataClass}`}>
+                    {activity.highlightedText || "First & Last Name"}
+                  </td>
+                  <td className={`${dataClass} text-right`}>
+                    {activity.headcount}
+                  </td>
+                  <td className={`${dataClass}`}>
+                    {activity.secondaryHeadcountName || "--"}
+                  </td>
+                  <td className={`${dataClass} text-right`}>
+                    {activity.secondaryHeadcount}
+                  </td>
+                  <td className={`${dataClass}`}>
                     {activity.notes.map((note, index) => (
                       <div key={index}>{note}</div>
                     ))}
