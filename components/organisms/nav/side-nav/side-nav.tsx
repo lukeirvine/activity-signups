@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useListenCollection } from "@/hooks/use-firebase";
-import { Week } from "@/types/firebase-types";
 
 type Item = {
   label: string;

@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import SideNav from "@/components/organisms/nav/side-nav/side-nav";
 import PagePadding from "@/components/atoms/containers/page-padding/page-padding";
-import { useCurrentUser } from "@/hooks/use-user";
 import { useListenCollection } from "@/hooks/use-firebase";
 import { Week } from "@/types/firebase-types";
 import AddWeekModal from "@/components/organisms/modals/add-week-modal/add-week-modal";
+import ProtectedPage from "@/components/atoms/containers/protected-page/protected-page";
+import SidenavPageContainer from "@/components/atoms/containers/sidenav-page-container/sidenav-page-container";
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -15,32 +15,18 @@ type DashboardLayoutProps = {
 const DashboardLayout: React.FC<Readonly<DashboardLayoutProps>> = ({
   children,
 }) => {
-  const user = useCurrentUser();
-  const router = useRouter();
-
-  if (user === undefined) {
-    router.push("/auth/login");
-  }
-
   const { docs: weeks, loading: weeksLoading } = useListenCollection<Week>({
     collectionId: "weeks",
   });
-  const params = useParams();
-  const { weekid: weekId } = params;
 
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = React.useState(false);
 
   return (
     <>
       <PagePadding>
-        {user === null && (
-          <div className="w-screen h-full flex justify-center items center">
-            <div className="loading loading-dots loading-lg mb-40"></div>
-          </div>
-        )}
-        {user && (
-          <div>
-            <div className="fixed top-0 left-0 h-screen pt-16">
+        <ProtectedPage>
+          <SidenavPageContainer
+            sidenav={
               <SideNav
                 items={Object.values(weeks || {})
                   .sort(
@@ -64,10 +50,11 @@ const DashboardLayout: React.FC<Readonly<DashboardLayoutProps>> = ({
                   </li>
                 }
               />
-            </div>
-            <div className="h-full pl-56">{children}</div>
-          </div>
-        )}
+            }
+          >
+            {children}
+          </SidenavPageContainer>
+        </ProtectedPage>
       </PagePadding>
       <AddWeekModal
         isOpen={isAddWeekModalOpen}

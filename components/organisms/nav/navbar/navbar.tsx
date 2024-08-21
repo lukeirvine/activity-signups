@@ -18,6 +18,13 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
         <Link href="/" className="btn btn-ghost">
           <p className="text-xl">Activity Signups</p>
         </Link>
+        <ul className="menu menu-horizontal">
+          {user && (
+            <li>
+              <Link href="/settings">Settings</Link>
+            </li>
+          )}
+        </ul>
       </div>
       <div className="navbar-end">
         <ul className="menu menu-horizontal">

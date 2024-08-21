@@ -1,5 +1,5 @@
 "use client";
-import DashboardLayout from "@/components/templates/pages/dashboard-layout/dashboard-layout";
+import DashboardLayout from "@/components/templates/layouts/dashboard-layout/dashboard-layout";
 
 export default function Layout({
   children,
