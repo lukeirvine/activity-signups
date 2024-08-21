@@ -11,6 +11,8 @@ import { printActivitiesPDF } from "@/helpers/print";
 import { convertDateToDay, downloadCSV } from "@/helpers/utils";
 import Dropdown from "@/components/atoms/dropdown/dropdown";
 import { deleteCollection, deleteDoc } from "@/helpers/firebase";
+import useActionVerificationModal from "@/hooks/use-action-verification-modal";
+import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
 
 type DayPageProps = {};
 
@@ -39,6 +41,13 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const [isDeleteDataLoading, setIsDeleteDataLoading] = React.useState(false);
   const [isDeleteDayLoading, setIsDeleteDayLoading] = React.useState(false);
 
+  const {
+    actionVerification,
+    setActionVerification,
+    updateButtonLoading,
+    closeActionVerification,
+  } = useActionVerificationModal();
+
   const exportFileName =
     day && week
       ? `activities-${week?.name}-${convertDateToDay(new Date(day?.date || ""))}`
@@ -66,15 +75,37 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     downloadCSV(csv, exportFileName + ".csv");
   };
 
-  const handleDeleteData = async () => {
+  const deleteData = async () => {
     setIsDeleteDataLoading(true);
     await deleteCollection<Activity>({
       collectionId: `weeks/${weekid}/days/${dayId}/activities`,
     });
     setIsDeleteDataLoading(false);
+    closeActionVerification();
   };
 
-  const handleDeleteDay = async () => {
+  const handleDeleteData = () => {
+    setActionVerification({
+      isOpen: true,
+      title: "Delete Data",
+      message: "Are you sure you want to delete all data for this day?",
+      onClose: closeActionVerification,
+      buttons: [
+        {
+          label: "Delete",
+          variant: "primary",
+          onClick: deleteData,
+        },
+        {
+          label: "Cancel",
+          variant: "ghost",
+          onClick: closeActionVerification,
+        },
+      ],
+    });
+  };
+
+  const deleteDay = async () => {
     setIsDeleteDayLoading(true);
     await deleteCollection<Activity>({
       collectionId: `weeks/${weekid}/days/${dayId}/activities`,
@@ -85,6 +116,27 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
     setIsDeleteDayLoading(false);
     router.push(`/dashboard/${weekid}`);
+  };
+
+  const handleDeleteDay = () => {
+    setActionVerification({
+      isOpen: true,
+      title: "Delete Day",
+      message: "Are you sure you want to delete this day?",
+      onClose: closeActionVerification,
+      buttons: [
+        {
+          label: "Delete",
+          variant: "primary",
+          onClick: deleteDay,
+        },
+        {
+          label: "Cancel",
+          variant: "ghost",
+          onClick: closeActionVerification,
+        },
+      ],
+    });
   };
 
   let actions = [];
@@ -154,6 +206,10 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
           onClose={() => setIsUploadCSVModalOpen(false)}
         />
       )}
+      <ActionVerificationModal
+        {...actionVerification}
+        onClose={closeActionVerification}
+      />
     </div>
   );
 };
