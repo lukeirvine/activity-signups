@@ -1,6 +1,8 @@
-import { Button, ButtonVariant } from "@tremor/react";
 import Link from "next/link";
 import React, { Fragment, ReactNode, useEffect, useState } from "react";
+import Button, {
+  Variant as ButtonVariant,
+} from "@/components/atoms/buttons/button/button";
 
 interface ButtonBaseProps {
   label: string;
@@ -52,15 +54,11 @@ const ModalConfirmationMessage: React.FC<
   }, [buttons]);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col text-center pt-2 gap-2">
-        {message && (
-          <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-            {message}
-          </p>
-        )}
+        {message && <p className="">{message}</p>}
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
         {buttons?.map((button, i) => (
           <Fragment key={i}>
             {isButtonLinkProps(button) ? (

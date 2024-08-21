@@ -12,6 +12,8 @@ import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import Button from "@/components/atoms/buttons/button/button";
 import Dropdown from "@/components/atoms/dropdown/dropdown";
 import { deleteDoc } from "@/helpers/firebase";
+import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
+import useActionVerificationModal from "@/hooks/use-action-verification-modal";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -35,6 +37,13 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = useState(false);
   const [isDeletingWeek, setIsDeletingWeek] = useState(false);
 
+  const {
+    actionVerification,
+    setActionVerification,
+    updateButtonLoading,
+    closeActionVerification,
+  } = useActionVerificationModal();
+
   const deleteWeek = async () => {
     setIsDeletingWeek(true);
     await deleteDoc({
@@ -43,6 +52,27 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
     });
     setIsDeletingWeek(false);
     router.push(`/dashboard`);
+  };
+
+  const handleDeleteWeek = () => {
+    setActionVerification({
+      isOpen: true,
+      title: "Delete Week",
+      message: "Are you sure you want to delete this week?",
+      onClose: closeActionVerification,
+      buttons: [
+        {
+          label: "Delete",
+          variant: "primary",
+          onClick: deleteWeek,
+        },
+        {
+          label: "Cancel",
+          variant: "ghost",
+          onClick: closeActionVerification,
+        },
+      ],
+    });
   };
 
   return (
@@ -72,7 +102,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                       items={[
                         {
                           label: "Delete Week",
-                          onClick: deleteWeek,
+                          onClick: handleDeleteWeek,
                           loading: isDeletingWeek,
                         },
                       ]}
@@ -121,6 +151,10 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
           weekId={weekId}
         />
       )}
+      <ActionVerificationModal
+        {...actionVerification}
+        onClose={closeActionVerification}
+      />
     </>
   );
 };
