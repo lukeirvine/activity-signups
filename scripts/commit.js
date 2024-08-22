@@ -25,14 +25,12 @@ try {
 
   // Convert buffer to string and check for warnings
   const lintFixOutputString = lintFixOutput.toString();
-  console.log(`${YELLOW}${lintFixOutputString}${RESET}`)
-  console.log(`${BLUE}Contains warning: ${lintFixOutputString.includes('Warning:')}${RESET}`)
-  if (lintFixOutputString.includes('Warning:')) {
+  if (lintFixOutputString.includes('Warning')) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
   }
 
-  console.log('Lint fix completed without warnings.');
+  console.log(`${GREEN}Lint fix completed without warnings.${RESET}`);
 } catch (error) {
   console.error(`${RED}Lint fix failed. Aborting commit.${RESET}`);
   console.error(error);
