@@ -8,16 +8,31 @@ if (!commitMessage) {
   process.exit(1);
 }
 
+// ANSI escape codes for coloring
+const RED = '\x1b[31m';
+const RESET = '\x1b[0m';
+
 try {
-  // Run lint-fix and stop the script if it fails
-  execSync('npm run lint-fix', { stdio: 'inherit' });
+  // Run lint-fix and capture output
+  const lintFixOutput = execSync('npm run lint-fix', { stdio: 'pipe' }).toString();
+
+  // Print the output to the console to preserve color
+  process.stdout.write(lintFixOutput);
+
+  // Check for warnings in the output
+  if (lintFixOutput.includes('warning')) {
+    console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
+    process.exit(1);
+  }
+
+  console.log('Lint fix completed without warnings.');
 } catch (error) {
-  console.error('Lint fix failed. Aborting commit.');
+  console.error(`${RED}Lint fix failed. Aborting commit.${RESET}`);
   process.exit(1);
 }
 
 try {
-  // Proceed with the rest of the steps if lint-fix succeeds
+  // Proceed with the rest of the steps if lint-fix succeeds without warnings
   execSync('git add --all', { stdio: 'inherit' });
   execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
   execSync('git push', { stdio: 'inherit' });
