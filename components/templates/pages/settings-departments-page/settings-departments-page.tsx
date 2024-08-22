@@ -56,7 +56,7 @@ const SettingsDepartmentsPage: React.FC<
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <div className="prose">
         <h2>Departments</h2>
       </div>

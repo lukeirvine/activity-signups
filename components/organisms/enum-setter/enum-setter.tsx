@@ -109,7 +109,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
                     <TextInput
                       id={id}
                       name={id}
-                      className="pr-14"
+                      className="pr-14 input-sm"
                       placeholder="Enter value"
                       value={values[id]}
                       onChange={handleChange}
@@ -123,7 +123,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
                         onClick={() => removeField(id)}
                         type="button"
                       >
-                        <TrashIcon className="w-5 h-5" />
+                        <TrashIcon className="w-4 h-4 text-neutral" />
                       </Button>
                     </div>
                   </td>
