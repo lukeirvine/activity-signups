@@ -20,9 +20,14 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
         </Link>
         <ul className="menu menu-horizontal">
           {user && (
-            <li>
-              <Link href="/settings">Settings</Link>
-            </li>
+            <>
+              <li>
+                <Link href="/activities">Activities</Link>
+              </li>
+              <li>
+                <Link href="/settings">Settings</Link>
+              </li>
+            </>
           )}
         </ul>
       </div>
