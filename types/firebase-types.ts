@@ -2,12 +2,16 @@ export interface Week {
   id?: string;
   name: string;
   startDate: string;
+  timeCreated: string;
+  timeUpdated: string;
 }
 
 export interface Day {
   id?: string;
   date: string;
   weekId: string;
+  timeCreated: string;
+  timeUpdated: string;
 }
 
 export interface Activity {
@@ -24,6 +28,22 @@ export interface Activity {
   secondaryHeadcountName: string;
   secondaryHeadcount: number;
   notes: string[];
+  timeCreated: string;
+  timeUpdated: string;
+}
+
+export interface Occurrence {
+  id?: string;
+  activityId: string;
+  dayId: string;
+  weekId: string;
+  timeCreated: string;
+  timeUpdated: string;
+}
+
+export interface Department {
+  id?: string;
+  name: string;
   timeCreated: string;
   timeUpdated: string;
 }

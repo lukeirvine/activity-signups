@@ -58,6 +58,8 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
         data: {
           date: values.date || "",
           weekId,
+          timeCreated: new Date().toISOString(),
+          timeUpdated: new Date().toISOString(),
         },
       });
       if (!result.success) {

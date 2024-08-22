@@ -80,6 +80,8 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
         data: {
           name: values.name,
           startDate: values.startDate || "",
+          timeCreated: new Date().toISOString(),
+          timeUpdated: new Date().toISOString(),
         },
       });
       if (!result.success) {
