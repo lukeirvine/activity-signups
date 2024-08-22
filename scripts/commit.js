@@ -19,8 +19,9 @@ try {
   // Print the output to the console to preserve color
   process.stdout.write(lintFixOutput);
 
-  // Check for warnings in the output
-  if (lintFixOutput.includes('Warning:')) {
+  // Check for warnings in the output (case-insensitive)
+  const warningPattern = /warning:/i;
+  if (warningPattern.test(lintFixOutput)) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
   }
