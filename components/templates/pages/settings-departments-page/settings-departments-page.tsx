@@ -66,6 +66,7 @@ const SettingsDepartmentsPage: React.FC<
           label: dept.name,
         }))}
         onSetItems={saveDepartments}
+        addLabel="Add Department"
       />
     </div>
   );

@@ -14,11 +14,13 @@ export type Item = {
 type EnumSetterProps = {
   items: Item[];
   onSetItems: (items: Item[]) => Promise<void>;
+  addLabel?: string;
 };
 
 const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
   items,
   onSetItems,
+  addLabel = "Add Item",
 }) => {
   const initialData = items.reduce(
     (acc, item) => {
@@ -138,7 +140,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
             onClick={addNewField}
             type="button"
           >
-            <PlusIcon className="w-5 h-5" /> Add Department
+            <PlusIcon className="w-5 h-5" /> {addLabel}
           </Button>
           {isDirty && (
             <div className="flex">
