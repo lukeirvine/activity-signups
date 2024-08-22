@@ -1,12 +1,7 @@
 const { execSync } = require('child_process');
 
-const args = process.argv.slice(2);
-
-// Find the index of the "-m" argument
-const messageIndex = args.indexOf('-m');
-
-// Get the commit message, which should be the next argument after "-m"
-const commitMessage = messageIndex > -1 ? args[messageIndex + 1] : null;
+// The commit message will be the first argument after "npm run commit"
+const commitMessage = process.argv[2];
 
 if (!commitMessage) {
   console.error('Error: Commit message is required.');

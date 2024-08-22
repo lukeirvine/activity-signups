@@ -69,7 +69,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
 
   useEffect(() => {
     reset();
-  }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [items]);
 
   const addNewField = async () => {
     const newId = uuid();
