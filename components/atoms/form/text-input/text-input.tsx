@@ -1,5 +1,7 @@
 import React from "react";
 
+type Variant = "default" | "table";
+
 type TextInputProps = {
   id?: string;
   name: string;
@@ -10,6 +12,7 @@ type TextInputProps = {
   className?: string;
   type?: string;
   error?: boolean;
+  variant?: Variant;
 };
 
 const TextInput: React.FC<Readonly<TextInputProps>> = ({
@@ -22,7 +25,13 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
   className,
   type = "text",
   error,
+  variant = "default",
 }) => {
+  const variantStyles: Record<Variant, string> = {
+    default: "input-bordered",
+    table: "input-ghost",
+  };
+
   return (
     <input
       id={id}
@@ -32,7 +41,7 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className={`input px-3 text-sm input-bordered w-full ${className} ${error ? "input-error" : ""}`}
+      className={`input px-3 text-sm w-full ${variantStyles[variant]} ${className} ${error ? "input-error" : ""}`}
     />
   );
 };

@@ -13,6 +13,7 @@ type ButtonProps = {
   variant?: Variant;
   size?: Size;
   id?: string;
+  type?: "button" | "submit" | "reset";
 };
 
 const Button: React.FC<Readonly<ButtonProps>> = ({
@@ -24,6 +25,7 @@ const Button: React.FC<Readonly<ButtonProps>> = ({
   variant = "primary",
   size = "md",
   id,
+  type,
 }) => {
   const btnVariant: Record<Variant, string> = {
     primary: "btn btn-primary",
@@ -43,6 +45,7 @@ const Button: React.FC<Readonly<ButtonProps>> = ({
       onClick={onClick}
       disabled={disabled}
       id={id}
+      type={type}
     >
       {loading ? (
         <span className="loading loading-spinner loading-xs" />
