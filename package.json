@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "commit": "node scripts/commit.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
@@ -49,6 +50,7 @@
     "postcss": "^8",
     "prettier": "^3.2.4",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "run-script-os": "^1.1.6",
     "tailwindcss": "^3.4.7",
     "typescript": "^5"
   }
