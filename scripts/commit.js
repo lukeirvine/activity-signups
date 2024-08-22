@@ -13,14 +13,14 @@ const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
 
 try {
-  // Run lint-fix and capture output
-  const lintFixOutput = execSync('npm run lint-fix', { stdio: 'pipe' }).toString();
+  // Run lint-fix and capture output while forcing color
+  const lintFixOutput = execSync('FORCE_COLOR=1 npm run lint-fix', { stdio: 'pipe' }).toString();
 
   // Print the output to the console to preserve color
   process.stdout.write(lintFixOutput);
 
   // Check for warnings in the output
-  if (lintFixOutput.includes('warning')) {
+  if (lintFixOutput.includes('Warning:')) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
   }
