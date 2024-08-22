@@ -16,15 +16,15 @@ export interface Day {
 
 export interface Activity {
   id?: string;
-  index: number;
+  // index: number;
   name: string;
   cost: string;
   highlightedText: string;
   department: string;
-  period: number[];
+  // period: number[];
   headcount: number;
-  dayId: string;
-  weekId: string;
+  // dayId: string;
+  // weekId: string;
   secondaryHeadcountName: string;
   secondaryHeadcount: number;
   notes: string[];
@@ -35,6 +35,8 @@ export interface Activity {
 export interface Occurrence {
   id?: string;
   activityId: string;
+  index: number;
+  period: number[];
   dayId: string;
   weekId: string;
   timeCreated: string;
