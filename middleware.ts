@@ -4,7 +4,13 @@ export function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const searchParams = url.searchParams;
 
-  if (!url.pathname.startsWith('/dashboard')) {
+  if (url.pathname === '/settings') {
+    const newUrl = new URL('/settings/departments', req.url);
+    newUrl.search = searchParams.toString();
+    return NextResponse.redirect(newUrl);
+  }
+
+  if (!url.pathname.startsWith('/dashboard') && !url.pathname.includes('settings')) {
     const newUrl = new URL(`/dashboard${url.pathname}`, req.url);
     newUrl.search = searchParams.toString();
     return NextResponse.redirect(newUrl);
@@ -15,6 +21,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|public|fonts|images|auth|settings|activities).*)',
+    '/((?!_next/static|_next/image|favicon.ico|public|fonts|images|auth|activities).*)',
   ],
 };
