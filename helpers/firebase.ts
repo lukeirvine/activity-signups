@@ -17,7 +17,7 @@ type FirebaseSetParams<T> = {
 type FirebaseUpdateParams<T> = {
   collectionId: string;
   docId: string;
-  data: T;
+  data: Partial<T>;
 };
 
 export async function setDoc<T>({
