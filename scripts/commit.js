@@ -13,6 +13,8 @@ const YELLOW = '\x1b[33m';
 const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
+const BLUE = '\x1b[34m';
+const ORANGE = '\x1b[38;2;255;165;0m';
 
 try {
   // Run lint-fix and capture output while forcing color
@@ -24,6 +26,7 @@ try {
   // Convert buffer to string and check for warnings
   const lintFixOutputString = lintFixOutput.toString();
   console.log(`${YELLOW}${lintFixOutputString}${RESET}`)
+  console.log(`${BLUE}Contains warning: ${lintFixOutputString.includes('Warning:')}${RESET}`)
   if (lintFixOutputString.includes('Warning:')) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
