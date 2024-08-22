@@ -9,6 +9,8 @@ if (!commitMessage) {
 }
 
 // ANSI escape codes for coloring
+const YELLOW = '\x1b[33m';
+const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
 const RESET = '\x1b[0m';
 
@@ -21,6 +23,7 @@ try {
 
   // Convert buffer to string and check for warnings
   const lintFixOutputString = lintFixOutput.toString();
+  console.log(`${YELLOW}${lintFixOutputString}${RESET}`)
   if (lintFixOutputString.includes('Warning:')) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
