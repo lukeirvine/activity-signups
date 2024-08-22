@@ -14,14 +14,14 @@ const RESET = '\x1b[0m';
 
 try {
   // Run lint-fix and capture output while forcing color
-  const lintFixOutput = execSync('FORCE_COLOR=1 npm run lint-fix', { stdio: 'pipe' }).toString();
+  const lintFixOutput = execSync('FORCE_COLOR=1 npm run lint-fix', { stdio: 'pipe' });
 
   // Print the output to the console to preserve color
   process.stdout.write(lintFixOutput);
 
-  // Check for warnings in the output (case-insensitive)
-  const warningPattern = /warning:/i;
-  if (warningPattern.test(lintFixOutput)) {
+  // Convert buffer to string and check for warnings
+  const lintFixOutputString = lintFixOutput.toString();
+  if (lintFixOutputString.includes('Warning:')) {
     console.error(`${RED}Lint fix completed with warnings. Aborting commit.${RESET}`);
     process.exit(1);
   }
@@ -29,6 +29,7 @@ try {
   console.log('Lint fix completed without warnings.');
 } catch (error) {
   console.error(`${RED}Lint fix failed. Aborting commit.${RESET}`);
+  console.error(error);
   process.exit(1);
 }
 
