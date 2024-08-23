@@ -5,6 +5,7 @@ type InputGroupProps = {
   label?: string;
   error?: boolean;
   errorMessage?: string;
+  className?: string;
 };
 
 const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
@@ -12,9 +13,10 @@ const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
   label,
   error,
   errorMessage,
+  className,
 }) => {
   return (
-    <div>
+    <div className={className}>
       {label && (
         <div className="label">
           <span className="label-text">{label}</span>

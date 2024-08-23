@@ -2,6 +2,8 @@ import { useParams } from "next/navigation";
 import React from "react";
 import { useListenDoc } from "@/hooks/use-firebase";
 import { Activity } from "@/types/firebase-types";
+import FullPageLoading from "@/components/atoms/full-page-loading/full-page-loading";
+import ActivityForm from "@/components/organisms/forms/activity-form/activity-form";
 
 type ActivityPageProps = {};
 
@@ -15,7 +17,21 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
     docId: actId,
   });
 
-  return <div>{!activity ? "Loading..." : activity.name}</div>;
+  return (
+    <div>
+      {activityLoading && <FullPageLoading />}
+      {activity && (
+        <div className="flex flex-col gap-4 mb-10">
+          <div className="prose">
+            <h2>{activity.name}</h2>
+          </div>
+          <div className="">
+            <ActivityForm activity={activity} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ActivityPage;
