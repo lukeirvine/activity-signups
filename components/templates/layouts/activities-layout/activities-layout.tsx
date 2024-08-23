@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import PagePadding from "@/components/atoms/containers/page-padding/page-padding";
@@ -27,15 +27,6 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
     });
 
   const [createActivityLoading, setCreateActivityLoading] = useState(false);
-
-  useEffect(() => {
-    if (activities) {
-      const firstActivity = Object.values(activities).sort((a, b) =>
-        a.name.localeCompare(b.name),
-      )[0];
-      router.push(`/activities/${firstActivity.id}`);
-    }
-  }, [activities, router]);
 
   const createNewActivity = async () => {
     setCreateActivityLoading(true);

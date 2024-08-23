@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import Button from "@/components/atoms/buttons/button/button";
 
+type ButtonVariant = "full" | "minimal";
+
 type BasicFormProps = {
   children: ReactNode;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -8,6 +10,8 @@ type BasicFormProps = {
   showDisabled: boolean;
   showSubmitError: boolean;
   submitError?: string[];
+  buttonVariant?: ButtonVariant;
+  isDirty?: boolean;
 };
 
 const BasicForm: React.FC<Readonly<BasicFormProps>> = ({
@@ -17,7 +21,14 @@ const BasicForm: React.FC<Readonly<BasicFormProps>> = ({
   showDisabled,
   showSubmitError,
   submitError,
+  buttonVariant = "full",
+  isDirty,
 }) => {
+  const buttonClass: Record<ButtonVariant, string> = {
+    full: "w-full",
+    minimal: "btn-sm",
+  };
+
   return (
     <form method="post" onSubmit={handleSubmit} noValidate>
       <div className="flex flex-col gap-6">
@@ -25,8 +36,8 @@ const BasicForm: React.FC<Readonly<BasicFormProps>> = ({
         <div>
           <Button
             loading={isSubmitting}
-            disabled={showDisabled}
-            className="w-full"
+            disabled={showDisabled || isSubmitting || isDirty === false}
+            className={`${buttonClass[buttonVariant]}`}
           >
             Submit
           </Button>

@@ -1,6 +1,6 @@
 import React from "react";
 
-type Variant = "default" | "table";
+type Variant = "default" | "table" | "ghost";
 
 type SelectProps = {
   children?: React.ReactNode;
@@ -28,6 +28,7 @@ const Select: React.FC<Readonly<SelectProps>> = ({
   const variantStyles: Record<Variant, string> = {
     default: "select-bordered",
     table: "select-ghost",
+    ghost: "select-ghost w-full max-w-xs select-sm text-xs",
   };
 
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 
-type Variant = "default" | "table";
+type Variant = "default" | "table" | "ghost";
 
 type TextInputProps = {
   id?: string;
@@ -30,6 +30,7 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
   const variantStyles: Record<Variant, string> = {
     default: "input-bordered",
     table: "input-ghost",
+    ghost: "input-ghost w-full max-w-xs input-sm",
   };
 
   return (

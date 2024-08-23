@@ -25,7 +25,7 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
           <div className="prose">
             <h2>{activity.name}</h2>
           </div>
-          <div className="">
+          <div className="w-full max-w-lg">
             <ActivityForm activity={activity} />
           </div>
         </div>

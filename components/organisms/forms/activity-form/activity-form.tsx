@@ -54,6 +54,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
     showSubmitError,
     submitError,
     reset,
+    isDirty,
   } = useFormHooks({
     requiredFields,
     initialize: () => formData,
@@ -92,11 +93,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
       showDisabled={showDisabled}
       showSubmitError={showSubmitError}
       submitError={submitError}
+      buttonVariant="minimal"
+      isDirty={isDirty}
     >
       <InputGroup
         label="Activity Name"
         error={!!errorMessages?.name}
         errorMessage={errorMessages?.name}
+        variant="inline"
       >
         <TextInput
           id="name"
@@ -105,12 +109,15 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.name}
           onChange={handleChange}
           error={!!errorMessages?.name}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
         label="Cost"
         error={!!errorMessages?.cost}
         errorMessage={errorMessages?.cost}
+        variant="inline"
+        tooltip="String format like '$10' or '$10-$20'"
       >
         <TextInput
           id="cost"
@@ -119,12 +126,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.cost}
           onChange={handleChange}
           error={!!errorMessages?.cost}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
         label="Highlighted Text"
         error={!!errorMessages?.highlightedText}
         errorMessage={errorMessages?.highlightedText}
+        variant="inline"
       >
         <TextInput
           id="highlightedText"
@@ -133,12 +142,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.highlightedText}
           onChange={handleChange}
           error={!!errorMessages?.highlightedText}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
         label="Department"
         error={!!errorMessages?.department}
         errorMessage={errorMessages?.department}
+        variant="inline"
       >
         {departments && (
           <Select
@@ -147,6 +158,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
             value={values.department}
             onChange={handleChange}
             error={!!errorMessages?.department}
+            variant="ghost"
           >
             <option value="">Select Department</option>
             {Object.keys(departments)
@@ -168,6 +180,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
         label="Headcount"
         error={!!errorMessages?.headcount}
         errorMessage={errorMessages?.headcount}
+        variant="inline"
       >
         <TextInput
           id="headcount"
@@ -177,12 +190,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.headcount}
           onChange={handleChange}
           error={!!errorMessages?.headcount}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
         label="Secondary Headcount Name"
         error={!!errorMessages?.secondaryHeadcountName}
         errorMessage={errorMessages?.secondaryHeadcountName}
+        variant="inline"
       >
         <TextInput
           id="secondaryHeadcountName"
@@ -191,12 +206,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.secondaryHeadcountName}
           onChange={handleChange}
           error={!!errorMessages?.secondaryHeadcountName}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
         label="Secondary Headcount"
         error={!!errorMessages?.secondaryHeadcount}
         errorMessage={errorMessages?.secondaryHeadcount}
+        variant="inline"
       >
         <TextInput
           id="secondaryHeadcount"
@@ -206,6 +223,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           value={values.secondaryHeadcount}
           onChange={handleChange}
           error={!!errorMessages?.secondaryHeadcount}
+          variant="ghost"
         />
       </InputGroup>
       <InputGroup
