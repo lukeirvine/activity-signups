@@ -3,16 +3,22 @@ import React from "react";
 import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
-import { Activities, Activity, Day, Week } from "@/types/firebase-types";
-import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
+import {
+  Activities,
+  Activity,
+  Day,
+  Occurrence,
+  Week,
+} from "@/types/firebase-types";
 import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import { printActivitiesPDF } from "@/helpers/print";
-import { convertDateToDay, downloadCSV } from "@/helpers/utils";
+import { convertDateToDay } from "@/helpers/utils";
 import Dropdown from "@/components/atoms/dropdown/dropdown";
 import { deleteCollection, deleteDoc } from "@/helpers/firebase";
 import useActionVerificationModal from "@/hooks/use-action-verification-modal";
 import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
+import CreateOccurrenceForm from "@/components/organisms/forms/create-occurrence-form/create-occurrence-form";
 
 type DayPageProps = {};
 
@@ -31,9 +37,14 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     collectionId: "weeks",
     docId: weekId,
   });
+  const { docs: occurrences, loading: occurrencesLoading } =
+    useListenCollection<Occurrence>({
+      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+    });
+
   const { docs: activities, loading: activitiesLoading } =
     useListenCollection<Activity>({
-      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+      collectionId: `activities`,
     });
 
   const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
@@ -63,17 +74,17 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     setIsPrintLoading(false);
   };
 
-  const handleDownloadCSV = async () => {
-    let csv = `Period,Name,Headcount,Secondary Headcount Name,Secondary Headcount,Notes\n`;
-    const data = Object.values(activities || {})
-      ?.map((activity) => {
-        return `"${activity.period.join(",")}","${activity.name}","${activity.headcount}","${activity.secondaryHeadcountName}","${activity.secondaryHeadcount}","${activity.notes}"`;
-      })
-      .join("\n");
-    csv += data;
+  // const handleDownloadCSV = async () => {
+  //   let csv = `Period,Name,Headcount,Secondary Headcount Name,Secondary Headcount,Notes\n`;
+  //   const data = Object.values(activities || {})
+  //     ?.map((activity) => {
+  //       return `"${activity.period.join(",")}","${activity.name}","${activity.headcount}","${activity.secondaryHeadcountName}","${activity.secondaryHeadcount}","${activity.notes}"`;
+  //     })
+  //     .join("\n");
+  //   csv += data;
 
-    downloadCSV(csv, exportFileName + ".csv");
-  };
+  //   downloadCSV(csv, exportFileName + ".csv");
+  // };
 
   const deleteData = async () => {
     setIsDeleteDataLoading(true);
@@ -143,7 +154,8 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   if (activities) {
     actions.push({
       label: "Download CSV",
-      onClick: handleDownloadCSV,
+      // onClick: handleDownloadCSV,
+      onClick: () => {},
       loading: false,
     });
     actions.push({
@@ -191,7 +203,8 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
             items={actions}
           />
         </div>
-        {activities && <ActivityTable activities={activities} />}
+        {activities && <CreateOccurrenceForm activities={activities} />}
+        {/* {activities && <ActivityTable activities={activities} />} */}
         {activities === undefined && (
           <div className="py-8 w-full flex justify-center">
             <div className="prose">

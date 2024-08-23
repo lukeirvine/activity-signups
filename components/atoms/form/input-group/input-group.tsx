@@ -10,6 +10,7 @@ type InputGroupProps = {
   className?: string;
   variant?: Variant;
   tooltip?: string;
+  errorClassName?: string;
 };
 
 const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
@@ -20,6 +21,7 @@ const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
   className,
   variant = "default",
   tooltip,
+  errorClassName,
 }) => {
   const containerClass: Record<Variant, string> = {
     default: "",
@@ -32,7 +34,7 @@ const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
   };
 
   const errorElement = (
-    <div className="label">
+    <div className={`label ${errorClassName}`}>
       <span className="label-text-alt text-error">{errorMessage}</span>
     </div>
   );
