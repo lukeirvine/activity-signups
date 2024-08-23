@@ -115,7 +115,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       docId: dayId,
     });
     setIsDeleteDayLoading(false);
-    router.push(`/dashboard/${weekid}`);
+    router.push(`/weeks/${weekid}`);
   };
 
   const handleDeleteDay = () => {

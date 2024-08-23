@@ -71,7 +71,7 @@ const AddDayModal: React.FC<Readonly<AddDayModalProps>> = ({
       } else {
         reset();
         onClose();
-        if (result.uid) router.push(`/dashboard/${weekId}/${result.uid}`);
+        if (result.uid) router.push(`/weeks/${weekId}/${result.uid}`);
       }
     },
   });

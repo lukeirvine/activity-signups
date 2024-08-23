@@ -10,8 +10,8 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(newUrl);
   }
 
-  if (!url.pathname.startsWith('/dashboard') && !url.pathname.includes('settings')) {
-    const newUrl = new URL(`/dashboard${url.pathname}`, req.url);
+  if (!url.pathname.startsWith('/weeks') && !url.pathname.includes('settings')) {
+    const newUrl = new URL(`/weeks${url.pathname}`, req.url);
     newUrl.search = searchParams.toString();
     return NextResponse.redirect(newUrl);
   }

@@ -51,7 +51,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
       docId: weekId,
     });
     setIsDeletingWeek(false);
-    router.push(`/dashboard`);
+    router.push(`/weeks`);
   };
 
   const handleDeleteWeek = () => {

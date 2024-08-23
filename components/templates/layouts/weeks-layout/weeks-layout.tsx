@@ -8,13 +8,11 @@ import AddWeekModal from "@/components/organisms/modals/add-week-modal/add-week-
 import ProtectedPage from "@/components/atoms/containers/protected-page/protected-page";
 import SidenavPageContainer from "@/components/atoms/containers/sidenav-page-container/sidenav-page-container";
 
-type DashboardLayoutProps = {
+type WeeksLayoutProps = {
   children: ReactNode;
 };
 
-const DashboardLayout: React.FC<Readonly<DashboardLayoutProps>> = ({
-  children,
-}) => {
+const WeeksLayout: React.FC<Readonly<WeeksLayoutProps>> = ({ children }) => {
   const { docs: weeks, loading: weeksLoading } = useListenCollection<Week>({
     collectionId: "weeks",
   });
@@ -36,7 +34,7 @@ const DashboardLayout: React.FC<Readonly<DashboardLayoutProps>> = ({
                   )
                   .map((week) => ({
                     label: week.name,
-                    href: `/dashboard/${week.id}`,
+                    href: `/weeks/${week.id}`,
                   }))}
                 actionButton={
                   <li>
@@ -64,4 +62,4 @@ const DashboardLayout: React.FC<Readonly<DashboardLayoutProps>> = ({
   );
 };
 
-export default DashboardLayout;
+export default WeeksLayout;

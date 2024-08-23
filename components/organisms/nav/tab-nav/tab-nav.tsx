@@ -36,7 +36,7 @@ const TabNav: React.FC<Readonly<TabNavProps>> = ({ days }) => {
                 key={index}
                 role="tab"
                 className={`tab ${day.id === dayid ? "tab-active" : ""}`}
-                href={`/dashboard/${weekid}/${day.id}`}
+                href={`/weeks/${weekid}/${day.id}`}
               >
                 {convertDateToDay(new Date(day.date))}
               </Link>

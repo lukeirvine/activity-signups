@@ -93,7 +93,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
       } else {
         reset();
         onClose();
-        if (result.uid) router.push(`/dashboard/${result.uid}`);
+        if (result.uid) router.push(`/weeks/${result.uid}`);
       }
     },
   });
