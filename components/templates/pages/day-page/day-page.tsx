@@ -19,6 +19,7 @@ import { deleteCollection, deleteDoc } from "@/helpers/firebase";
 import useActionVerificationModal from "@/hooks/use-action-verification-modal";
 import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
 import CreateOccurrenceForm from "@/components/organisms/forms/create-occurrence-form/create-occurrence-form";
+import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 
 type DayPageProps = {};
 
@@ -39,7 +40,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   });
   const { docs: occurrences, loading: occurrencesLoading } =
     useListenCollection<Occurrence>({
-      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+      collectionId: `weeks/${weekid}/days/${dayId}/occurrences`,
     });
 
   const { docs: activities, loading: activitiesLoading } =
@@ -152,12 +153,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   let actions = [];
   if (activities) {
-    actions.push({
-      label: "Download CSV",
-      // onClick: handleDownloadCSV,
-      onClick: () => {},
-      loading: false,
-    });
+    // actions.push({
+    //   label: "Download CSV",
+    //   onClick: handleDownloadCSV,
+    //   loading: false,
+    // });
     actions.push({
       label: "Delete Data",
       onClick: handleDeleteData,
@@ -203,9 +203,13 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
             items={actions}
           />
         </div>
-        {activities && <CreateOccurrenceForm activities={activities} />}
-        {/* {activities && <ActivityTable activities={activities} />} */}
-        {activities === undefined && (
+        <div className="flex flex-col gap-4">
+          {activities && <CreateOccurrenceForm activities={activities} />}
+          {activities && occurrences && (
+            <ActivityTable activities={activities} occurrences={occurrences} />
+          )}
+        </div>
+        {occurrences === undefined && (
           <div className="py-8 w-full flex justify-center">
             <div className="prose">
               <h2 className="mb-2">No activities</h2>

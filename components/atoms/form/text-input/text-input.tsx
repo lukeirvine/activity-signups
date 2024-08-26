@@ -13,6 +13,7 @@ type TextInputProps = {
   type?: string;
   error?: boolean;
   variant?: Variant;
+  autoComplete?: "on" | "off";
 };
 
 const TextInput: React.FC<Readonly<TextInputProps>> = ({
@@ -26,6 +27,7 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
   type = "text",
   error,
   variant = "default",
+  autoComplete = "on",
 }) => {
   const variantStyles: Record<Variant, string> = {
     default: "input-bordered",
@@ -43,6 +45,7 @@ const TextInput: React.FC<Readonly<TextInputProps>> = ({
       onChange={onChange}
       disabled={disabled}
       className={`input px-3 text-sm w-full ${variantStyles[variant]} ${className} ${error ? "input-error" : ""}`}
+      autoComplete={autoComplete}
     />
   );
 };

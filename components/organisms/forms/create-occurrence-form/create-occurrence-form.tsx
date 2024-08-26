@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import Button from "@/components/atoms/buttons/button/button";
 import Card from "@/components/atoms/containers/card/card";
 import InputGroup from "@/components/atoms/form/input-group/input-group";
@@ -6,7 +7,8 @@ import TextInput from "@/components/atoms/form/text-input/text-input";
 import { createTextChangeEvent } from "@/helpers/forms";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { FormErrors } from "@/hooks/use-form-validation";
-import { Activities, Activity } from "@/types/firebase-types";
+import { Activities, Activity, Occurrence } from "@/types/firebase-types";
+import { setDoc } from "@/helpers/firebase";
 
 type FormData = {
   period: string;
@@ -40,6 +42,11 @@ const customValidate = ({
 const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
   activities,
 }) => {
+  const params = useParams();
+  const { weekid, dayid } = params;
+  const weekId = typeof weekid === "string" ? weekid : weekid[0];
+  const dayId = typeof dayid === "string" ? dayid : dayid[0];
+
   const requiredFields: (keyof FormData)[] = useMemo(() => {
     return ["period", "id"];
   }, []);
@@ -63,7 +70,32 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
     requiredFields,
     initialize: () => formData,
     onValidate: customValidate,
-    onSubmit: async () => {},
+    onSubmit: async () => {
+      await setDoc<Occurrence>({
+        collectionId: `weeks/${weekId}/days/${dayId}/occurrences`,
+        data: {
+          activityId: values.id,
+          period: [parseInt(values.period)],
+          dayId,
+          weekId,
+          timeCreated: new Date().toISOString(),
+          timeUpdated: new Date().toISOString(),
+        },
+      });
+      setFormState((state) => ({
+        ...state,
+        values: {
+          ...state.values,
+          id: "",
+        },
+        isSubmitting: false,
+        isDirty: false,
+        hasSubmitted: false,
+        hasErrors: false,
+      }));
+      setSearchVal("");
+      document.getElementById("id")?.focus();
+    },
   });
 
   const [searchVal, setSearchVal] = useState("");
@@ -106,6 +138,7 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
         <InputGroup label="Activity">
           <div className="relative">
             <TextInput
+              id="id"
               name="id"
               type="text"
               value={searchVal}
@@ -113,9 +146,10 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
               placeholder="Activity"
               error={!!errorMessages?.id}
               className="input-sm"
+              autoComplete="off"
             />
             {searchResults.length > 0 && (
-              <Card className="absolute w-64 top-10" padding="thin">
+              <Card className="absolute w-64 top-10 z-10" padding="thin">
                 <ul className="menu menu-sm">
                   {searchResults.map((activity) => (
                     <li key={activity.id} className="">

@@ -35,7 +35,6 @@ export interface Activity {
 export interface Occurrence {
   id?: string;
   activityId: string;
-  index: number;
   period: number[];
   dayId: string;
   weekId: string;
@@ -53,3 +52,5 @@ export interface Department {
 export type Activities = { [key: string]: Activity };
 
 export type Departments = { [key: string]: Department };
+
+export type Occurrences = { [key: string]: Occurrence };
