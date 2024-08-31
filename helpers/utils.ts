@@ -43,3 +43,14 @@ export function getInitials(name: string): string {
   const names = name.split(" ");
   return names.map((name) => (name[0] || "").toUpperCase()).join("");
 }
+
+export function verifyPeriodInput(inputString: string): boolean {
+  // Remove any spaces
+  inputString = inputString.replace(/\s+/g, '');
+
+  // Regular expression to match the desired pattern
+  const pattern = /^[0-6](,[0-6])*$/;
+
+  // Test if the input string matches the pattern
+  return pattern.test(inputString);
+}
