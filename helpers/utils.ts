@@ -45,12 +45,23 @@ export function getInitials(name: string): string {
 }
 
 export function verifyPeriodInput(inputString: string): boolean {
-  // Remove any spaces
-  inputString = inputString.replace(/\s+/g, '');
+  // Trim spaces and normalize the input by replacing spaces around commas with just a comma
+  inputString = inputString.trim().replace(/\s*,\s*/g, ',');
 
-  // Regular expression to match the desired pattern
-  const pattern = /^[0-6](,[0-6])*$/;
+  // Split the input string by commas
+  const numbers = inputString.split(',').map(Number);
 
-  // Test if the input string matches the pattern
-  return pattern.test(inputString);
+  // Ensure all numbers are between 0 and 6 and there are no invalid numbers
+  if (!numbers.every(num => num >= 0 && num <= 6 && !isNaN(num))) {
+    return false;
+  }
+
+  // Check if the numbers are consecutive
+  for (let i = 0; i < numbers.length - 1; i++) {
+    if (numbers[i] + 1 !== numbers[i + 1]) {
+      return false; // Not consecutive
+    }
+  }
+
+  return true;
 }
