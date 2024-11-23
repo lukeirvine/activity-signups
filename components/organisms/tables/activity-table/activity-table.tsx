@@ -22,7 +22,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
 }) => {
   const dataClass = "whitespace-nowrap";
 
-  const handleDeleteActivity = async (occurrence: Occurrence) => {
+  const handleDeleteOccurrence = async (occurrence: Occurrence) => {
     if (occurrence.id) {
       await deleteDoc({
         collectionId: `weeks/${occurrence.weekId}/days/${occurrence.dayId}/occurrences`,
@@ -56,7 +56,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
                 <td>
                   <button
                     className="btn btn-ghost btn-xs"
-                    onClick={() => handleDeleteActivity(occurrence)}
+                    onClick={() => handleDeleteOccurrence(occurrence)}
                   >
                     <TrashIcon className="w-3 h-3" />
                   </button>
