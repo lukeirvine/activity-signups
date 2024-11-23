@@ -23,7 +23,6 @@ const SettingsLayout: React.FC<Readonly<SettingsLayoutProps>> = ({
                 items={[
                   { label: "Departments", href: "/settings/departments" },
                   { label: "Account", href: "/settings/account" },
-                  { label: "Billing", href: "/settings/billing" },
                 ]}
               />
             }

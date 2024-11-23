@@ -60,14 +60,16 @@ const SettingsDepartmentsPage: React.FC<
       <div className="prose">
         <h2>Departments</h2>
       </div>
-      <EnumSetter
-        items={Object.values(depts || {}).map((dept) => ({
-          id: dept.id || uuid(),
-          label: dept.name,
-        }))}
-        onSetItems={saveDepartments}
-        addLabel="Add Department"
-      />
+      <div className="max-w-96">
+        <EnumSetter
+          items={Object.values(depts || {}).map((dept) => ({
+            id: dept.id || uuid(),
+            label: dept.name,
+          }))}
+          onSetItems={saveDepartments}
+          addLabel="Add Department"
+        />
+      </div>
     </div>
   );
 };
