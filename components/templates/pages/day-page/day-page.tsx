@@ -203,7 +203,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
             items={actions}
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full">
           {activities && <CreateOccurrenceForm activities={activities} />}
           {activities && occurrences && (
             <ActivityTable activities={activities} occurrences={occurrences} />

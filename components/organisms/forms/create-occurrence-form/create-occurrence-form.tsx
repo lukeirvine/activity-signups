@@ -26,14 +26,32 @@ const customValidate = ({
 }): FormErrors<FormData> => {
   let errors: FormErrors<FormData> = {};
 
-  console.log("VALIDATE values", values);
-
-  // check if period is a valid number between 0 and 6
-  if (parseInt(values.period) < 0 || parseInt(values.period) > 6) {
+  let period = values.period.replace(/\s+/g, "");
+  if (!period.match(/^([0-6](,[0-6])*)?$/)) {
     errors.period = {
       type: "custom",
-      message: "Period must be between 0 and 6",
+      message:
+        "Period must be a comma separated list of sequential numbers between 0 and 6",
     };
+  } else {
+    const periodArray = period.split(",").map(Number);
+    const uniquePeriods = new Set(periodArray);
+    if (uniquePeriods.size !== periodArray.length) {
+      errors.period = {
+        type: "custom",
+        message: "Period must not contain duplicate numbers",
+      };
+    } else {
+      for (let i = 1; i < periodArray.length; i++) {
+        if (periodArray[i] !== periodArray[i - 1] + 1) {
+          errors.period = {
+            type: "custom",
+            message: "Period must be a sequential list of numbers",
+          };
+          break;
+        }
+      }
+    }
   }
 
   return errors;
@@ -51,7 +69,7 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
     return ["period", "id"];
   }, []);
   const formData: FormData = {
-    period: "0",
+    period: "",
     id: "",
   };
 
@@ -71,11 +89,12 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
     initialize: () => formData,
     onValidate: customValidate,
     onSubmit: async () => {
+      const periods = values.period.split(",").map(Number);
       await setDoc<Occurrence>({
         collectionId: `weeks/${weekId}/days/${dayId}/occurrences`,
         data: {
           activityId: values.id,
-          period: [parseInt(values.period)],
+          period: periods,
           dayId,
           weekId,
           timeCreated: new Date().toISOString(),
@@ -127,7 +146,7 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
         <InputGroup label="Period">
           <TextInput
             name="period"
-            type="number"
+            type="text"
             value={values.period}
             onChange={handleChange}
             placeholder="--"
