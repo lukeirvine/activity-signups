@@ -1,23 +1,42 @@
 import React from "react";
 import Link from "next/link";
-import { Activities, Occurrences } from "@/types/firebase-types";
+import { TrashIcon } from "@heroicons/react/16/solid";
+import {
+  Activities,
+  Departments,
+  Occurrence,
+  Occurrences,
+} from "@/types/firebase-types";
+import { deleteDoc } from "@/helpers/firebase";
 
 type ActivityTableProps = {
   activities: Activities;
   occurrences: Occurrences;
+  departments: Departments;
 };
 
 const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   activities,
   occurrences,
+  departments,
 }) => {
   const dataClass = "whitespace-nowrap";
+
+  const handleDeleteActivity = async (occurrence: Occurrence) => {
+    if (occurrence.id) {
+      await deleteDoc({
+        collectionId: `weeks/${occurrence.weekId}/days/${occurrence.dayId}/occurrences`,
+        docId: occurrence.id,
+      });
+    }
+  };
 
   return (
     <div className="overflow-x-auto w-full">
       <table className="table table-xs">
         <thead>
           <tr>
+            <th></th>
             <th>Period</th>
             <th>Name</th>
             <th>Department</th>
@@ -34,6 +53,14 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
             const activity = activities[occurrence.activityId];
             return (
               <tr key={activity.id}>
+                <td>
+                  <button
+                    className="btn btn-ghost btn-xs"
+                    onClick={() => handleDeleteActivity(occurrence)}
+                  >
+                    <TrashIcon className="w-3 h-3" />
+                  </button>
+                </td>
                 <td className={`${dataClass} text-right`}>
                   {occurrence.period[0]}
                   {occurrence.period.length > 1
@@ -48,7 +75,9 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
                     {activity.name}
                   </Link>
                 </td>
-                <td className={`${dataClass}`}>{activity.department}</td>
+                <td className={`${dataClass}`}>
+                  {departments[activity.department].name}
+                </td>
                 <td className={`${dataClass} text-right`}>
                   {activity.cost || "--"}
                 </td>

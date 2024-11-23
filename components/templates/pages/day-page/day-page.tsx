@@ -7,6 +7,7 @@ import {
   Activities,
   Activity,
   Day,
+  Department,
   Occurrence,
   Week,
 } from "@/types/firebase-types";
@@ -46,6 +47,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const { docs: activities, loading: activitiesLoading } =
     useListenCollection<Activity>({
       collectionId: `activities`,
+    });
+
+  const { docs: departments, loading: departmentsLoading } =
+    useListenCollection<Department>({
+      collectionId: `departments`,
     });
 
   const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
@@ -205,8 +211,12 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
         </div>
         <div className="flex flex-col gap-4 w-full">
           {activities && <CreateOccurrenceForm activities={activities} />}
-          {activities && occurrences && (
-            <ActivityTable activities={activities} occurrences={occurrences} />
+          {activities && occurrences && departments && (
+            <ActivityTable
+              activities={activities}
+              occurrences={occurrences}
+              departments={departments}
+            />
           )}
         </div>
         {occurrences === undefined && (
