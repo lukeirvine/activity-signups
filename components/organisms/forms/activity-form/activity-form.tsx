@@ -8,6 +8,7 @@ import { updateDoc } from "@/helpers/firebase";
 import { useListenCollection } from "@/hooks/use-firebase";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { Activity, Department } from "@/types/firebase-types";
+import { FormErrors } from "@/hooks/use-form-validation";
 
 interface ActivityData {
   name: string;
@@ -22,6 +23,21 @@ interface ActivityData {
 
 type ActivityFormProps = {
   activity: Activity;
+};
+
+const customValidate = ({
+  values,
+}: {
+  values: ActivityData;
+}): FormErrors<ActivityData> => {
+  let errors: FormErrors<ActivityData> = {};
+  if (values.secondaryHeadcount > 0 && !values.secondaryHeadcountName) {
+    errors.secondaryHeadcountName = {
+      type: "required",
+      message: "Secondary Headcount Name is required",
+    };
+  }
+  return errors;
 };
 
 const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
@@ -58,6 +74,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
   } = useFormHooks({
     requiredFields,
     initialize: () => formData,
+    onValidate: customValidate,
     onSubmit: async () => {
       // convert notes to array
       const notes = values.notes.split("\n");

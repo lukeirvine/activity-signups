@@ -45,9 +45,11 @@ const InputGroup: React.FC<Readonly<InputGroupProps>> = ({
       <div className={`${containerClass[variant]}`}>
         {label && (
           <div className="flex items-center flex-none">
-            {tooltip && <div className={`${tooltip ? "tooltip" : ""}`} data-tip={tooltip}>
-              <QuestionMarkCircleIcon className="w-3 h-3 text-content" />
-            </div>}
+            {tooltip && (
+              <div className={`${tooltip ? "tooltip" : ""}`} data-tip={tooltip}>
+                <QuestionMarkCircleIcon className="w-3 h-3 text-content" />
+              </div>
+            )}
             <div className={`label ${labelClass[variant]}`}>
               <span className="label-text">
                 {label}
