@@ -21,7 +21,6 @@ export interface Activity {
   cost: string;
   highlightedText: string;
   department: string;
-  period: number[];
   headcount: number;
   // dayId: string;
   // weekId: string;

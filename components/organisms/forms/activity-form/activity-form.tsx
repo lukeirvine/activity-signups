@@ -62,7 +62,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
       // convert notes to array
       const notes = values.notes.split("\n");
       const newId = uuid();
-      await updateDoc({
+      await updateDoc<Activity>({
         collectionId: "activities",
         docId: activity.id || newId,
         data: {
@@ -70,10 +70,10 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
           cost: values.cost || "",
           highlightedText: values.highlightedText || "",
           department: values.department,
-          headcount: values.headcount,
+          headcount: +values.headcount,
           secondaryHeadcountName: values.secondaryHeadcountName || "",
           secondaryHeadcount: values.secondaryHeadcount
-            ? values.secondaryHeadcount
+            ? +values.secondaryHeadcount
             : 0,
           notes: notes || [""],
           timeUpdated: new Date().toISOString(),
@@ -210,6 +210,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
         <TextInput
           id="secondaryHeadcountName"
           name="secondaryHeadcountName"
+          type="number"
           placeholder="Enter value"
           value={values.secondaryHeadcountName}
           onChange={handleChange}
