@@ -3,8 +3,8 @@ import React from "react";
 type TooltipPosition = "top" | "bottom" | "left" | "right";
 
 type IconButtonProps = {
-  onClick: () => void;
-  tooltip: string;
+  onClick?: () => void;
+  tooltip?: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   loading?: boolean;
   tooltipPosition?: TooltipPosition;
