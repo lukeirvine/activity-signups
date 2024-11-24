@@ -8,6 +8,7 @@ import {
   Occurrences,
 } from "@/types/firebase-types";
 import { deleteDoc } from "@/helpers/firebase";
+import useTableQueryParams from "@/hooks/use-table-query-params";
 
 type SortOption = "period" | "name" | "department";
 
@@ -22,7 +23,13 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   occurrences,
   departments,
 }) => {
-  const [sortBy, setSortBy] = useState<SortOption>("period");
+  const {
+    queryParamState: state,
+    updateQueryParams,
+  } = useTableQueryParams({
+    fields: ["sortBy"],
+    initialize: () => ({ sortBy: "period" }),
+  })
 
   const dataClass = "whitespace-nowrap";
 
@@ -51,7 +58,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
       return activityA.name.localeCompare(activityB.name);
     }
 
-    if (sortBy === "department") {
+    if (state.sortBy === "department") {
       if (departmentA !== departmentB) {
         return sortByDepartment();
       }
@@ -61,7 +68,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
       return sortByName();
     }
 
-    if (sortBy === "name") {
+    if (state.sortBy === "name") {
       if (activityA.name !== activityB.name) {
         return sortByName();
       }
@@ -96,8 +103,8 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
         <label className="text-xs mr-2">Sort by:</label>
         <select
           className="select select-xs text-xs pt-1 pb-1 mb-2"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortOption)}
+          value={state.sortBy || ''}
+          onChange={(e) => updateQueryParams({ sortBy: e.target.value })}
         >
           <option disabled>Sort by</option>
           {Object.values(sortOptions).map((option) => (
@@ -127,7 +134,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
             {Object.values(sortedOccurrences).map((occurrence) => {
               const activity = activities[occurrence.activityId];
               return (
-                <tr key={activity.id}>
+                <tr key={occurrence.id}>
                   <td>
                     <button
                       className="btn btn-ghost btn-xs"
