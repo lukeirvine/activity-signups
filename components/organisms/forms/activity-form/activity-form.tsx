@@ -83,6 +83,14 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
   });
 
   useEffect(() => {
+    const firstInput = document.getElementById("name") as HTMLInputElement;
+    if (firstInput && firstInput.value === "New Activity") {
+      firstInput.focus();
+      firstInput.select();
+    }
+  }, [])
+
+  useEffect(() => {
     reset();
   }, [activity]); // eslint-disable-line react-hooks/exhaustive-deps
 
