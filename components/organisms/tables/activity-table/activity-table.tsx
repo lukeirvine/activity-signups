@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import {
@@ -23,13 +23,10 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   occurrences,
   departments,
 }) => {
-  const {
-    queryParamState: state,
-    updateQueryParams,
-  } = useTableQueryParams({
+  const { queryParamState: state, updateQueryParams } = useTableQueryParams({
     fields: ["sortBy"],
     initialize: () => ({ sortBy: "period" }),
-  })
+  });
 
   const dataClass = "whitespace-nowrap";
 
@@ -50,13 +47,13 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
 
     const sortByPeriod = () => {
       return a.period[0] - b.period[0];
-    }
+    };
     const sortByDepartment = () => {
       return departmentA.localeCompare(departmentB);
-    }
+    };
     const sortByName = () => {
       return activityA.name.localeCompare(activityB.name);
-    }
+    };
 
     if (state.sortBy === "department") {
       if (departmentA !== departmentB) {
@@ -90,12 +87,12 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   type SortOptionData = {
     value: SortOption;
     label: string;
-  }
+  };
   const sortOptions: Record<SortOption, SortOptionData> = {
     period: { value: "period", label: "Period" },
     name: { value: "name", label: "Name" },
     department: { value: "department", label: "Department" },
-  }
+  };
 
   return (
     <div>
@@ -103,7 +100,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
         <label className="text-xs mr-2">Sort by:</label>
         <select
           className="select select-xs text-xs pt-1 pb-1 mb-2"
-          value={state.sortBy || ''}
+          value={state.sortBy || ""}
           onChange={(e) => updateQueryParams({ sortBy: e.target.value })}
         >
           <option disabled>Sort by</option>
