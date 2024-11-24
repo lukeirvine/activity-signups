@@ -4,7 +4,6 @@ import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import {
-  Activities,
   Activity,
   Day,
   Department,
@@ -21,6 +20,7 @@ import useActionVerificationModal from "@/hooks/use-action-verification-modal";
 import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
 import CreateOccurrenceForm from "@/components/organisms/forms/create-occurrence-form/create-occurrence-form";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
+import { enhanceOccurrences } from "@/helpers/data";
 
 type DayPageProps = {};
 
@@ -71,10 +71,16 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       ? `activities-${week?.name}-${convertDateToDay(new Date(day?.date || ""))}`
       : "";
 
-  const handlePrintPDF = async (activities: Activities) => {
+  const handlePrintPDF = async () => {
     setIsPrintLoading(true);
     try {
-      await printActivitiesPDF(activities, exportFileName + ".pdf");
+      if (occurrences && activities) {
+        console.log(enhanceOccurrences(occurrences, activities));
+        await printActivitiesPDF(
+          enhanceOccurrences(occurrences, activities),
+          exportFileName + ".pdf",
+        );
+      }
     } catch (error) {
       console.error(error);
     }
@@ -192,9 +198,9 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
             tooltip="Upload CSV"
             icon={CloudArrowUpIcon}
           />
-          {activities && (
+          {activities && occurrences && (
             <IconButton
-              onClick={() => handlePrintPDF(activities)}
+              onClick={handlePrintPDF}
               tooltip="Print PDF"
               icon={PrinterIcon}
               loading={isPrintLoading}

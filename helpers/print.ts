@@ -1,4 +1,4 @@
-import { Activity } from "@/types/firebase-types";
+import { Activity, EnhancedOccurrences, Occurrence } from "@/types/firebase-types";
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 import fontkit from '@pdf-lib/fontkit';
@@ -9,7 +9,7 @@ async function fetchFont(url: string): Promise<Uint8Array> {
   return new Uint8Array(arrayBuffer);
 }
 
-export async function printActivitiesPDF(activities: { [key: string]: Activity }, filename: string) {
+export async function printActivitiesPDF(enhancedOccurrences: EnhancedOccurrences, filename: string) {
   const pdfDoc = await PDFDocument.create();
 
   pdfDoc.registerFontkit(fontkit);
@@ -24,7 +24,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
   const pageWidth = 8.5 * 72; // 612 points
   const pageHeight = 11 * 72; // 792 points
 
-  Object.values(activities).sort((a, b) => {
+  Object.values(enhancedOccurrences).sort((a, b) => {
     // sort by period[0] first, then by department
     if (a.period[0] < b.period[0]) return -1;
     if (a.period[0] > b.period[0]) return 1;
@@ -34,7 +34,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
   }).forEach(activity => {
     const page = pdfDoc.addPage([pageWidth, pageHeight]);
     const { width, height } = page.getSize();
-    
+
     const titleSize = 40;
     const fontSize = 12;
 
@@ -60,7 +60,7 @@ export async function printActivitiesPDF(activities: { [key: string]: Activity }
 
     drawCenteredText(`${activity.name}${activity.cost?.length > 0 ? ` - ${activity.cost}` : ''}`, ypos, sansSerifFont, titleSize);
     ypos -= 30;
-    
+
     if (activity.notes.length > 0 && activity.notes[0].length > 0) {
       activity.notes.forEach((note) => {
         drawCenteredText(`${note}`, ypos, sansSerifFont, fontSize, rgb(1, 0, 0));

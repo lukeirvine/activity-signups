@@ -42,6 +42,8 @@ export interface Occurrence {
   timeUpdated: string;
 }
 
+export type EnhancedOccurrence = Occurrence & Activity;
+
 export interface Department {
   id?: string;
   name: string;
@@ -54,3 +56,5 @@ export type Activities = { [key: string]: Activity };
 export type Departments = { [key: string]: Department };
 
 export type Occurrences = { [key: string]: Occurrence };
+
+export type EnhancedOccurrences = { [key: string]: EnhancedOccurrence };
