@@ -88,7 +88,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
       firstInput.focus();
       firstInput.select();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     reset();
