@@ -1,6 +1,6 @@
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
-import { CloudArrowUpIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import { PrinterIcon } from "@heroicons/react/24/outline";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
 import {
@@ -10,7 +10,6 @@ import {
   Occurrence,
   Week,
 } from "@/types/firebase-types";
-import UploadCSVModal from "@/components/organisms/modals/upload-csv-modal/upload-csv-modal";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import { printActivitiesPDF } from "@/helpers/print";
 import { convertDateToDay } from "@/helpers/utils";
@@ -54,7 +53,6 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       collectionId: `departments`,
     });
 
-  const [isUploadCSVModalOpen, setIsUploadCSVModalOpen] = React.useState(false);
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
   const [isDeleteDataLoading, setIsDeleteDataLoading] = React.useState(false);
   const [isDeleteDayLoading, setIsDeleteDayLoading] = React.useState(false);
@@ -102,7 +100,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const deleteData = async () => {
     setIsDeleteDataLoading(true);
     await deleteCollection<Activity>({
-      collectionId: `weeks/${weekid}/days/${dayId}/activities`,
+      collectionId: `weeks/${weekid}/days/${dayId}/occurrences`,
     });
     setIsDeleteDataLoading(false);
     closeActionVerification();
@@ -193,11 +191,6 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       )}
       <div className="mt-4 mb-12 flex flex-col items-start">
         <div className="flex gap-2">
-          <IconButton
-            onClick={() => setIsUploadCSVModalOpen(true)}
-            tooltip="Upload CSV"
-            icon={CloudArrowUpIcon}
-          />
           {activities && occurrences && (
             <IconButton
               onClick={handlePrintPDF}
@@ -233,12 +226,6 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
           </div>
         )}
       </div>
-      {weekid && dayid && (
-        <UploadCSVModal
-          isOpen={isUploadCSVModalOpen}
-          onClose={() => setIsUploadCSVModalOpen(false)}
-        />
-      )}
       <ActionVerificationModal
         {...actionVerification}
         onClose={closeActionVerification}
