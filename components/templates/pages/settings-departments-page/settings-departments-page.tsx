@@ -68,6 +68,8 @@ const SettingsDepartmentsPage: React.FC<
           }))}
           onSetItems={saveDepartments}
           addLabel="Add Department"
+          confirmationTitle="Save Changes"
+          confirmationMessage="Are you sure you want to make these changes? All activities and occurrences associated with removed departments will be deleted."
         />
       </div>
     </div>

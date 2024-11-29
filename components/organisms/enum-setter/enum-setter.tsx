@@ -4,6 +4,7 @@ import uuid from "react-uuid";
 import Button from "@/components/atoms/buttons/button/button";
 import TextInput from "@/components/atoms/form/text-input/text-input";
 import useFormHooks from "@/hooks/use-form-hooks";
+import { useActionVerificationModalContext } from "@/components/contexts/action-verification-modal-context/action-verification-modal-context";
 
 export type Item = {
   label: string;
@@ -14,12 +15,16 @@ type EnumSetterProps = {
   items: Item[];
   onSetItems: (items: Item[]) => Promise<void>;
   addLabel?: string;
+  confirmationTitle?: string;
+  confirmationMessage?: string;
 };
 
 const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
   items,
   onSetItems,
   addLabel = "Add Item",
+  confirmationTitle,
+  confirmationMessage,
 }) => {
   const initialData = items.reduce(
     (acc, item) => {
@@ -31,6 +36,9 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
   const [requiredFields, setRequiredFields] = useState(
     items.map((item) => item.id),
   );
+
+  const { setActionVerification, closeActionVerification } =
+    useActionVerificationModalContext();
 
   useEffect(() => {
     setRequiredFields(items.map((item) => item.id));
@@ -55,14 +63,46 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
       // Handle your form submission logic here
       console.log(values);
       console.log("Required Fields:", requiredFields);
-      // wait 1 second
-      await onSetItems(
-        Object.keys(values).map((key) => ({ id: key, label: values[key] })),
-      );
-      // blur all inputs
-      Object.keys(values).forEach((id) => {
-        document.getElementById(id)?.blur();
-      });
+      const data = Object.keys(values).map((key) => ({
+        id: key,
+        label: values[key],
+      }));
+      const submit = async () => {
+        await onSetItems(data);
+        // blur all inputs
+        Object.keys(values).forEach((id) => {
+          document.getElementById(id)?.blur();
+        });
+      };
+      if (confirmationTitle && confirmationMessage) {
+        setActionVerification({
+          onClose: closeActionVerification,
+          isOpen: true,
+          title: confirmationTitle,
+          message: confirmationMessage,
+          buttons: [
+            {
+              label: "Save",
+              onClick: submit,
+              variant: "primary",
+              handleLoading: true,
+            },
+            {
+              label: "Cancel",
+              onClick: () => {
+                setFormState((prev) => ({
+                  ...prev,
+                  isSubmitting: false,
+                }));
+                closeActionVerification();
+              },
+              variant: "ghost",
+            },
+          ],
+        });
+      } else {
+        await submit();
+      }
     },
   });
 

@@ -55,7 +55,7 @@ const ModalConfirmationMessage: React.FC<
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col text-center pt-2 gap-2">
+      <div className="flex flex-col text-left pt-2 gap-2">
         {message && <p className="">{message}</p>}
       </div>
       <div className="flex flex-col gap-2">
