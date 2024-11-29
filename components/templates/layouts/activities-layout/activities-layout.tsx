@@ -11,6 +11,7 @@ import { useListenCollection } from "@/hooks/use-firebase";
 import { Activity, Department } from "@/types/firebase-types";
 import Button from "@/components/atoms/buttons/button/button";
 import { setDoc } from "@/helpers/firebase";
+import ActivityMenuHeader from "@/components/molecules/activity-menu-header/activity-menu-header";
 
 type ActivitiesLayoutProps = {
   children: ReactNode;
@@ -67,6 +68,7 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
           <SidenavPageContainer
             sidenav={
               <SideNav
+                header={<ActivityMenuHeader />}
                 groups={uniqueDepartments.map((dept) => ({
                   title: dept?.name || "No Department",
                   items: Object.values(activities || {})
