@@ -33,7 +33,7 @@ const SettingsDepartmentsPage: React.FC<
         updateDoc<Department>({
           collectionId: "departments",
           docId: item.id,
-          data: { name: item.label, timeCreated: new Date().toISOString() },
+          data: { name: item.label },
         }),
       ),
     );
@@ -43,8 +43,6 @@ const SettingsDepartmentsPage: React.FC<
       data: newItems.map((item) => ({
         id: item.id,
         name: item.label,
-        timeCreated: new Date().toISOString(),
-        timeUpdated: new Date().toISOString(),
       })),
     });
     // remove removed items

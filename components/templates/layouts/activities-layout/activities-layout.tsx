@@ -45,8 +45,6 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
         secondaryHeadcountName: "",
         secondaryHeadcount: 0,
         notes: [],
-        timeCreated: new Date().toISOString(),
-        timeUpdated: new Date().toISOString(),
       },
     });
     setCreateActivityLoading(false);

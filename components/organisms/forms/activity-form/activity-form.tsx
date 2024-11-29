@@ -93,7 +93,6 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
             ? +values.secondaryHeadcount
             : 0,
           notes: notes || [""],
-          timeUpdated: new Date().toISOString(),
         },
       });
     },

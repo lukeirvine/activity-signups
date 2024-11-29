@@ -97,8 +97,6 @@ const CreateOccurrenceForm: React.FC<Readonly<CreateOccurrenceFormProps>> = ({
           period: periods,
           dayId,
           weekId,
-          timeCreated: new Date().toISOString(),
-          timeUpdated: new Date().toISOString(),
         },
       });
       setFormState((state) => ({

@@ -2,16 +2,12 @@ export interface Week {
   id?: string;
   name: string;
   startDate: string;
-  timeCreated: string;
-  timeUpdated: string;
 }
 
 export interface Day {
   id?: string;
   date: string;
   weekId: string;
-  timeCreated: string;
-  timeUpdated: string;
 }
 
 export interface Activity {
@@ -27,8 +23,6 @@ export interface Activity {
   secondaryHeadcountName: string;
   secondaryHeadcount: number;
   notes: string[];
-  timeCreated: string;
-  timeUpdated: string;
 }
 
 export interface Occurrence {
@@ -37,8 +31,6 @@ export interface Occurrence {
   period: number[];
   dayId: string;
   weekId: string;
-  timeCreated: string;
-  timeUpdated: string;
 }
 
 export type EnhancedOccurrence = Occurrence & Activity;
@@ -46,8 +38,6 @@ export type EnhancedOccurrence = Occurrence & Activity;
 export interface Department {
   id?: string;
   name: string;
-  timeCreated: string;
-  timeUpdated: string;
 }
 
 export type Activities = { [key: string]: Activity };
