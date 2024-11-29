@@ -255,6 +255,7 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
         label="Notes"
         error={!!errorMessages?.notes}
         errorMessage={errorMessages?.notes}
+        tooltip="Separate lines with a semi-colon ( ; )"
       >
         <textarea
           id="notes"
