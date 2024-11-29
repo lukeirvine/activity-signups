@@ -74,28 +74,33 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
           document.getElementById(id)?.blur();
         });
       };
+      const onClose = () => {
+        setFormState((prev) => ({
+          ...prev,
+          isSubmitting: false,
+        }));
+        closeActionVerification();
+      };
+
       if (confirmationTitle && confirmationMessage) {
         setActionVerification({
-          onClose: closeActionVerification,
+          onClose: onClose,
           isOpen: true,
           title: confirmationTitle,
           message: confirmationMessage,
           buttons: [
             {
               label: "Save",
-              onClick: submit,
+              onClick: async () => {
+                await submit();
+                closeActionVerification();
+              },
               variant: "primary",
               handleLoading: true,
             },
             {
               label: "Cancel",
-              onClick: () => {
-                setFormState((prev) => ({
-                  ...prev,
-                  isSubmitting: false,
-                }));
-                closeActionVerification();
-              },
+              onClick: onClose,
               variant: "ghost",
             },
           ],
