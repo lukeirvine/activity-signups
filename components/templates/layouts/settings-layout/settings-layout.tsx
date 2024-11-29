@@ -22,6 +22,7 @@ const SettingsLayout: React.FC<Readonly<SettingsLayoutProps>> = ({
               <SideNav
                 items={[
                   { label: "Departments", href: "/settings/departments" },
+                  { label: "Activity Sets", href: "/settings/activity-sets" },
                   { label: "Account", href: "/settings/account" },
                 ]}
               />
