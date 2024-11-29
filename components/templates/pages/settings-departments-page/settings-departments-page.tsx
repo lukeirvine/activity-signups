@@ -59,12 +59,12 @@ const SettingsDepartmentsPage: React.FC<
         <h2>Departments</h2>
       </div>
       <div className="max-w-96">
-        <EnumSetter
+        <EnumSetter<Department>
           items={Object.values(depts || {}).map((dept) => ({
             id: dept.id || uuid(),
             label: dept.name,
           }))}
-          onSetItems={saveDepartments}
+          collectionId="departments"
           addLabel="Add Department"
           confirmationTitle="Save Changes"
           confirmationMessage="Are you sure you want to make these changes? All activities and occurrences associated with removed departments will be deleted."

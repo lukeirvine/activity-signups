@@ -35,12 +35,18 @@ export interface Occurrence {
 
 export type EnhancedOccurrence = Occurrence & Activity;
 
-export interface Department {
+export type EnumItem = {
   id?: string;
   name: string;
 }
 
+export interface Department extends EnumItem {}
+
+export interface ActivitySet extends EnumItem {}
+
 export type Activities = { [key: string]: Activity };
+
+export type ActivitySets = { [key: string]: ActivitySet };
 
 export type Departments = { [key: string]: Department };
 

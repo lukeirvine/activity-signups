@@ -5,6 +5,8 @@ import Button from "@/components/atoms/buttons/button/button";
 import TextInput from "@/components/atoms/form/text-input/text-input";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { useActionVerificationModalContext } from "@/components/contexts/action-verification-modal-context/action-verification-modal-context";
+import { deleteDoc, setCollection, updateDoc } from "@/helpers/firebase";
+import { EnumItem } from "@/types/firebase-types";
 
 export type Item = {
   label: string;
@@ -13,19 +15,19 @@ export type Item = {
 
 type EnumSetterProps = {
   items: Item[];
-  onSetItems: (items: Item[]) => Promise<void>;
   addLabel?: string;
   confirmationTitle?: string;
   confirmationMessage?: string;
+  collectionId: string;
 };
 
-const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
+const EnumSetter = <T extends EnumItem>({
   items,
-  onSetItems,
   addLabel = "Add Item",
   confirmationTitle,
   confirmationMessage,
-}) => {
+  collectionId,
+}: EnumSetterProps) => {
   const initialData = items.reduce(
     (acc, item) => {
       acc[item.id] = item.label;
@@ -68,7 +70,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
         label: values[key],
       }));
       const submit = async () => {
-        await onSetItems(data);
+        await saveChanges(data);
         // blur all inputs
         Object.keys(values).forEach((id) => {
           document.getElementById(id)?.blur();
@@ -114,6 +116,51 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
   useEffect(() => {
     reset();
   }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const saveChanges = async (changedItems: Item[]) => {
+    // array of items that already exist
+    const existingItems = changedItems.filter((changedItem) =>
+      items?.find((item) => item.id === changedItem.id),
+    );
+    // array of items that are new
+    const newItems = changedItems.filter(
+      (changedItem) => !items?.find((item) => item.id === changedItem.id),
+    );
+    // array of items that have been removed
+    const removedIds = items
+      .map((item) => item.id)
+      .filter(
+        (id) => !changedItems.find((changedItem) => changedItem.id === id),
+      );
+
+    // update existing items
+    await Promise.all(
+      existingItems.map((item) =>
+        updateDoc<T>({
+          collectionId: collectionId,
+          docId: item.id,
+          data: { name: item.label } as T,
+        }),
+      ),
+    );
+    // add new items
+    await setCollection<T>({
+      collectionId: collectionId,
+      data: newItems.map(
+        (item) =>
+          ({
+            id: item.id,
+            name: item.label,
+          }) as T,
+      ),
+    });
+    // remove removed items
+    await Promise.all(
+      removedIds.map((id) =>
+        deleteDoc({ collectionId: collectionId, docId: id }),
+      ),
+    );
+  };
 
   const addNewField = async () => {
     const newId = uuid();

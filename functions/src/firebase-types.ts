@@ -50,7 +50,16 @@ export interface Department {
   timeUpdated: string;
 }
 
+export interface ActivitySet {
+  id?: string;
+  name: string;
+  timeCreated: string;
+  timeUpdated: string;
+}
+
 export type Activities = { [key: string]: Activity };
+
+export type ActivitySets = { [key: string]: ActivitySet };
 
 export type Departments = { [key: string]: Department };
 
