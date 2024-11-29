@@ -227,7 +227,6 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
         <TextInput
           id="secondaryHeadcountName"
           name="secondaryHeadcountName"
-          type="number"
           placeholder="Enter value"
           value={values.secondaryHeadcountName}
           onChange={handleChange}

@@ -28,7 +28,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = ({
 
   return (
     <>
-      <ul className="menu bg-base-200 w-56 h-full">
+      <ul className="menu bg-base-200 w-56 h-full flex-nowrap overflow-auto pb-10">
         {items &&
           items.map((item, i) => (
             <li key={i}>
