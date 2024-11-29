@@ -28,7 +28,7 @@ const Select: React.FC<Readonly<SelectProps>> = ({
   const variantStyles: Record<Variant, string> = {
     default: "select-bordered",
     table: "select-ghost",
-    ghost: "select-ghost w-full max-w-xs select-sm text-xs",
+    ghost: "select-ghost select-sm text-xs w-auto",
   };
 
   return (

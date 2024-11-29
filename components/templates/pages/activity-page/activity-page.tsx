@@ -1,12 +1,13 @@
 import { useParams } from "next/navigation";
 import React from "react";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenDoc } from "@/hooks/use-firebase";
 import { Activity } from "@/types/firebase-types";
 import FullPageLoading from "@/components/atoms/full-page-loading/full-page-loading";
 import ActivityForm from "@/components/organisms/forms/activity-form/activity-form";
-import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import { deleteDoc } from "@/helpers/firebase";
+import { useActionVerificationModalContext } from "@/components/contexts/action-verification-modal-context/action-verification-modal-context";
+import Dropdown from "@/components/atoms/dropdown/dropdown";
 
 type ActivityPageProps = {};
 
@@ -16,10 +17,35 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
   const actId = typeof actid === "string" ? actid : actid[0];
   const [deleteLoading, setDeleteLoading] = React.useState(false);
 
+  const { actionVerification, setActionVerification, closeActionVerification } =
+    useActionVerificationModalContext();
+
   const { data: activity, loading: activityLoading } = useListenDoc<Activity>({
     collectionId: "activities",
     docId: actId,
   });
+
+  const handleDeleteClick = () => {
+    setActionVerification({
+      isOpen: true,
+      onClose: closeActionVerification,
+      title: `Delete ${activity?.name ?? "Activity"}`,
+      message: "Are you sure you want to delete this activity?",
+      buttons: [
+        {
+          label: "Delete",
+          variant: "primary",
+          onClick: handleDeleteActivity,
+          handleLoading: true,
+        },
+        {
+          label: "Cancel",
+          variant: "ghost",
+          onClick: closeActionVerification,
+        },
+      ],
+    });
+  };
 
   const handleDeleteActivity = async () => {
     setDeleteLoading(true);
@@ -30,6 +56,13 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
     setDeleteLoading(false);
   };
 
+  const actions = [
+    {
+      label: "Delete",
+      onClick: handleDeleteClick,
+    },
+  ];
+
   return (
     <div>
       {activityLoading && <FullPageLoading />}
@@ -39,10 +72,13 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
             <div className="prose">
               <h2>{activity.name}</h2>
             </div>
-            <IconButton
-              icon={TrashIcon}
-              loading={deleteLoading}
-              onClick={handleDeleteActivity}
+            <Dropdown
+              button={
+                <div className="btn btn-ghost btn-sm px-2">
+                  <EllipsisHorizontalIcon className="w-7 h-7" />
+                </div>
+              }
+              items={actions}
             />
           </div>
           <div className="w-full max-w-lg">
