@@ -66,6 +66,26 @@ exports.cleanOnActivityDelete = onDocumentDeleted(
   }
 );
 
+exports.cleanOnDepartmentDelete = onDocumentDeleted(
+  "departments/{departmentId}",
+  async (event) => {
+    const document = event.data;
+
+    if (!document?.exists) {
+      logger.error("Document does not exist.");
+      return;
+    }
+
+    const querySnapshot = await db.collection("activities")
+      .where("department", "==", document.id).get();
+    querySnapshot.forEach(async (doc) => {
+      await doc.ref.delete();
+    });
+
+    return;
+  }
+);
+
 function deleteCollectionRecursive(
   collectionRef: firestore.CollectionReference, batchSize: number
 ): Promise<void> {
