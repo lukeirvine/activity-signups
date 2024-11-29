@@ -6,7 +6,7 @@ export default function Home() {
     <main>
       <PageContainer>
         <div className="prose">
-          <h1>Mivoden Activity Signups Generator</h1>
+          <h1 className="text-primary">Mivoden Activity Signups Generator</h1>
           <p>
             Welcome to the Mivoden Activity Signups Generator. This is a tool to
             help you create signups for activities at Camp Mivoden.

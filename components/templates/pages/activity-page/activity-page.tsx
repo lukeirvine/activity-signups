@@ -69,7 +69,7 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
         <div className="flex flex-col gap-4 mb-10">
           <div className="flex items-center gap-2">
             <div className="prose">
-              <h2>{activity.name}</h2>
+              <h2 className="text-primary">{activity.name}</h2>
             </div>
             <Dropdown
               button={

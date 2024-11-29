@@ -97,9 +97,9 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
   return (
     <div>
       <div>
-        <label className="text-xs mr-2">Sort by:</label>
+        <label className="text-xs mr-2 text-base-content">Sort by:</label>
         <select
-          className="select select-xs text-xs pt-1 pb-1 mb-2"
+          className="select select-xs text-xs pt-1 pb-1 mb-2 text-base-content"
           value={state.sortBy || ""}
           onChange={(e) => updateQueryParams({ sortBy: e.target.value })}
         >
@@ -131,7 +131,7 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
             {Object.values(sortedOccurrences).map((occurrence) => {
               const activity = activities[occurrence.activityId];
               return (
-                <tr key={occurrence.id}>
+                <tr key={occurrence.id} className="text-base-content">
                   <td>
                     <button
                       className="btn btn-ghost btn-xs"

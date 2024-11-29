@@ -152,7 +152,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
                   <TextInput
                     id={id}
                     name={id}
-                    className="pr-14 input-sm"
+                    className="pr-14 input-sm text-base-content"
                     placeholder="Enter value"
                     value={values[id]}
                     onChange={handleChange}
@@ -166,7 +166,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
                       onClick={() => removeField(id)}
                       type="button"
                     >
-                      <TrashIcon className="w-4 h-4 text-neutral" />
+                      <TrashIcon className="w-4 h-4 text-base-content" />
                     </Button>
                   </div>
                 </td>
@@ -177,7 +177,7 @@ const EnumSetter: React.FC<Readonly<EnumSetterProps>> = ({
       <div className="flex flex-col gap-2">
         <Button
           variant="ghost"
-          className="w-full justify-start"
+          className="w-full justify-start text-base-content"
           onClick={addNewField}
           type="button"
         >

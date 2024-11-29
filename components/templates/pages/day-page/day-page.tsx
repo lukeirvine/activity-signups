@@ -202,7 +202,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
           <Dropdown
             button={
               <div className="btn btn-ghost btn-sm px-2">
-                <EllipsisHorizontalIcon className="w-7 h-7" />
+                <EllipsisHorizontalIcon className="w-7 h-7 text-base-content" />
               </div>
             }
             items={actions}

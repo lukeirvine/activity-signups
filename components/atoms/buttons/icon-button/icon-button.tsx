@@ -30,7 +30,7 @@ const IconButton: React.FC<Readonly<IconButtonProps>> = ({
       data-tip={tooltip}
     >
       <button className="btn btn-ghost btn-sm px-2" onClick={onClick}>
-        {!loading && <Icon className="w-7 h-7" />}
+        {!loading && <Icon className="w-7 h-7 text-base-content" />}
         {loading && <div className="loading loading-spinner loading-sm"></div>}
       </button>
     </div>

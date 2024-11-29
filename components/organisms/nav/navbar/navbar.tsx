@@ -5,6 +5,7 @@ import { getInitials } from "@/helpers/utils";
 import { useCurrentUser } from "@/hooks/use-user";
 import Button from "@/components/atoms/buttons/button/button";
 import { useSignOut } from "@/hooks/use-firebase";
+import Dropdown from "@/components/atoms/dropdown/dropdown";
 
 type NavbarProps = {};
 
@@ -30,6 +31,10 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
 
   const links = [
     {
+      href: "/",
+      text: "Weeks",
+    },
+    {
       href: "/activities",
       text: "Activities",
     },
@@ -54,10 +59,10 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
     <div className="navbar bg-base-100 py-0">
       <div className="navbar-start flex-grow w-full">
         <Link href="/" className="btn btn-ghost">
-          <p className="text-xl">Activity Signups</p>
+          <p className="text-xl text-primary">Activity Signups</p>
         </Link>
         <div className="hidden flex-none sm:block">
-          <ul className="menu menu-horizontal w-full">
+          <ul className="menu menu-horizontal w-full text-base-content">
             {user &&
               links.map((link, index) => (
                 <NavLink key={index} href={link.href}>
@@ -123,28 +128,30 @@ const Navbar: React.FC<Readonly<NavbarProps>> = () => {
               </li>
             )}
             {user && (
-              <div className="dropdown dropdown-end">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="avatar placeholder btn btn-circle btn-ghost"
-                >
-                  <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                    <span className="text-xs">
-                      {user.displayName ? (
-                        getInitials(user.displayName)
-                      ) : (
-                        <UserIcon className="w-5 h-5" />
-                      )}
-                    </span>
-                  </div>
-                </div>
-                <ul
-                  tabIndex={0}
-                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-                >
-                  <li>{logoutButton}</li>
-                </ul>
+              <div>
+                <Dropdown
+                  align="right"
+                  button={
+                    <div className="avatar placeholder btn btn-circle btn-ghost">
+                      <div className="bg-neutral text-neutral-content w-8 rounded-full">
+                        <span className="text-xs">
+                          {user.displayName ? (
+                            getInitials(user.displayName)
+                          ) : (
+                            <UserIcon className="w-5 h-5" />
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  }
+                  items={[
+                    {
+                      label: "Logout",
+                      onClick: signOutUser,
+                      loading: loadingSignOut,
+                    },
+                  ]}
+                />
               </div>
             )}
           </ul>

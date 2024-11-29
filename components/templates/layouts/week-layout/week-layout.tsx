@@ -84,7 +84,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
               <div className="m-0 p-0">
                 <div className="flex items-center gap-6">
                   <div className="prose">
-                    <h1 className="p-0 m-0">{week.name}</h1>
+                    <h1 className="p-0 m-0 text-primary">{week.name}</h1>
                   </div>
                   <div className="flex items-center">
                     <IconButton
@@ -96,7 +96,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                     <Dropdown
                       button={
                         <div className="btn btn-ghost btn-sm px-2">
-                          <EllipsisHorizontalIcon className="w-7 h-7" />
+                          <EllipsisHorizontalIcon className="w-7 h-7 text-base-content" />
                         </div>
                       }
                       items={[
@@ -109,7 +109,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                     />
                   </div>
                 </div>
-                <p className="m-0">
+                <p className="m-0 text-base-content">
                   {stringToDate(week.startDate).toLocaleDateString()} -{" "}
                   {getEndDateFromStartDate(
                     stringToDate(week.startDate),

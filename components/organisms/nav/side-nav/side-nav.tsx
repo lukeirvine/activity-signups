@@ -24,7 +24,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = ({ items, actionButton }) => {
             <li key={i}>
               <Link
                 href={item.href}
-                className={`${pathname.includes(item.href) ? "active" : ""}`}
+                className={`${pathname.includes(item.href) ? "active" : ""} text-base-content`}
               >
                 {item.label}
               </Link>
@@ -36,7 +36,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = ({ items, actionButton }) => {
             <div className="loading loading-spinner loading-sm"></div>
           </div>
         )}
-        {actionButton}
+        <div className="text-base-content">{actionButton}</div>
       </ul>
     </>
   );
