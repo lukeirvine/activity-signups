@@ -26,16 +26,20 @@ const WeeksLayout: React.FC<Readonly<WeeksLayoutProps>> = ({ children }) => {
           <SidenavPageContainer
             sidenav={
               <SideNav
-                items={Object.values(weeks || {})
-                  .sort(
-                    (a, b) =>
-                      new Date(a.startDate).getTime() -
-                      new Date(b.startDate).getTime(),
-                  )
-                  .map((week) => ({
-                    label: week.name,
-                    href: `/weeks/${week.id}`,
-                  }))}
+                groups={[
+                  {
+                    items: Object.values(weeks || {})
+                      .sort(
+                        (a, b) =>
+                          new Date(a.startDate).getTime() -
+                          new Date(b.startDate).getTime(),
+                      )
+                      .map((week) => ({
+                        label: week.name,
+                        href: `/weeks/${week.id}`,
+                      })),
+                  },
+                ]}
                 actionButton={
                   <li>
                     <button

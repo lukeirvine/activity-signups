@@ -8,7 +8,7 @@ import SideNav from "@/components/organisms/nav/side-nav/side-nav";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import LayoutTitleContainer from "@/components/atoms/containers/layout-title-container/layout-title-container";
 import { useListenCollection } from "@/hooks/use-firebase";
-import { Activity } from "@/types/firebase-types";
+import { Activity, Department } from "@/types/firebase-types";
 import Button from "@/components/atoms/buttons/button/button";
 import { setDoc } from "@/helpers/firebase";
 
@@ -20,6 +20,10 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
   children,
 }) => {
   const router = useRouter();
+
+  const { docs: departments } = useListenCollection<Department>({
+    collectionId: "departments",
+  });
 
   const { docs: activities, loading: activitiesLoading } =
     useListenCollection<Activity>({
@@ -51,6 +55,13 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
     }
   };
 
+  const uniqueDepartmentIds = new Set(
+    Object.values(activities || {}).map((activity) => activity.department),
+  );
+  const uniqueDepartments = Array.from(uniqueDepartmentIds)
+    .map((deptId) => departments?.[deptId])
+    .sort((a, b) => a?.name?.localeCompare(b?.name || "") ?? 0);
+
   return (
     <>
       <PagePadding>
@@ -58,12 +69,15 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
           <SidenavPageContainer
             sidenav={
               <SideNav
-                items={Object.values(activities || {})
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((activity) => ({
-                    label: activity.name,
-                    href: `/activities/${activity.id}`,
-                  }))}
+                groups={uniqueDepartments.map((dept) => ({
+                  title: dept?.name || "No Department",
+                  items: Object.values(activities || {})
+                    .filter((act) => act.department === (dept?.id ?? ""))
+                    .map((activity) => ({
+                      label: activity.name,
+                      href: `/activities/${activity.id}`,
+                    })),
+                }))}
                 actionButton={
                   <li>
                     <Button
