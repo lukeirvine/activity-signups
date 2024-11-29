@@ -46,6 +46,26 @@ exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
   return;
 });
 
+exports.cleanOnActivityDelete = onDocumentDeleted(
+  "activities/{activityId}",
+  async (event) => {
+    const document = event.data;
+
+    if (!document?.exists) {
+      logger.error("Document does not exist.");
+      return;
+    }
+
+    const querySnapshot = await db.collectionGroup("occurrences")
+      .where("activityId", "==", document.id).get();
+    querySnapshot.forEach(async (doc) => {
+      await doc.ref.delete();
+    });
+
+    return;
+  }
+);
+
 function deleteCollectionRecursive(
   collectionRef: firestore.CollectionReference, batchSize: number
 ): Promise<void> {

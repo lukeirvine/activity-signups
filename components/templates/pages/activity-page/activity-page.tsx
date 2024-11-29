@@ -15,9 +15,8 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
   const params = useParams();
   const { actid } = params;
   const actId = typeof actid === "string" ? actid : actid[0];
-  const [deleteLoading, setDeleteLoading] = React.useState(false);
 
-  const { actionVerification, setActionVerification, closeActionVerification } =
+  const { setActionVerification, closeActionVerification } =
     useActionVerificationModalContext();
 
   const { data: activity, loading: activityLoading } = useListenDoc<Activity>({
@@ -30,7 +29,8 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
       isOpen: true,
       onClose: closeActionVerification,
       title: `Delete ${activity?.name ?? "Activity"}`,
-      message: "Are you sure you want to delete this activity?",
+      message:
+        "Are you sure you want to delete this activity? All occurrences will be deleted as well.",
       buttons: [
         {
           label: "Delete",
@@ -48,12 +48,11 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
   };
 
   const handleDeleteActivity = async () => {
-    setDeleteLoading(true);
     await deleteDoc({
       collectionId: "activities",
       docId: actId,
     });
-    setDeleteLoading(false);
+    closeActionVerification();
   };
 
   const actions = [
