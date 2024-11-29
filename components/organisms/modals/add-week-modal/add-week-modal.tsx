@@ -1,10 +1,10 @@
 import { DatePicker } from "@tremor/react";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import InputGroup from "@/components/atoms/form/input-group/input-group";
 import TextInput from "@/components/atoms/form/text-input/text-input";
 import Modal from "@/components/atoms/modal/modal";
-import { setDoc } from "@/helpers/firebase";
+import { setDoc, updateDoc } from "@/helpers/firebase";
 import { createTextChangeEvent } from "@/helpers/forms";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { FormError, FormErrors } from "@/hooks/use-form-validation";
@@ -16,6 +16,7 @@ import { Week } from "@/types/firebase-types";
 type MyComponentProps = {
   isOpen: boolean;
   onClose: () => void;
+  week?: Week | null;
 };
 
 interface AddWeekData {
@@ -50,14 +51,15 @@ const customValidate = ({
 const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
   isOpen,
   onClose,
+  week,
 }) => {
   const router = useRouter();
   const requiredFields: (keyof AddWeekData)[] = useMemo(() => {
     return ["name", "startDate"];
   }, []);
   const formData: AddWeekData = {
-    name: "",
-    startDate: undefined,
+    name: week?.name || "",
+    startDate: week?.startDate,
   };
   const {
     values,
@@ -75,7 +77,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
     initialize: () => formData,
     onValidate: customValidate,
     onSubmit: async () => {
-      const result = await setDoc<Week>({
+      const data = {
         collectionId: "weeks",
         data: {
           name: values.name,
@@ -83,12 +85,19 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
           timeCreated: new Date().toISOString(),
           timeUpdated: new Date().toISOString(),
         },
-      });
+      };
+      const result = week?.id
+        ? await updateDoc<Week>({ ...data, docId: week.id })
+        : await setDoc<Week>(data);
       if (!result.success) {
         setFormState((state) => ({
           ...state,
           submitError: [result.error || "Error saving week."],
           isSubmitting: false,
+          values: {
+            name: "",
+            startDate: undefined,
+          },
         }));
       } else {
         reset();
@@ -97,6 +106,17 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
       }
     },
   });
+
+  useEffect(() => {
+    console.log("Incoming Week changed", week);
+    setFormState((prev) => ({
+      ...prev,
+      values: {
+        startDate: week?.startDate,
+        name: week?.name || "",
+      },
+    }));
+  }, [week, setFormState, isOpen]);
 
   return (
     <Modal

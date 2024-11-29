@@ -62,7 +62,7 @@ const Modal: React.FC<Readonly<ModalProps>> = ({
   };
 
   const containerStyle =
-    "bg-tremor-background dark:bg-dark-tremor-background border-tremor-border dark:border-dark-tremor-border shadow-tremor-card dark:shadow-dark-tremor-card";
+    "bg-base-100 border-tremor-border dark:border-dark-tremor-border shadow-tremor-card dark:shadow-dark-tremor-card";
 
   return (
     <Transition show={open} as={Fragment}>

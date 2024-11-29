@@ -5,7 +5,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import PageContainer from "@/components/atoms/containers/page-container/page-container";
 import AddDayModal from "@/components/organisms/modals/add-day-modal/add-day-modal";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
-import { useListenCollection, useReadDoc } from "@/hooks/use-firebase";
+import { useListenCollection, useListenDoc } from "@/hooks/use-firebase";
 import { Day, Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
@@ -14,6 +14,7 @@ import Dropdown from "@/components/atoms/dropdown/dropdown";
 import { deleteDoc } from "@/helpers/firebase";
 import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
 import useActionVerificationModal from "@/hooks/use-action-verification-modal";
+import AddWeekModal from "@/components/organisms/modals/add-week-modal/add-week-modal";
 
 type WeekLayoutProps = {
   children: ReactNode;
@@ -25,7 +26,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const { weekid: rawWeekId, dayid } = params;
   const weekId = typeof rawWeekId === "string" ? rawWeekId : rawWeekId[0];
 
-  const { data: week, loading: weekLoading } = useReadDoc<Week>({
+  const { data: week, loading: weekLoading } = useListenDoc<Week>({
     collectionId: "weeks",
     docId: weekId,
   });
@@ -35,6 +36,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   });
 
   const [isAddWeekModalOpen, setIsAddWeekModalOpen] = useState(false);
+  const [isAddDayModalOpen, setIsAddDayModalOpen] = useState(false);
   const [isDeletingWeek, setIsDeletingWeek] = useState(false);
 
   const {
@@ -88,7 +90,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                   </div>
                   <div className="flex items-center">
                     <IconButton
-                      onClick={() => setIsAddWeekModalOpen(true)}
+                      onClick={() => setIsAddDayModalOpen(true)}
                       tooltip="Add Day"
                       icon={PlusIcon}
                       tooltipPosition="bottom"
@@ -100,6 +102,10 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                         </div>
                       }
                       items={[
+                        {
+                          label: "Edit Week",
+                          onClick: () => setIsAddWeekModalOpen(true),
+                        },
                         {
                           label: "Delete Week",
                           onClick: handleDeleteWeek,
@@ -145,8 +151,8 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
       </PageContainer>
       {week && (
         <AddDayModal
-          isOpen={isAddWeekModalOpen}
-          onClose={() => setIsAddWeekModalOpen(false)}
+          isOpen={isAddDayModalOpen}
+          onClose={() => setIsAddDayModalOpen(false)}
           weekStartDate={new Date(week.startDate)}
           weekId={weekId}
         />
@@ -154,6 +160,11 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
       <ActionVerificationModal
         {...actionVerification}
         onClose={closeActionVerification}
+      />
+      <AddWeekModal
+        isOpen={isAddWeekModalOpen}
+        onClose={() => setIsAddWeekModalOpen(false)}
+        week={week}
       />
     </>
   );
