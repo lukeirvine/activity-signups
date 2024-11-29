@@ -13,10 +13,14 @@
 import {initializeApp} from "firebase-admin/app";
 initializeApp();
 import {logger} from "firebase-functions";
-import {onDocumentDeleted} from "firebase-functions/v2/firestore";
+import {
+  onDocumentDeleted,
+  onDocumentUpdated,
+} from "firebase-functions/v2/firestore";
 // import * as firebaseTools from "firebase-tools";
 // import * as functions from "firebase-functions";
 import {firestore} from "firebase-admin";
+import {Week} from "./firebase-types";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -35,8 +39,6 @@ exports.deleteChildren = onDocumentDeleted("weeks/{weekId}", async (event) => {
     logger.error("Document does not exist.");
     return;
   }
-
-  console.log("Document deleted", document.id);
 
   const collections = await document.ref.listCollections();
 
@@ -81,6 +83,33 @@ exports.cleanOnDepartmentDelete = onDocumentDeleted(
     querySnapshot.forEach(async (doc) => {
       await doc.ref.delete();
     });
+
+    return;
+  }
+);
+
+exports.changeDayDatesOnWeekChange = onDocumentUpdated(
+  "weeks/{weekId}",
+  async (event) => {
+    const weekId = event.params.weekId;
+    const beforeDoc = event.data?.before?.data() as Week;
+    const afterDoc = event.data?.after?.data() as Week;
+
+    if (!beforeDoc || !afterDoc) {
+      logger.error("Document does not exist.");
+      return;
+    }
+
+    if (beforeDoc.startDate !== afterDoc.startDate) {
+      const querySnapshot = await db.collection(`weeks/${weekId}/days`).get();
+      querySnapshot.forEach(async (doc) => {
+        const prevDate = doc.data().date;
+        const prevDayOfWeek = new Date(prevDate).getDay();
+        const newDate = new Date(afterDoc.startDate);
+        newDate.setDate(newDate.getDate() + prevDayOfWeek);
+        await doc.ref.update({date: newDate.toISOString()});
+      });
+    }
 
     return;
   }
