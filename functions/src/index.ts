@@ -17,6 +17,7 @@ import {onCall} from "firebase-functions/v2/https";
 import {
   changeDayDatesOnWeekChange,
   cleanOnActivityDelete,
+  cleanOnActivitySetDelete,
   cleanOnDepartmentDelete,
   deleteWeeksChildren,
 } from "./firestore";
@@ -25,6 +26,7 @@ import {throwError, verifyPermissions} from "./utils";
 // firestore.ts
 exports.deleteWeeksChildren = deleteWeeksChildren;
 exports.cleanOnActivityDelete = cleanOnActivityDelete;
+exports.cleanOnActivitySetDelete = cleanOnActivitySetDelete;
 exports.cleanOnDepartmentDelete = cleanOnDepartmentDelete;
 exports.changeDayDatesOnWeekChange = changeDayDatesOnWeekChange;
 

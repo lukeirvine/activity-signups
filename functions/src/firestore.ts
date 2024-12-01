@@ -50,6 +50,26 @@ export const cleanOnActivityDelete = onDocumentDeleted(
   }
 );
 
+export const cleanOnActivitySetDelete = onDocumentDeleted(
+  "activity-sets/{activitySetId}",
+  async (event) => {
+    const document = event.data;
+
+    if (!document?.exists) {
+      logger.error("Document does not exist.");
+      return;
+    }
+
+    const querySnapshot = await db.collection("activities")
+      .where("activitySetId", "==", document.id).get();
+    querySnapshot.forEach(async (doc) => {
+      await doc.ref.delete();
+    });
+
+    return;
+  }
+);
+
 export const cleanOnDepartmentDelete = onDocumentDeleted(
   "departments/{departmentId}",
   async (event) => {
