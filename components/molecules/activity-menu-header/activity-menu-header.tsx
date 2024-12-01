@@ -9,11 +9,13 @@ import useTableQueryParams from "@/hooks/use-table-query-params";
 import { Activity, ActivitySet } from "@/types/firebase-types";
 import Button from "@/components/atoms/buttons/button/button";
 import { setDoc } from "@/helpers/firebase";
+import { useCookieContext } from "@/components/contexts/cookie-context/cookie-context";
 
 type ActivityMenuHeaderProps = {};
 
 const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
   const router = useRouter();
+  const { setCookie, getCookie } = useCookieContext();
 
   const { docs: activitySets } = useListenCollection<ActivitySet>({
     collectionId: "activity-sets",
@@ -31,13 +33,22 @@ const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
 
   // set the first activity set as the default activity set in the query params
   useEffect(() => {
-    const firstActivitySet = Object.values(activitySets || {}).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )[0];
-    if (firstActivitySet && !activitySetId) {
-      updateQueryParams({ "activity-set": firstActivitySet.id });
-    }
-  }, [activitySets, activitySetId, updateQueryParams]);
+    (async () => {
+      const cookieSet = await getCookie("activities/activity-set");
+      const cookieSetInActivitySets = activitySets?.[cookieSet];
+      const firstActivitySet = Object.values(activitySets || {}).sort((a, b) =>
+        a.name.localeCompare(b.name),
+      )[0];
+      if (!activitySetId) {
+        if (cookieSetInActivitySets) {
+          updateQueryParams({ "activity-set": cookieSet });
+        } else if (firstActivitySet?.id) {
+          updateQueryParams({ "activity-set": firstActivitySet.id });
+          await setCookie("activities/activity-set", firstActivitySet.id);
+        }
+      }
+    })();
+  }, [activitySets, activitySetId, updateQueryParams, setCookie, getCookie]);
 
   const createNewActivity = async () => {
     if (
@@ -78,9 +89,10 @@ const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
               className="bg-base-200 select-sm text-xs"
               name="activity-set"
               value={queryParamState["activity-set"] || ""}
-              onChange={(event) =>
-                updateQueryParams({ "activity-set": event.target.value })
-              }
+              onChange={async (event) => {
+                updateQueryParams({ "activity-set": event.target.value });
+                await setCookie("activities/activity-set", event.target.value);
+              }}
               variant="default"
             >
               {Object.values(activitySets).map((set) => (
