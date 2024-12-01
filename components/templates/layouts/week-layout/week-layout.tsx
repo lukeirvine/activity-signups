@@ -6,7 +6,7 @@ import PageContainer from "@/components/atoms/containers/page-container/page-con
 import AddDayModal from "@/components/organisms/modals/add-day-modal/add-day-modal";
 import TabNav from "@/components/organisms/nav/tab-nav/tab-nav";
 import { useListenCollection, useListenDoc } from "@/hooks/use-firebase";
-import { Day, Week } from "@/types/firebase-types";
+import { ActivitySet, Day, Week } from "@/types/firebase-types";
 import { getEndDateFromStartDate, stringToDate } from "@/helpers/utils";
 import IconButton from "@/components/atoms/buttons/icon-button/icon-button";
 import Button from "@/components/atoms/buttons/button/button";
@@ -29,6 +29,11 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
   const { data: week, loading: weekLoading } = useListenDoc<Week>({
     collectionId: "weeks",
     docId: weekId,
+  });
+
+  const { data: activitySet } = useListenDoc<ActivitySet>({
+    collectionId: "activity-sets",
+    docId: week?.activitySetId || "null",
   });
 
   const { docs: days, loading: daysLoading } = useListenCollection<Day>({
@@ -121,6 +126,15 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
                     stringToDate(week.startDate),
                   ).toLocaleDateString()}
                 </p>
+                {activitySet && (
+                  <p className="m-0 mt-1 text-base-content text-sm">
+                    <span className="font-semibold">Activity Set:</span>{" "}
+                    <span className="">{activitySet.name}</span>
+                  </p>
+                )}
+                {!activitySet && (
+                  <div className="w-full max-w-48 h-5 mt-1 skeleton" />
+                )}
               </div>
             )}
             {week === undefined && (
@@ -140,7 +154,7 @@ const WeekLayout: React.FC<Readonly<WeekLayoutProps>> = ({ children }) => {
               </div>
               <Button
                 className="btn-link"
-                onClick={() => setIsAddWeekModalOpen(true)}
+                onClick={() => setIsAddDayModalOpen(true)}
               >
                 Add Day to get started
               </Button>

@@ -14,3 +14,14 @@ export const enhanceOccurrences = (occurrences: Occurrences, activities: Activit
   });
   return enhancedObject;
 }
+
+type ObjectWithId = {
+  id?: string;
+}
+export const convertArrayToObject = <T extends ObjectWithId>(array: T[]) => {
+  const object: { [key: string]: T } = {};
+  array.forEach(item => {
+    object[item["id"] || ""] = item;
+  });
+  return object;
+}

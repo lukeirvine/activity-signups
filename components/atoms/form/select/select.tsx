@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 type Variant = "default" | "table" | "ghost";
@@ -38,7 +39,12 @@ const Select: React.FC<Readonly<SelectProps>> = ({
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className={`select px-3 text-sm w-full ${variantStyles[variant]} ${className} ${error ? "input-error" : ""}`}
+      className={clsx(
+        "select px-3 text-sm w-full",
+        variantStyles[variant],
+        className,
+        error && "select-error",
+      )}
     >
       {children}
     </select>

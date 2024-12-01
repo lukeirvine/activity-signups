@@ -2,6 +2,7 @@ export interface Week {
   id?: string;
   name: string;
   startDate: string;
+  activitySetId: string;
   timeCreated: string;
   timeUpdated: string;
 }

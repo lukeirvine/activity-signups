@@ -11,7 +11,9 @@ import { FormError, FormErrors } from "@/hooks/use-form-validation";
 
 import "react-datepicker/dist/react-datepicker.css";
 import BasicForm from "@/components/molecules/basic-form/basic-form";
-import { Week } from "@/types/firebase-types";
+import { ActivitySet, Week } from "@/types/firebase-types";
+import Select from "@/components/atoms/form/select/select";
+import { useReadCollection } from "@/hooks/use-firebase";
 
 type MyComponentProps = {
   isOpen: boolean;
@@ -22,6 +24,7 @@ type MyComponentProps = {
 interface AddWeekData {
   name: string;
   startDate: string | undefined;
+  activitySetId: string | undefined;
 }
 
 const customValidate = ({
@@ -54,12 +57,18 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
   week,
 }) => {
   const router = useRouter();
+
+  const { docs: activitySets } = useReadCollection<ActivitySet>({
+    collectionId: "activity-sets",
+  });
+
   const requiredFields: (keyof AddWeekData)[] = useMemo(() => {
-    return ["name", "startDate"];
+    return ["name", "startDate", "activitySetId"];
   }, []);
   const formData: AddWeekData = {
     name: week?.name || "",
     startDate: week?.startDate,
+    activitySetId: week?.activitySetId || "",
   };
   const {
     values,
@@ -82,6 +91,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
         data: {
           name: values.name,
           startDate: values.startDate || "",
+          activitySetId: values.activitySetId || "",
         },
       };
       const result = week?.id
@@ -95,6 +105,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
           values: {
             name: "",
             startDate: undefined,
+            activitySetId: undefined,
           },
         }));
       } else {
@@ -112,6 +123,7 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
       values: {
         startDate: week?.startDate,
         name: week?.name || "",
+        activitySetId: week?.activitySetId || "",
       },
     }));
   }, [week, setFormState, isOpen]);
@@ -164,6 +176,31 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
             onChange={handleChange}
             error={!!errorMessages?.name}
           />
+        </InputGroup>
+        <InputGroup
+          label="Activity Set"
+          error={!!errorMessages?.activitySetId}
+          errorMessage={errorMessages?.activitySetId}
+        >
+          {activitySets && (
+            <Select
+              name="activitySetId"
+              value={values.activitySetId || ""}
+              onChange={handleChange}
+              error={!!errorMessages?.activitySetId}
+              disabled={(week?.activitySetId?.length ?? 0) > 0}
+            >
+              <option value="" disabled>
+                Select an Activity Set
+              </option>
+              {Object.values(activitySets).map((set) => (
+                <option key={set.id} value={set.id}>
+                  {set.name}
+                </option>
+              ))}
+            </Select>
+          )}
+          {!activitySets && <div className="w-full h-12 skeleton"></div>}
         </InputGroup>
       </BasicForm>
     </Modal>

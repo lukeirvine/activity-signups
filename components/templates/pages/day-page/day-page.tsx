@@ -19,7 +19,7 @@ import useActionVerificationModal from "@/hooks/use-action-verification-modal";
 import ActionVerificationModal from "@/components/molecules/alerts/action-verification-modal/action-verification-modal";
 import CreateOccurrenceForm from "@/components/organisms/forms/create-occurrence-form/create-occurrence-form";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
-import { enhanceOccurrences } from "@/helpers/data";
+import { convertArrayToObject, enhanceOccurrences } from "@/helpers/data";
 
 type DayPageProps = {};
 
@@ -47,6 +47,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     useListenCollection<Activity>({
       collectionId: `activities`,
     });
+  const filteredActivities = convertArrayToObject<Activity>(
+    Object.values(activities || {}).filter(
+      (act) => act.activitySetId === week?.activitySetId,
+    ),
+  );
 
   const { docs: departments, loading: departmentsLoading } =
     useListenCollection<Department>({
@@ -72,10 +77,10 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const handlePrintPDF = async () => {
     setIsPrintLoading(true);
     try {
-      if (occurrences && activities) {
-        console.log(enhanceOccurrences(occurrences, activities));
+      if (occurrences && filteredActivities) {
+        console.log(enhanceOccurrences(occurrences, filteredActivities));
         await printActivitiesPDF(
-          enhanceOccurrences(occurrences, activities),
+          enhanceOccurrences(occurrences, filteredActivities),
           exportFileName + ".pdf",
         );
       }
@@ -162,7 +167,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   };
 
   let actions = [];
-  if (activities) {
+  if (occurrences) {
     // actions.push({
     //   label: "Download CSV",
     //   onClick: handleDownloadCSV,
@@ -191,7 +196,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       )}
       <div className="mt-4 mb-12 flex flex-col items-start">
         <div className="flex gap-2">
-          {activities && occurrences && (
+          {filteredActivities && occurrences && (
             <IconButton
               onClick={handlePrintPDF}
               tooltip="Print PDF"
@@ -209,10 +214,12 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
           />
         </div>
         <div className="flex flex-col gap-4 w-full">
-          {activities && <CreateOccurrenceForm activities={activities} />}
-          {activities && occurrences && departments && (
+          {filteredActivities && (
+            <CreateOccurrenceForm activities={filteredActivities} />
+          )}
+          {filteredActivities && occurrences && departments && (
             <ActivityTable
-              activities={activities}
+              activities={filteredActivities}
               occurrences={occurrences}
               departments={departments}
             />
