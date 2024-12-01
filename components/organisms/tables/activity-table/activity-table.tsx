@@ -116,14 +116,14 @@ const ActivityTable: React.FC<Readonly<ActivityTableProps>> = ({
           <thead>
             <tr>
               <th></th>
-              <th>Period</th>
+              <th className="text-right">Period</th>
               <th>Name</th>
               <th>Department</th>
-              <th>Cost</th>
+              <th className="text-right">Cost</th>
               <th>Highlighted Text</th>
-              <th>Headcount</th>
+              <th className="text-right">Headcount</th>
               <th>Secondary Headcount Name</th>
-              <th>Secondary Headcount</th>
+              <th className="text-right">Secondary Headcount</th>
               <th>Notes</th>
             </tr>
           </thead>
