@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PagePadding from "@/components/atoms/containers/page-padding/page-padding";
 import ProtectedPage from "@/components/atoms/containers/protected-page/protected-page";
 import SidenavPageContainer from "@/components/atoms/containers/sidenav-page-container/sidenav-page-container";
@@ -12,6 +12,7 @@ import { Activity, Department } from "@/types/firebase-types";
 import Button from "@/components/atoms/buttons/button/button";
 import { setDoc } from "@/helpers/firebase";
 import ActivityMenuHeader from "@/components/molecules/activity-menu-header/activity-menu-header";
+import useTableQueryParams from "@/hooks/use-table-query-params";
 
 type ActivitiesLayoutProps = {
   children: ReactNode;
@@ -21,6 +22,7 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
   children,
 }) => {
   const router = useRouter();
+  const params = useParams();
 
   const { docs: departments } = useListenCollection<Department>({
     collectionId: "departments",
@@ -31,31 +33,53 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
       collectionId: "activities",
     });
 
+  const { queryParamState } = useTableQueryParams({
+    fields: ["activity-set"],
+    initialize: () => ({
+      "activity-set": "",
+    }),
+  });
+
   const [createActivityLoading, setCreateActivityLoading] = useState(false);
 
   const createNewActivity = async () => {
-    setCreateActivityLoading(true);
-    const result = await setDoc<Activity>({
-      collectionId: "activities",
-      data: {
-        name: "New Activity",
-        cost: "",
-        highlightedText: "",
-        department: "",
-        headcount: 8,
-        secondaryHeadcountName: "",
-        secondaryHeadcount: 0,
-        notes: [],
-      },
-    });
-    setCreateActivityLoading(false);
-    if (result.success) {
-      router.push(`/activities/${result.uid}`);
+    if (
+      queryParamState["activity-set"] &&
+      queryParamState["activity-set"].length > 0
+    ) {
+      setCreateActivityLoading(true);
+      const result = await setDoc<Activity>({
+        collectionId: "activities",
+        data: {
+          name: "New Activity",
+          activitySetId: queryParamState["activity-set"],
+          cost: "",
+          highlightedText: "",
+          department: "",
+          headcount: 8,
+          secondaryHeadcountName: "",
+          secondaryHeadcount: 0,
+          notes: [],
+        },
+      });
+      setCreateActivityLoading(false);
+      if (result.success) {
+        router.push(`/activities/${result.uid}`);
+      }
+    } else {
+      // TODO: show error message
+      console.error("No activity set selected");
     }
   };
 
+  const filteredActivities = Object.values(activities || {}).filter(
+    (activity) => activity.activitySetId === queryParamState["activity-set"],
+  );
+
   const uniqueDepartmentIds = new Set(
-    Object.values(activities || {}).map((activity) => activity.department),
+    Object.values(filteredActivities || {}).map(
+      (activity) => activity.department,
+    ),
   );
   const uniqueDepartments = Array.from(uniqueDepartmentIds)
     .map((deptId) => departments?.[deptId])
@@ -71,11 +95,11 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
                 header={<ActivityMenuHeader />}
                 groups={uniqueDepartments.map((dept) => ({
                   title: dept?.name || "No Department",
-                  items: Object.values(activities || {})
+                  items: Object.values(filteredActivities || {})
                     .filter((act) => act.department === (dept?.id ?? ""))
                     .map((activity) => ({
                       label: activity.name,
-                      href: `/activities/${activity.id}`,
+                      href: `/activities/${activity.id}?activity-set=${activity.activitySetId}`,
                     })),
                 }))}
                 actionButton={

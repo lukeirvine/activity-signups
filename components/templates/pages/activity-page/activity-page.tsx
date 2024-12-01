@@ -1,5 +1,5 @@
-import { useParams } from "next/navigation";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 import { useListenDoc } from "@/hooks/use-firebase";
 import { Activity } from "@/types/firebase-types";
@@ -8,10 +8,12 @@ import ActivityForm from "@/components/organisms/forms/activity-form/activity-fo
 import { deleteDoc } from "@/helpers/firebase";
 import { useActionVerificationModalContext } from "@/components/contexts/action-verification-modal-context/action-verification-modal-context";
 import Dropdown from "@/components/atoms/dropdown/dropdown";
+import useTableQueryParams from "@/hooks/use-table-query-params";
 
 type ActivityPageProps = {};
 
 const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
+  const router = useRouter();
   const params = useParams();
   const { actid } = params;
   const actId = typeof actid === "string" ? actid : actid[0];
@@ -23,6 +25,26 @@ const ActivityPage: React.FC<Readonly<ActivityPageProps>> = () => {
     collectionId: "activities",
     docId: actId,
   });
+
+  const { queryParamState } = useTableQueryParams({
+    fields: ["activity-set"],
+    initialize: () => ({
+      "activity-set": "",
+    }),
+  });
+  const activitySetParam = queryParamState["activity-set"];
+
+  // redirect to the base activity page if the selected activity set does not match
+  // this activity's activity set
+  useEffect(() => {
+    if (
+      activity &&
+      activitySetParam &&
+      activitySetParam !== activity.activitySetId
+    ) {
+      router.replace(`/activities?activity-set=${activitySetParam}`);
+    }
+  }, [queryParamState, activitySetParam, activity, router]);
 
   const handleDeleteClick = () => {
     setActionVerification({

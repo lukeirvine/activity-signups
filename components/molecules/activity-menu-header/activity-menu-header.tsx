@@ -1,6 +1,6 @@
 import { PencilIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "@/components/atoms/form/select/select";
 import { useListenCollection } from "@/hooks/use-firebase";
 import useTableQueryParams from "@/hooks/use-table-query-params";
@@ -19,6 +19,17 @@ const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
       "activity-set": "",
     }),
   });
+  const activitySetId = queryParamState["activity-set"];
+
+  // set the first activity set as the default activity set in the query params
+  useEffect(() => {
+    const firstActivitySet = Object.values(activitySets || {}).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )[0];
+    if (firstActivitySet && !activitySetId) {
+      updateQueryParams({ "activity-set": firstActivitySet.id });
+    }
+  }, [activitySets, activitySetId, updateQueryParams]);
 
   return (
     <div>
