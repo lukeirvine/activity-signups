@@ -49,7 +49,9 @@ const ActivitiesLayout: React.FC<Readonly<ActivitiesLayoutProps>> = ({
   // Put the 'No Department' department at the top of the list
   if (uniqueDepartments[uniqueDepartments.length - 1] === undefined) {
     uniqueDepartments.pop();
-    uniqueDepartments.unshift(undefined);
+    if (filteredActivities.find((act) => act.department === "")) {
+      uniqueDepartments.unshift(undefined);
+    }
   }
 
   return (
