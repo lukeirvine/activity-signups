@@ -42,3 +42,42 @@ export const deleteCollectionRecursive = async (
     }
   });
 };
+
+export async function getDoc<T extends firestore.DocumentData>({
+  collectionId,
+  docId,
+}: { collectionId: string; docId: string }): Promise<T | undefined> {
+  const docRef = db.collection(collectionId).doc(docId);
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    return undefined;
+  }
+  return doc.data() as T;
+}
+
+export async function getAllDocs<T extends firestore.DocumentData>(
+  collectionId: string
+): Promise<{ [id: string]: T }> {
+  const querySnapshot = await db.collection(collectionId).get();
+  const data: { [id: string]: T } = {};
+  querySnapshot.forEach((doc) => {
+    data[doc.id] = doc.data() as T;
+  });
+  return data;
+}
+
+export async function updateDoc<T extends firestore.DocumentData>({
+  collectionId,
+  docId,
+  data,
+}: { collectionId: string; docId: string; data: Partial<T> }): Promise<void> {
+  await db.collection(collectionId).doc(docId).update(data);
+}
+
+export async function setDoc<T extends firestore.DocumentData>({
+  collectionId,
+  docId,
+  data,
+}: { collectionId: string; docId: string; data: T }): Promise<void> {
+  await db.collection(collectionId).doc(docId).set(data);
+}

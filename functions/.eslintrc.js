@@ -31,6 +31,6 @@ module.exports = {
     // Disable JSDoc rules
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
-    "max-len": ["error", {"code": 80, "ignoreUrls": true}],
+    "max-len": ["error", {"code": 100, "ignoreUrls": true}],
   },
 };
