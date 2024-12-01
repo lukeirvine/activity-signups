@@ -41,15 +41,13 @@ const WeeksLayout: React.FC<Readonly<WeeksLayoutProps>> = ({ children }) => {
                   },
                 ]}
                 actionButton={
-                  <li>
-                    <button
-                      className="btn btn-ghost"
-                      onClick={() => setIsAddWeekModalOpen(true)}
-                    >
-                      <PlusIcon className="w-5 h-5" />
-                      Add Week
-                    </button>
-                  </li>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => setIsAddWeekModalOpen(true)}
+                  >
+                    <PlusIcon className="w-5 h-5" />
+                    Add Week
+                  </button>
                 }
               />
             }

@@ -67,7 +67,7 @@ const SideNav: React.FC<Readonly<SideNavProps>> = ({
               <div className="loading loading-spinner loading-sm"></div>
             </div>
           )}
-          <div className="text-base-content">{actionButton}</div>
+          <li className="text-base-content">{actionButton}</li>
         </ul>
       </div>
     </>
