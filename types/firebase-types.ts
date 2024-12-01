@@ -13,6 +13,7 @@ export interface Day {
 export interface Activity {
   id?: string;
   // index: number;
+  activitySetId: string;
   name: string;
   cost: string;
   highlightedText: string;

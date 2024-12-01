@@ -1,7 +1,8 @@
 import { collection, getDoc, getDocs, onSnapshot, query, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { fireAuth, fireStore } from "@/utils/Fire";
+import { fireAuth, fireFuncs, fireStore } from "@/utils/Fire";
 import { signOut } from "firebase/auth";
+import { httpsCallable } from "firebase/functions";
 
 type FirebaseCollectionRequestParams = {
   collectionId: string;
@@ -145,4 +146,23 @@ export function useSignOut() {
   };
 
   return { signOutUser, loading };
+}
+
+export function useCallableFunction(functionName: string) {
+  const [loading, setLoading] = useState(false);
+
+  const callFunction = async () => {
+    setLoading(true);
+    const callable = httpsCallable(fireFuncs, functionName);
+    let result;
+    try {
+      result = await callable();
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+    return result;
+  };
+
+  return { callFunction, loading };
 }

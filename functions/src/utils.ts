@@ -1,11 +1,18 @@
 import * as functions from "firebase-functions";
-import {FunctionsErrorCode} from "firebase-functions/v1/https";
+// import {FunctionsErrorCode} from "firebase-functions/v1/https";
 import {firestore} from "firebase-admin";
+import {CallableRequest, FunctionsErrorCode} from "firebase-functions/v2/https";
 
 const db = firestore();
 
 export const throwError = (code: FunctionsErrorCode, message: string) => {
   throw new functions.https.HttpsError(code, message);
+};
+
+export const verifyPermissions = async (request: CallableRequest) => {
+  if (!request.auth?.uid) {
+    throwError("permission-denied", "Unauthorized");
+  }
 };
 
 export const deleteCollectionRecursive = async (
