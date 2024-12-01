@@ -30,9 +30,9 @@ const SideNav: React.FC<Readonly<SideNavProps>> = ({
 
   return (
     <>
-      <div className="bg-base-200 pb-10 h-full">
+      <div className="bg-base-200 h-full flex flex-col">
         <div>{header}</div>
-        <ul className="menu w-56 h-full flex-nowrap overflow-auto pb-10">
+        <ul className="menu w-56 flex-nowrap overflow-auto pb-10">
           {items &&
             items.map((item, i) => (
               <li key={i}>
