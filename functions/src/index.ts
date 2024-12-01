@@ -20,7 +20,7 @@ import {
 } from "./firestore";
 
 // firestore.ts
-exports.deleteChildren = deleteWeeksChildren;
+exports.deleteWeeksChildren = deleteWeeksChildren;
 exports.cleanOnActivityDelete = cleanOnActivityDelete;
 exports.cleanOnDepartmentDelete = cleanOnDepartmentDelete;
 exports.changeDayDatesOnWeekChange = changeDayDatesOnWeekChange;
