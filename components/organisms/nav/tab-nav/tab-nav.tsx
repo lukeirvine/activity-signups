@@ -13,7 +13,6 @@ const TabNav: React.FC<Readonly<TabNavProps>> = ({ days }) => {
   const router = useRouter();
   const params = useParams();
   const { weekid, dayid } = params;
-  console.log("TAB NAV", weekid, dayid);
 
   useEffect(() => {
     if (dayid === undefined && days && Object.values(days).length > 0) {

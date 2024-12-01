@@ -88,7 +88,6 @@ export function useReadCollection<T>({
       const data: FirebaseCollection<T> = {};
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
         data[doc.id] = doc.data() as T;
       });
       if (Object.keys(data).length === 0) {

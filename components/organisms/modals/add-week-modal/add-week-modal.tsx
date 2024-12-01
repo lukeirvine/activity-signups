@@ -117,7 +117,6 @@ const AddWeekModal: React.FC<Readonly<MyComponentProps>> = ({
   });
 
   useEffect(() => {
-    console.log("Incoming Week changed", week);
     setFormState((prev) => ({
       ...prev,
       values: {
