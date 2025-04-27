@@ -1,6 +1,6 @@
-import { fireAuth } from "@/utils/Fire";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { fireAuth } from "@/utils/Fire";
 
 export function useCurrentUser() {
   const [user, setUser] = useState<User | null | undefined>(null);

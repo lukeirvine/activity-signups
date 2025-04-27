@@ -1,12 +1,20 @@
-import { fireStore } from "@/utils/Fire";
-import { doc, setDoc as firebaseSetDoc, updateDoc as firebaseUpdateDoc, writeBatch, deleteDoc as firebaseDeleteDoc, getDocs, collection } from "firebase/firestore";
+import {
+  doc,
+  setDoc as firebaseSetDoc,
+  updateDoc as firebaseUpdateDoc,
+  writeBatch,
+  deleteDoc as firebaseDeleteDoc,
+  getDocs,
+  collection,
+} from "firebase/firestore";
 import uuid from "react-uuid";
+import { fireStore } from "@/utils/Fire";
 
 type FirebaseWriteResponse = {
   success: boolean;
   error?: string;
   uid?: string;
-}
+};
 
 type FirebaseSetParams<T> = {
   collectionId: string;
@@ -27,7 +35,12 @@ export async function setDoc<T>({
 }: FirebaseSetParams<T>): Promise<FirebaseWriteResponse> {
   const newId = docId || uuid();
   try {
-    await firebaseSetDoc(doc(fireStore, collectionId, newId), {...data, id: newId, timeCreated: new Date().toISOString(), timeUpdated: new Date().toISOString()});
+    await firebaseSetDoc(doc(fireStore, collectionId, newId), {
+      ...data,
+      id: newId,
+      timeCreated: new Date().toISOString(),
+      timeUpdated: new Date().toISOString(),
+    });
     return { success: true, uid: newId };
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -41,7 +54,10 @@ export async function updateDoc<T>({
   data,
 }: FirebaseUpdateParams<T>): Promise<FirebaseWriteResponse> {
   try {
-    await firebaseUpdateDoc(doc(fireStore, collectionId, docId), { ...data, timeUpdated: new Date().toISOString() } as Partial<T>);
+    await firebaseUpdateDoc(doc(fireStore, collectionId, docId), {
+      ...data,
+      timeUpdated: new Date().toISOString(),
+    } as Partial<T>);
     return { success: true };
   } catch (error) {
     console.error("Error updating document: ", error);
@@ -52,13 +68,21 @@ export async function updateDoc<T>({
 export async function setCollection<T>({
   collectionId,
   data,
-}: { collectionId: string; data: T[] }): Promise<FirebaseWriteResponse> {
+}: {
+  collectionId: string;
+  data: T[];
+}): Promise<FirebaseWriteResponse> {
   try {
     const batch = writeBatch(fireStore);
     data.forEach((item) => {
       const newId = uuid();
       const docRef = doc(fireStore, collectionId, newId);
-      batch.set(docRef, {...item, id: newId, timeCreated: new Date().toISOString(), timeUpdated: new Date().toISOString()});
+      batch.set(docRef, {
+        ...item,
+        id: newId,
+        timeCreated: new Date().toISOString(),
+        timeUpdated: new Date().toISOString(),
+      });
     });
     await batch.commit();
     return { success: true };
@@ -70,7 +94,9 @@ export async function setCollection<T>({
 
 export async function getCollection<T>({
   collectionId,
-}: { collectionId: string }): Promise<{ [key: string]: T } | undefined> {
+}: {
+  collectionId: string;
+}): Promise<{ [key: string]: T } | undefined> {
   try {
     const querySnapshot = await getDocs(collection(fireStore, collectionId));
     const data: { [key: string]: T } = {};
@@ -89,7 +115,10 @@ export async function getCollection<T>({
 export async function deleteDoc({
   collectionId,
   docId,
-}: { collectionId: string; docId: string }): Promise<FirebaseWriteResponse> {
+}: {
+  collectionId: string;
+  docId: string;
+}): Promise<FirebaseWriteResponse> {
   try {
     await firebaseDeleteDoc(doc(fireStore, collectionId, docId));
     return { success: true };
@@ -101,7 +130,9 @@ export async function deleteDoc({
 
 export async function deleteCollection<T>({
   collectionId,
-}: { collectionId: string }): Promise<FirebaseWriteResponse> {
+}: {
+  collectionId: string;
+}): Promise<FirebaseWriteResponse> {
   try {
     const docs = await getCollection<T>({ collectionId });
     if (docs) {

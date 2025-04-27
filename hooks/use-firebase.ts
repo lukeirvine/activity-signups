@@ -1,8 +1,15 @@
-import { collection, getDoc, getDocs, onSnapshot, query, doc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  doc,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { fireAuth, fireFuncs, fireStore } from "@/utils/Fire";
 import { signOut } from "firebase/auth";
 import { httpsCallable } from "firebase/functions";
+import { fireAuth, fireFuncs, fireStore } from "@/utils/Fire";
 
 type FirebaseCollectionRequestParams = {
   collectionId: string;
@@ -10,7 +17,7 @@ type FirebaseCollectionRequestParams = {
 
 interface FirebaseDocRequestParams extends FirebaseCollectionRequestParams {
   docId: string;
-};
+}
 
 interface FirebaseDocReturn<T> {
   data: T | null | undefined;
@@ -59,27 +66,32 @@ export function useListenDoc<T>({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(fireStore, collectionId, docId), (doc: any) => {
-      if (doc.exists()) {
-        setData(doc.data() as T);
-      } else {
-        setData(undefined);
-      }
-      setLoading(false);
-    });
+    const unsub = onSnapshot(
+      doc(fireStore, collectionId, docId),
+      (doc: any) => {
+        if (doc.exists()) {
+          setData(doc.data() as T);
+        } else {
+          setData(undefined);
+        }
+        setLoading(false);
+      },
+    );
 
     return () => {
       unsub();
-    }
+    };
   }, [collectionId, docId]);
 
   return { data, loading };
-};
+}
 
 export function useReadCollection<T>({
   collectionId,
 }: FirebaseCollectionRequestParams): FirebaseCollectionReturn<T> {
-  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(null);
+  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -105,7 +117,9 @@ export function useReadCollection<T>({
 export function useListenCollection<T>({
   collectionId,
 }: FirebaseCollectionRequestParams): FirebaseCollectionReturn<T> {
-  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(null);
+  const [docs, setDocs] = useState<FirebaseCollection<T> | null | undefined>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -125,7 +139,7 @@ export function useListenCollection<T>({
 
     return () => {
       unsubscribe();
-    }
+    };
   }, [collectionId]);
 
   return { docs, loading };
@@ -136,11 +150,13 @@ export function useSignOut() {
 
   const signOutUser = async () => {
     setLoading(true);
-    await signOut(fireAuth).then(() => {
-      // Sign-out successful.
-    }).catch((error) => {
-      // An error happened.
-    });
+    await signOut(fireAuth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
     setLoading(false);
   };
 
