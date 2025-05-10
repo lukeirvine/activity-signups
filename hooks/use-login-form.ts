@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import useFormHooks from "./use-form-hooks";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import useFormHooks from "./use-form-hooks";
 import { fireAuth } from "@/utils/Fire";
 
 interface LoginFormData {
@@ -29,21 +29,25 @@ const useLoginForm = () => {
     initialize: () => formData,
     onSubmit: async () => {
       const callbackUrl = searchParams?.get("callbackUrl") || undefined;
-      signInWithEmailAndPassword(fireAuth, formHooks.values.username, formHooks.values.password)
+      signInWithEmailAndPassword(
+        fireAuth,
+        formHooks.values.username,
+        formHooks.values.password,
+      )
         .then((userCredential) => {
-          // Signed up 
+          // Signed up
           const user = userCredential.user;
           router.push(callbackUrl || "/");
         })
         .catch((error) => {
           formHooks.setFormState((state) => ({
-          ...state,
-          submitError: [
-            error.message || "Error logging in. Please try again.",
-          ],
-          isSubmitting: false,
-        }));
-      });
+            ...state,
+            submitError: [
+              error.message || "Error logging in. Please try again.",
+            ],
+            isSubmitting: false,
+          }));
+        });
     },
   });
 

@@ -40,7 +40,7 @@ export type EnhancedOccurrence = Occurrence & Activity;
 export type EnumItem = {
   id?: string;
   name: string;
-}
+};
 
 export interface Department extends EnumItem {}
 

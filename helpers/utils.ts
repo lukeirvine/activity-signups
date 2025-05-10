@@ -1,4 +1,3 @@
-
 export function convertDateToDay(date: Date): string {
   const day = date.getDay();
   switch (day) {
@@ -32,11 +31,11 @@ export function getEndDateFromStartDate(startDate: Date): Date {
 
 export function downloadCSV(data: string, filename: string): void {
   const blob = new Blob([data], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
 }
 
 export function getInitials(name: string): string {
@@ -46,13 +45,13 @@ export function getInitials(name: string): string {
 
 export function verifyPeriodInput(inputString: string): boolean {
   // Trim spaces and normalize the input by replacing spaces around commas with just a comma
-  inputString = inputString.trim().replace(/\s*,\s*/g, ',');
+  inputString = inputString.trim().replace(/\s*,\s*/g, ",");
 
   // Split the input string by commas
-  const numbers = inputString.split(',').map(Number);
+  const numbers = inputString.split(",").map(Number);
 
   // Ensure all numbers are between 0 and 6 and there are no invalid numbers
-  if (!numbers.every(num => num >= 0 && num <= 6 && !isNaN(num))) {
+  if (!numbers.every((num) => num >= 0 && num <= 6 && !isNaN(num))) {
     return false;
   }
 
