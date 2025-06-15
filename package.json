@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "firebase emulators:exec --import=./emulator --export-on-exit --ui 'next dev'",
+    "dev": "concurrently \"npm:watch-functions\" \"npm:dev-next\"",
+    "dev-next": "firebase emulators:exec --import=./emulator --export-on-exit --ui 'next dev'",
+    "watch-functions": "npm --prefix ./functions run build:watch",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -46,6 +48,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/validator": "^13.12.0",
+    "concurrently": "^9.1.2",
     "daisyui": "^4.12.10",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",

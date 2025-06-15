@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 type MyComponentProps = {
-	children: ReactNode;
+  children: ReactNode;
 };
 
 const MyComponent: React.FC<Readonly<MyComponentProps>> = ({ children }) => {
-	return <div>{children}</div>;
+  return <div>{children}</div>;
 };
 
 export default MyComponent;

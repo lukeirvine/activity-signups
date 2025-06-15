@@ -14,7 +14,10 @@ export const createSelectChangeEvent = (
   return event;
 };
 
-export const createTextChangeEvent = (value: string | undefined, name: string) => {
+export const createTextChangeEvent = (
+  value: string | undefined,
+  name: string,
+) => {
   const event = {
     target: {
       value: value,
