@@ -1,9 +1,19 @@
 import Link from "next/link";
 import React, { ReactNode } from "react";
 
-export type Variant = "primary" | "ghost" | "none";
+export type Variant = "primary" | "ghost" | "none" | "link" | "outline";
 
 type Size = "sm" | "md" | "lg";
+
+type Color =
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
+  | "neutral";
 
 type ButtonBaseProps = {
   children: ReactNode;
@@ -12,6 +22,7 @@ type ButtonBaseProps = {
   onClick?: () => void;
   className?: string;
   variant?: Variant;
+  color?: Color;
   size?: Size;
   id?: string;
   as?: "button";
@@ -36,6 +47,7 @@ const Button: React.FC<Readonly<CombinedButtonProps>> = ({
   className,
   as = "button",
   variant = "primary",
+  color = "primary",
   size = "md",
   id,
   type,
@@ -47,7 +59,20 @@ const Button: React.FC<Readonly<CombinedButtonProps>> = ({
   const btnVariant: Record<Variant, string> = {
     primary: "btn btn-primary",
     ghost: "btn btn-ghost",
+    link: "btn btn-link",
+    outline: "btn btn-outline",
     none: "",
+  };
+
+  const btnColor: Record<Color, string> = {
+    primary: "btn-primary",
+    secondary: "btn-secondary",
+    accent: "btn-accent",
+    success: "btn-success",
+    warning: "btn-warning",
+    error: "btn-error",
+    info: "btn-info",
+    neutral: "btn-neutral",
   };
 
   const btnSize: Record<Size, string> = {
@@ -65,7 +90,7 @@ const Button: React.FC<Readonly<CombinedButtonProps>> = ({
       )}
     </>
   );
-  const fullClassName = `${btnVariant[variant]} ${btnSize[size]} ${className}`;
+  const fullClassName = `${btnVariant[variant]} ${btnSize[size]} ${btnColor[color]} ${className ?? ""}`;
 
   if (as === "link" && href) {
     return (
