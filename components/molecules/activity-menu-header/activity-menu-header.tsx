@@ -129,6 +129,7 @@ const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
             as="link"
             href="/settings/activity-sets"
           >
+            <PlusIcon className="w-5 h-5" />
             Create Activity Set
           </Button>
         </div>
