@@ -120,7 +120,20 @@ const ActivityMenuHeader: React.FC<Readonly<ActivityMenuHeaderProps>> = () => {
           <div className="divider mt-0 mb-0"></div>
         </div>
       )}
-      {!activitySets && <div className="w-full h-6 skeleton"></div>}
+      {activitySets === null && <div className="w-full h-6 skeleton"></div>}
+      {activitySets === undefined && (
+        <div className="p-2">
+          <Button
+            variant="ghost"
+            className="w-full"
+            as="link"
+            href="/settings/activity-sets"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Create Activity Set
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

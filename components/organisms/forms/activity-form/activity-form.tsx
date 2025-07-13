@@ -9,6 +9,7 @@ import { useListenCollection } from "@/hooks/use-firebase";
 import useFormHooks from "@/hooks/use-form-hooks";
 import { Activity, Department } from "@/types/firebase-types";
 import { FormErrors } from "@/hooks/use-form-validation";
+import Button from "@/components/atoms/buttons/button/button";
 
 interface ActivityData {
   name: string;
@@ -197,6 +198,18 @@ const ActivityForm: React.FC<Readonly<ActivityFormProps>> = ({ activity }) => {
                 );
               })}
           </Select>
+        )}
+        {departments === null && <div className="skeleton w-full h-10"></div>}
+        {departments === undefined && (
+          <Button
+            as="link"
+            color="warning"
+            size="sm"
+            variant="outline"
+            href="/settings/departments"
+          >
+            Create a department
+          </Button>
         )}
         {departments === null && <div className="skeleton w-full h-10"></div>}
       </InputGroup>
