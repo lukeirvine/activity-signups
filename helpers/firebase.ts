@@ -10,7 +10,7 @@ import {
 import uuid from "react-uuid";
 import { fireStore } from "@/utils/Fire";
 
-type FirebaseWriteResponse = {
+export type FirebaseWriteResponse = {
   success: boolean;
   error?: string;
   uid?: string;

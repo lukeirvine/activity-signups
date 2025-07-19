@@ -59,8 +59,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
 
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
-  const [isDeleteDataLoading, setIsDeleteDataLoading] = React.useState(false);
-  const [isDeleteDayLoading, setIsDeleteDayLoading] = React.useState(false);
+  const [isDayActionLoading, setIsDayActionLoading] = React.useState(false);
 
   const {
     actionVerification,
@@ -103,11 +102,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   // };
 
   const deleteData = async () => {
-    setIsDeleteDataLoading(true);
+    setIsDayActionLoading(true);
     await deleteCollection<Activity>({
       collectionId: `weeks/${weekid}/days/${dayId}/occurrences`,
     });
-    setIsDeleteDataLoading(false);
+    setIsDayActionLoading(false);
     closeActionVerification();
   };
 
@@ -133,7 +132,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   };
 
   const deleteDay = async () => {
-    setIsDeleteDayLoading(true);
+    setIsDayActionLoading(true);
     await deleteCollection<Activity>({
       collectionId: `weeks/${weekid}/days/${dayId}/activities`,
     });
@@ -141,7 +140,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       collectionId: `weeks/${weekid}/days`,
       docId: dayId,
     });
-    setIsDeleteDayLoading(false);
+    setIsDayActionLoading(false);
     router.push(`/weeks/${weekid}`);
   };
 
@@ -166,7 +165,15 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
   };
 
-  let actions = [];
+  const handleDuplicateDay = () => {};
+
+  let actions = [
+    {
+      label: "Duplicate Day",
+      onClick: () => {},
+      loading: isDayActionLoading,
+    },
+  ];
   if (occurrences) {
     // actions.push({
     //   label: "Download CSV",
@@ -176,14 +183,14 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     actions.push({
       label: "Delete Data",
       onClick: handleDeleteData,
-      loading: isDeleteDataLoading,
+      loading: isDayActionLoading,
     });
   }
   if (day) {
     actions.push({
       label: "Delete Day",
       onClick: handleDeleteDay,
-      loading: isDeleteDayLoading,
+      loading: isDayActionLoading,
     });
   }
 
