@@ -167,13 +167,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const handleDuplicateDay = () => {};
 
-  let actions = [
-    {
-      label: "Duplicate Day",
-      onClick: () => {},
-      loading: isDayActionLoading,
-    },
-  ];
+  let actions = [];
   if (occurrences) {
     // actions.push({
     //   label: "Download CSV",
@@ -190,6 +184,11 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     actions.push({
       label: "Delete Day",
       onClick: handleDeleteDay,
+      loading: isDayActionLoading,
+    });
+    actions.push({
+      label: "Duplicate Day",
+      onClick: () => {},
       loading: isDayActionLoading,
     });
   }
