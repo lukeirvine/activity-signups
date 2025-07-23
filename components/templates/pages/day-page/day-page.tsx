@@ -20,6 +20,7 @@ import ActionVerificationModal from "@/components/molecules/alerts/action-verifi
 import CreateOccurrenceForm from "@/components/organisms/forms/create-occurrence-form/create-occurrence-form";
 import ActivityTable from "@/components/organisms/tables/activity-table/activity-table";
 import { convertArrayToObject, enhanceOccurrences } from "@/helpers/data";
+import DuplicateDayModal from "@/components/organisms/modals/duplicate-day-modal/duplicate-day-modal";
 
 type DayPageProps = {};
 
@@ -60,6 +61,8 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
 
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
   const [isDayActionLoading, setIsDayActionLoading] = React.useState(false);
+  const [isDuplicateDayModalOpen, setIsDuplicateDayModalOpen] =
+    React.useState(true);
 
   const {
     actionVerification,
@@ -165,7 +168,9 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
   };
 
-  const handleDuplicateDay = () => {};
+  const handleDuplicateDay = () => {
+    setIsDuplicateDayModalOpen(true);
+  };
 
   let actions = [];
   if (occurrences) {
@@ -188,7 +193,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
     });
     actions.push({
       label: "Duplicate Day",
-      onClick: () => {},
+      onClick: handleDuplicateDay,
       loading: isDayActionLoading,
     });
   }
@@ -242,6 +247,12 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       <ActionVerificationModal
         {...actionVerification}
         onClose={closeActionVerification}
+      />
+      <DuplicateDayModal
+        isOpen={isDuplicateDayModalOpen}
+        onClose={() => setIsDuplicateDayModalOpen(false)}
+        weekId={weekId}
+        dayId={dayId}
       />
     </div>
   );
