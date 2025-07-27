@@ -9,7 +9,7 @@ import { getEndDateFromStartDate } from "@/helpers/utils";
 import BasicForm from "@/components/molecules/basic-form/basic-form";
 import { Week } from "@/types/firebase-types";
 import Select from "@/components/atoms/form/select/select";
-import { useListenCollection } from "@/hooks/use-firebase";
+import { useCallableFunction, useListenCollection } from "@/hooks/use-firebase";
 
 type DuplicateDayModalProps = {
   isOpen: boolean;
@@ -35,6 +35,9 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
     collectionId: `weeks`,
   });
 
+  const { callFunction: deepDuplicateDay, loading: isCalling } =
+    useCallableFunction("deepDuplicateDay");
+
   const requiredFields: (keyof DuplicateDayData)[] = useMemo(() => {
     return ["week", "date"];
   }, []);
@@ -57,24 +60,20 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
-      // const result = await setDoc<Day>({
-      //   collectionId: `weeks/${weekId}/days`,
-      //   data: {
-      //     date: values.date || "",
-      //     weekId,
-      //   },
-      // });
-      // if (!result.success) {
-      //   setFormState((state) => ({
-      //     ...state,
-      //     submitError: [result.error || "Error saving day."],
-      //     isSubmitting: false,
-      //   }));
-      // } else {
-      //   reset();
-      //   onClose();
-      //   if (result.uid) router.push(`/weeks/${weekId}/${result.uid}`);
-      // }
+      const { week: destWeekId, date } = values;
+      deepDuplicateDay({
+        weekId,
+        dayId,
+        destWeekId: values.week,
+        destDate: values.date,
+      })
+        .then((result) => {
+          onClose();
+          reset();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   });
 

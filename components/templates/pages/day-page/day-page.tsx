@@ -62,7 +62,7 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const [isPrintLoading, setIsPrintLoading] = React.useState(false);
   const [isDayActionLoading, setIsDayActionLoading] = React.useState(false);
   const [isDuplicateDayModalOpen, setIsDuplicateDayModalOpen] =
-    React.useState(true);
+    React.useState(false);
 
   const {
     actionVerification,

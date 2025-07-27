@@ -166,12 +166,12 @@ export function useSignOut() {
 export function useCallableFunction(functionName: string) {
   const [loading, setLoading] = useState(false);
 
-  const callFunction = async () => {
+  const callFunction = async (data: any) => {
     setLoading(true);
     const callable = httpsCallable(fireFuncs, functionName);
     let result;
     try {
-      result = await callable();
+      result = await callable(data);
     } catch (error) {
       console.error(error);
     }

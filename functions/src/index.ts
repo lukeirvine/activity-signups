@@ -22,6 +22,7 @@ import {
   deleteWeeksChildren,
 } from "./firestore";
 import {throwError, verifyPermissions} from "./utils";
+import { deepDuplicate, deepDuplicateDay } from "./data";
 
 // firestore.ts
 exports.deleteWeeksChildren = deleteWeeksChildren;
@@ -30,7 +31,11 @@ exports.cleanOnActivitySetDelete = cleanOnActivitySetDelete;
 exports.cleanOnDepartmentDelete = cleanOnDepartmentDelete;
 exports.changeDayDatesOnWeekChange = changeDayDatesOnWeekChange;
 
+// data.ts
+exports.deepDuplicate = deepDuplicate;
+exports.deepDuplicateDay = deepDuplicateDay;
+
 exports.databaseTransform = onCall(async (request) => {
-  verifyPermissions(request);
+  await verifyPermissions(request);
   throwError("unimplemented", "Not yet implemented");
 });

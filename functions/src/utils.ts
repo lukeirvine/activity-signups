@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 // import {FunctionsErrorCode} from "firebase-functions/v1/https";
 import {firestore} from "firebase-admin";
 import {CallableRequest, FunctionsErrorCode} from "firebase-functions/v2/https";
+const { v4: uuidv4 } = require('uuid');
 
 const db = firestore();
 
@@ -66,18 +67,56 @@ export async function getAllDocs<T extends firestore.DocumentData>(
   return data;
 }
 
+type FirebaseSetParams<T> = {
+  collectionId: string;
+  docId?: string;
+  data: T;
+};
+
+type FirebaseUpdateParams<T> = {
+  collectionId: string;
+  docId: string;
+  data: Partial<T>;
+};
+
 export async function updateDoc<T extends firestore.DocumentData>({
   collectionId,
   docId,
   data,
-}: { collectionId: string; docId: string; data: Partial<T> }): Promise<void> {
-  await db.collection(collectionId).doc(docId).update(data);
+}: FirebaseUpdateParams<T>): Promise<void> {
+  try {
+    await db.collection(collectionId).doc(docId).update({
+      ...data,
+      timeUpdated: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error updating document:", error);
+    throwError("internal", "Error updating document");
+  }
 }
 
+
+/**
+ * Exactly like the client’s setDoc(..., { merge: true }),
+ * but using the Admin SDK.
+ */
 export async function setDoc<T extends firestore.DocumentData>({
   collectionId,
   docId,
-  data,
-}: { collectionId: string; docId: string; data: T }): Promise<void> {
-  await db.collection(collectionId).doc(docId).set(data);
+  data
+}: FirebaseSetParams<T>): Promise<FirebaseFirestore.WriteResult> {
+  const newId = docId || uuidv4();
+  try {
+    const ref = db.collection(collectionId).doc(newId);
+    return ref.set({
+      ...data,
+      id: newId,
+      timeCreated: new Date().toISOString(),
+      timeUpdated: new Date().toISOString(),
+    }, { merge: true });
+  } catch (error) {
+    console.error("Error setting document:", error);
+    throwError("internal", "Error setting document");
+    return Promise.reject(error);
+  }
 }
