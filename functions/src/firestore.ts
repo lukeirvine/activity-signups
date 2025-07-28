@@ -90,6 +90,29 @@ export const cleanOnDepartmentDelete = onDocumentDeleted(
   }
 );
 
+export const cleanOnDocDelete = onDocumentDeleted(
+  "*/**/{docId}",
+  async (event) => {
+    const document = event.data;
+
+    if (!document?.exists) {
+      logger.error("Document does not exist.");
+      return;
+    }
+
+    const ref = document.ref;
+    const subcols = await ref.listCollections();
+    if (subcols.length > 0) {
+      for (const subcol of subcols) {
+        const childDocs = await subcol.listDocuments();
+        for (const childDoc of childDocs) {
+          await childDoc.delete();
+        }
+      }
+    }
+  }
+)
+
 export const changeDayDatesOnWeekChange = onDocumentUpdated(
   "weeks/{weekId}",
   async (event) => {

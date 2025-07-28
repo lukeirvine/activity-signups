@@ -18,6 +18,7 @@ import {
   changeDayDatesOnWeekChange,
   cleanOnActivityDelete,
   cleanOnActivitySetDelete,
+  cleanOnDocDelete,
   cleanOnDepartmentDelete,
   deleteWeeksChildren,
 } from "./firestore";
@@ -29,6 +30,7 @@ exports.deleteWeeksChildren = deleteWeeksChildren;
 exports.cleanOnActivityDelete = cleanOnActivityDelete;
 exports.cleanOnActivitySetDelete = cleanOnActivitySetDelete;
 exports.cleanOnDepartmentDelete = cleanOnDepartmentDelete;
+exports.cleanOnDocDelete = cleanOnDocDelete;
 exports.changeDayDatesOnWeekChange = changeDayDatesOnWeekChange;
 
 // data.ts
