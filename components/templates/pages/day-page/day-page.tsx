@@ -79,12 +79,17 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
   const handlePrintPDF = async () => {
     setIsPrintLoading(true);
     try {
-      if (occurrences && filteredActivities) {
+      if (occurrences && filteredActivities && week && day) {
         console.log(enhanceOccurrences(occurrences, filteredActivities));
-        await printActivitiesPDF(
-          enhanceOccurrences(occurrences, filteredActivities),
-          exportFileName + ".pdf",
-        );
+        await printActivitiesPDF({
+          enhancedOccurrences: enhanceOccurrences(
+            occurrences,
+            filteredActivities,
+          ),
+          filename: exportFileName + ".pdf",
+          week: week,
+          day: day,
+        });
       }
     } catch (error) {
       console.error(error);
