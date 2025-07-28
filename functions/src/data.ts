@@ -6,11 +6,6 @@ import { setDoc, throwError } from "./utils";
 
 const db = firestore();
 
-type DocumentIdsd = {
-  collection: string;
-  doc: string;
-};
-
 /**
  * Recursively duplicates a Firestore document and all of its subcollections.
  *
@@ -50,9 +45,8 @@ export async function deepDuplicateDocumentRecursive({
         });
       }
     }
-  } else {
-    return newRef;
   }
+  return newRef;
 }
 
 export async function deepDuplicateDocument({
@@ -151,4 +145,6 @@ export const deepDuplicateDay = onCall(async (request) => {
       },
     });
   }
+
+  return result;
 });

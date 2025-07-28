@@ -81,7 +81,7 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
           }
         })
         .catch((error) => {
-          console.error(error);
+          console.error("Error caught:", error);
         });
     },
   });
