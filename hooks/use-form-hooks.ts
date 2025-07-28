@@ -123,6 +123,16 @@ const useFormHooks = <T extends Object>({
     });
   };
 
+  const setSubmitError = (message: string[]) => {
+    setFormState((state) => ({
+      ...state,
+      hasErrors: true,
+      submitError: message,
+      submitSuccessful: false,
+      isSubmitting: false,
+    }));
+  };
+
   const updateValues = (newValues: Partial<T>) => {
     setFormState((state) => ({
       ...state,
@@ -190,6 +200,7 @@ const useFormHooks = <T extends Object>({
     getError,
     getErrorMessage,
     setFormState,
+    setSubmitError,
   };
 };
 

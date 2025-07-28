@@ -68,24 +68,24 @@ export async function getAllDocs<T extends firestore.DocumentData>(
 }
 
 type FirebaseSetParams<T> = {
-  collectionId: string;
+  collectionPath: string;
   docId?: string;
   data: T;
 };
 
 type FirebaseUpdateParams<T> = {
-  collectionId: string;
+  collectionPath: string;
   docId: string;
   data: Partial<T>;
 };
 
 export async function updateDoc<T extends firestore.DocumentData>({
-  collectionId,
+  collectionPath,
   docId,
   data,
 }: FirebaseUpdateParams<T>): Promise<void> {
   try {
-    await db.collection(collectionId).doc(docId).update({
+    await db.collection(collectionPath).doc(docId).update({
       ...data,
       timeUpdated: new Date().toISOString(),
     });
@@ -101,19 +101,20 @@ export async function updateDoc<T extends firestore.DocumentData>({
  * but using the Admin SDK.
  */
 export async function setDoc<T extends firestore.DocumentData>({
-  collectionId,
+  collectionPath,
   docId,
   data
-}: FirebaseSetParams<T>): Promise<FirebaseFirestore.WriteResult> {
+}: FirebaseSetParams<T>): Promise<FirebaseFirestore.DocumentReference> {
   const newId = docId || uuidv4();
   try {
-    const ref = db.collection(collectionId).doc(newId);
-    return ref.set({
+    const ref = db.collection(collectionPath).doc(newId);
+    await ref.set({
       ...data,
       id: newId,
       timeCreated: new Date().toISOString(),
       timeUpdated: new Date().toISOString(),
     }, { merge: true });
+    return ref;
   } catch (error) {
     console.error("Error setting document:", error);
     throwError("internal", "Error setting document");

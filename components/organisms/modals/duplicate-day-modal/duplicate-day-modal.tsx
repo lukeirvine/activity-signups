@@ -56,11 +56,13 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
     showSubmitError,
     submitError,
     reset,
+    setSubmitError,
   } = useFormHooks({
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
       const { week: destWeekId, date } = values;
+      // const deepDuplicateDay = httpsCallable(fireFuncs, "deepDuplicateDay");
       deepDuplicateDay({
         weekId,
         dayId,
@@ -68,8 +70,15 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
         destDate: values.date,
       })
         .then((result) => {
-          onClose();
-          reset();
+          if (result?.data?.success) {
+            onClose();
+            reset();
+          } else {
+            console.error("Error from result:", result?.data);
+            setSubmitError([
+              `There was an error on the server: ${result?.data?.message || ""}`,
+            ]);
+          }
         })
         .catch((error) => {
           console.error(error);
