@@ -1,7 +1,8 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { saveAs } from "file-saver";
 import fontkit from "@pdf-lib/fontkit";
-import { EnhancedOccurrences } from "@/types/firebase-types";
+import { convertDateToDay } from "./utils";
+import { Day, EnhancedOccurrences, Week } from "@/types/firebase-types";
 
 async function fetchFont(url: string): Promise<Uint8Array> {
   const response = await fetch(url);
@@ -9,10 +10,17 @@ async function fetchFont(url: string): Promise<Uint8Array> {
   return new Uint8Array(arrayBuffer);
 }
 
-export async function printActivitiesPDF(
-  enhancedOccurrences: EnhancedOccurrences,
-  filename: string,
-) {
+export async function printActivitiesPDF({
+  enhancedOccurrences,
+  filename,
+  week,
+  day,
+}: {
+  enhancedOccurrences: EnhancedOccurrences;
+  filename: string;
+  week: Week;
+  day: Day;
+}) {
   const pdfDoc = await PDFDocument.create();
 
   pdfDoc.registerFontkit(fontkit);
@@ -68,6 +76,18 @@ export async function printActivitiesPDF(
           color,
         });
       };
+
+      // Week and Date
+      page.drawText(
+        `${week.name} - ${convertDateToDay(new Date(day.date))} - ${new Date(day.date).toLocaleDateString()}`,
+        {
+          x: ml / 3,
+          y: height - ml / 2,
+          size: 8,
+          font: sansSerifFont,
+          color: rgb(0.7, 0.7, 0.7),
+        },
+      );
 
       drawCenteredText(
         `${activity.name}${activity.cost?.length > 0 ? ` - ${activity.cost}` : ""}`,
