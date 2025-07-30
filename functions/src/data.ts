@@ -102,6 +102,7 @@ export const deepDuplicateDay = onCall(async (request) => {
 
   return {
     success: true,
+    newDayId: newDayRef.id,
     message: `Copied ${sourceRef.path} → ${newDayRef.path}`,
   };
 });

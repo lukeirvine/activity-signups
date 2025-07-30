@@ -73,6 +73,7 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
           if (result?.data?.success) {
             onClose();
             reset();
+            router.push(`/weeks/${destWeekId}/${result.data.newDayId}`);
           } else {
             console.error("Error from result:", result?.data);
             setSubmitError([
