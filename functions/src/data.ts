@@ -76,14 +76,27 @@ export const deepDuplicate = onCall(async (request) => {
   };
 });
 
-export const deepDuplicateDay = onCall(async (request) => {
+export type DeepDuplicateDayRequest = {
+  weekId: string;
+  dayId: string;
+  destWeekId: string;
+  destDate: string;
+}
+
+export type DeepDuplicateDayResponse = {
+  success: boolean;
+  newDayId: string;
+  message: string;
+}
+
+export const deepDuplicateDay = onCall<DeepDuplicateDayRequest>(async (request) => {
   const {weekId, dayId, destWeekId, destDate} = request.data ?? {};
 
   await verifyPermissions(request);
 
   // --- validate input ---
   if (
-    ![weekId, dayId, destWeekId].every(
+    ![weekId, dayId, destWeekId, destDate].every(
       (p) => typeof p === "string" && p.length > 0
     )
   ) {

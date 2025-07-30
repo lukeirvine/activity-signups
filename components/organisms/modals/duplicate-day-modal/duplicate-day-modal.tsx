@@ -10,6 +10,10 @@ import BasicForm from "@/components/molecules/basic-form/basic-form";
 import { Week } from "@/types/firebase-types";
 import Select from "@/components/atoms/form/select/select";
 import { useCallableFunction, useListenCollection } from "@/hooks/use-firebase";
+import {
+  DeepDuplicateDayRequest,
+  DeepDuplicateDayResponse,
+} from "@/functions/src/data";
 
 type DuplicateDayModalProps = {
   isOpen: boolean;
@@ -36,7 +40,9 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
   });
 
   const { callFunction: deepDuplicateDay, loading: isCalling } =
-    useCallableFunction("deepDuplicateDay");
+    useCallableFunction<DeepDuplicateDayRequest, DeepDuplicateDayResponse>(
+      "deepDuplicateDay",
+    );
 
   const requiredFields: (keyof DuplicateDayData)[] = useMemo(() => {
     return ["week", "date"];
@@ -61,19 +67,17 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
-      const { week: destWeekId, date } = values;
-      // const deepDuplicateDay = httpsCallable(fireFuncs, "deepDuplicateDay");
       deepDuplicateDay({
         weekId,
         dayId,
-        destWeekId: values.week,
-        destDate: values.date,
+        destWeekId: values.week ?? "",
+        destDate: values.date ?? "",
       })
         .then((result) => {
           if (result?.data?.success) {
             onClose();
             reset();
-            router.push(`/weeks/${destWeekId}/${result.data.newDayId}`);
+            router.push(`/weeks/${values.week}/${result.data.newDayId}`);
           } else {
             console.error("Error from result:", result?.data);
             setSubmitError([

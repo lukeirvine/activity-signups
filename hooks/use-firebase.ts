@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
+import { httpsCallable, HttpsCallableResult } from "firebase/functions";
 import { fireAuth, fireFuncs, fireStore } from "@/utils/Fire";
 
 type FirebaseCollectionRequestParams = {
@@ -163,19 +163,24 @@ export function useSignOut() {
   return { signOutUser, loading };
 }
 
-export function useCallableFunction(functionName: string) {
+export function useCallableFunction<Req = unknown, Res = unknown>(
+  functionName: string,
+) {
   const [loading, setLoading] = useState(false);
 
-  const callFunction = async (data: any) => {
+  const callFunction = async (data: Req): Promise<HttpsCallableResult<Res>> => {
     setLoading(true);
     const callable = httpsCallable(fireFuncs, functionName);
-    let result;
+    let result: HttpsCallableResult<Res> | undefined;
     try {
-      result = await callable(data);
+      result = (await callable(data)) as HttpsCallableResult<Res>;
     } catch (error) {
       console.error(error);
     }
     setLoading(false);
+    if (result === undefined) {
+      throw new Error("Callable function failed and no result was returned.");
+    }
     return result;
   };
 
