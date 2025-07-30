@@ -70,7 +70,7 @@ export async function getAllDocs<T extends firestore.DocumentData>(
 type FirebaseSetParams<T> = {
   collectionPath: string;
   docId?: string;
-  data: T;
+  data?: T;
 };
 
 type FirebaseUpdateParams<T> = {
