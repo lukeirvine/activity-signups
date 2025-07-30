@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 // import {FunctionsErrorCode} from "firebase-functions/v1/https";
 import {firestore} from "firebase-admin";
 import {CallableRequest, FunctionsErrorCode} from "firebase-functions/v2/https";
-const { v4: uuidv4 } = require('uuid');
+import {v4 as uuidv4} from "uuid";
 
 const db = firestore();
 
@@ -103,7 +103,7 @@ export async function updateDoc<T extends firestore.DocumentData>({
 export async function setDoc<T extends firestore.DocumentData>({
   collectionPath,
   docId,
-  data
+  data,
 }: FirebaseSetParams<T>): Promise<FirebaseFirestore.DocumentReference> {
   const newId = docId || uuidv4();
   try {
@@ -113,7 +113,7 @@ export async function setDoc<T extends firestore.DocumentData>({
       id: newId,
       timeCreated: new Date().toISOString(),
       timeUpdated: new Date().toISOString(),
-    }, { merge: true });
+    }, {merge: true});
     return ref;
   } catch (error) {
     console.error("Error setting document:", error);

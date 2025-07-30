@@ -1,8 +1,6 @@
-import { logger } from "firebase-functions";
-import { onCall } from "firebase-functions/v2/https";
-import { firestore } from "firebase-admin";
-import { updateDoc, verifyPermissions } from "./utils";
-import { setDoc, throwError } from "./utils";
+import {onCall} from "firebase-functions/v2/https";
+import {firestore} from "firebase-admin";
+import {verifyPermissions, setDoc, throwError} from "./utils";
 
 const db = firestore();
 
@@ -21,17 +19,17 @@ async function cloneDocumentRecursive(
   if (!snap.exists) {
     throw new Error(`Source ${src.path} does not exist.`);
   }
-  const data = snap.data()!;
+  const data = snap.data();
 
   // 2) Create a new document in the destination collection
   const newDoc = await setDoc({
     collectionPath: destCollection.path,
-    data
+    data,
   });
 
   // 3) Recurse into each subcollection
   const subcols = await src.listCollections();
-  console.log('subcol length:', subcols.length);
+  console.log("subcol length:", subcols.length);
   for (const subcol of subcols) {
     // “childDest” is the matching subcollection under our new doc
     const childDest = newDoc.collection(subcol.id);
@@ -51,7 +49,7 @@ async function cloneDocumentRecursive(
  *   { collectionId, docId, destCollectionId, destDocId }
  */
 export const deepDuplicate = onCall(async (request) => {
-  const { sourceDocPath, destCollectionPath } = request.data ?? {};
+  const {sourceDocPath, destCollectionPath} = request.data ?? {};
 
   await verifyPermissions(request);
 
@@ -79,7 +77,7 @@ export const deepDuplicate = onCall(async (request) => {
 });
 
 export const deepDuplicateDay = onCall(async (request) => {
-  const { weekId, dayId, destWeekId, destDate } = request.data ?? {};
+  const {weekId, dayId, destWeekId, destDate} = request.data ?? {};
 
   await verifyPermissions(request);
 
@@ -100,10 +98,10 @@ export const deepDuplicateDay = onCall(async (request) => {
 
   const newDayRef = await cloneDocumentRecursive(sourceRef, destCollection);
 
-  await newDayRef.update({ date: destDate, weekId: destWeekId });
+  await newDayRef.update({date: destDate, weekId: destWeekId});
 
   return {
     success: true,
     message: `Copied ${sourceRef.path} → ${newDayRef.path}`,
-  }
+  };
 });

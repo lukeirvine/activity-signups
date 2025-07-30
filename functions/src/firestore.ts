@@ -111,7 +111,7 @@ export const cleanOnDocDelete = onDocumentDeleted(
       }
     }
   }
-)
+);
 
 export const changeDayDatesOnWeekChange = onDocumentUpdated(
   "weeks/{weekId}",

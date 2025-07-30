@@ -23,7 +23,7 @@ import {
   deleteWeeksChildren,
 } from "./firestore";
 import {throwError, verifyPermissions} from "./utils";
-import { deepDuplicate, deepDuplicateDay } from "./data";
+import {deepDuplicate, deepDuplicateDay} from "./data";
 
 // firestore.ts
 exports.deleteWeeksChildren = deleteWeeksChildren;
