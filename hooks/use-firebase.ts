@@ -168,7 +168,9 @@ export function useCallableFunction<Req = unknown, Res = unknown>(
 ) {
   const [loading, setLoading] = useState(false);
 
-  const callFunction = async (data: Req): Promise<HttpsCallableResult<Res>> => {
+  const callFunction = async (
+    data?: Req,
+  ): Promise<HttpsCallableResult<Res>> => {
     setLoading(true);
     const callable = httpsCallable(fireFuncs, functionName);
     let result: HttpsCallableResult<Res> | undefined;
