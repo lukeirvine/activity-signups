@@ -1,6 +1,7 @@
 import {onCall} from "firebase-functions/v2/https";
 import {firestore} from "firebase-admin";
 import {verifyPermissions, setDoc, throwError} from "./utils";
+import {DeepDuplicateDayRequest} from "./dto-types";
 
 const db = firestore();
 
@@ -75,19 +76,6 @@ export const deepDuplicate = onCall(async (request) => {
     message: `Copied ${sourceRef.path} → ${newDocRef.path}`,
   };
 });
-
-export type DeepDuplicateDayRequest = {
-  weekId: string;
-  dayId: string;
-  destWeekId: string;
-  destDate: string;
-}
-
-export type DeepDuplicateDayResponse = {
-  success: boolean;
-  newDayId: string;
-  message: string;
-}
 
 export const deepDuplicateDay = onCall<DeepDuplicateDayRequest>(async (request) => {
   const {weekId, dayId, destWeekId, destDate} = request.data ?? {};
