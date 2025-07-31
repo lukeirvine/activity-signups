@@ -13,7 +13,7 @@ import { useCallableFunction, useListenCollection } from "@/hooks/use-firebase";
 import {
   DeepDuplicateDayRequest,
   DeepDuplicateDayResponse,
-} from "@/functions/src/dto-types";
+} from "@/types/dto-types";
 
 type DuplicateDayModalProps = {
   isOpen: boolean;
