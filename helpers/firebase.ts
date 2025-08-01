@@ -7,8 +7,6 @@ import {
   getDocs,
   collection,
   WriteBatch,
-  DocumentReference,
-  DocumentData,
 } from "firebase/firestore";
 import uuid from "react-uuid";
 import { fireStore } from "@/utils/Fire";
@@ -31,85 +29,33 @@ type FirebaseUpdateParams<T> = {
   data: Partial<T>;
 };
 
-type FirebaseSetBatchBaseParams = {
-  as: "collection" | "doc";
+interface FirebaseSetBatchDoc {
+  collectionPath: string;
+  docId?: string;
+  data: any;
   batch?: WriteBatch;
+}
+
+type FirebaseSetBatchParams = {
+  batch?: WriteBatch;
+  docs: FirebaseSetBatchDoc[];
 };
 
-interface FirebaseSetBatchDoc extends FirebaseSetBatchBaseParams {
-  as: "doc";
-  ref: DocumentReference<DocumentData>;
-  data: any;
-  subcols?: FirebaseSetBatchCollection[];
-}
-
-interface FirebaseSetBatchCollection extends FirebaseSetBatchBaseParams {
-  as: "collection";
-  children: FirebaseSetBatchDoc[];
-}
-
-type FirebaseSetBatchCombinedParams =
-  | FirebaseSetBatchDoc
-  | FirebaseSetBatchCollection;
-
-function setBatchRecursive({
-  as,
+export async function setBatch({
   batch: incomingBatch,
-  ...props
-}: FirebaseSetBatchCombinedParams): WriteBatch {
-  const data = as === "doc" ? (props as FirebaseSetBatchDoc).data : undefined;
-  const children =
-    as === "collection"
-      ? (props as FirebaseSetBatchCollection).children
-      : undefined;
+  docs,
+}: FirebaseSetBatchParams): Promise<FirebaseWriteResponse> {
   const batch = incomingBatch ?? writeBatch(fireStore);
 
-  if (as === "doc") {
-    const ref = (props as FirebaseSetBatchDoc).ref;
-    const subcols = (props as FirebaseSetBatchDoc).subcols;
-    batch.set(ref, {
+  docs.forEach(({ collectionPath, docId, data }) => {
+    const newId = docId ?? uuid();
+    batch.set(doc(fireStore, collectionPath, newId), {
       ...data,
+      id: newId,
       timeCreated: new Date().toISOString(),
       timeUpdated: new Date().toISOString(),
     });
-    if (subcols) {
-      console.log("These are the subcols", subcols);
-      subcols.forEach((subcol) => {
-        console.log("Setting subcollection", subcol);
-        setBatchRecursive(subcol);
-      });
-    }
-  } else if (as === "collection" && children) {
-    children.forEach((child) => {
-      console.log("Setting child document", child);
-      setBatchRecursive(child);
-    });
-  }
-
-  return batch;
-}
-
-export async function setBatch({
-  as,
-  batch,
-  ...props
-}: FirebaseSetBatchCombinedParams): Promise<FirebaseWriteResponse> {
-  if (as === "doc") {
-    const ref = (props as FirebaseSetBatchDoc).ref;
-    batch = setBatchRecursive({
-      as: "doc",
-      ref,
-      batch,
-      data: (props as FirebaseSetBatchDoc).data,
-      subcols: (props as FirebaseSetBatchDoc).subcols,
-    });
-  } else {
-    batch = setBatchRecursive({
-      as: "collection",
-      batch,
-      children: (props as FirebaseSetBatchCollection).children,
-    });
-  }
+  });
 
   try {
     await batch.commit();

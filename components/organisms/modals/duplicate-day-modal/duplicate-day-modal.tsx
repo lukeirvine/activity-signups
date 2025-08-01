@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { DatePicker } from "@tremor/react";
 import { useRouter } from "next/navigation";
-import { doc } from "firebase/firestore";
 import uuid from "react-uuid";
 import Modal from "@/components/atoms/modal/modal";
 import useFormHooks from "@/hooks/use-form-hooks";
@@ -16,7 +15,6 @@ import {
   DeepDuplicateDayRequest,
   DeepDuplicateDayResponse,
 } from "@/types/dto-types";
-import { fireStore } from "@/utils/Fire";
 import { setBatch } from "@/helpers/firebase";
 
 type DuplicateDayModalProps = {
@@ -73,65 +71,31 @@ const DuplicateDayModal: React.FC<Readonly<DuplicateDayModalProps>> = ({
     requiredFields,
     initialize: () => formData,
     onSubmit: async () => {
-      const { id, ...dayData } = day;
       const newDayId = uuid();
-      console.log("Here are the occurrences", occurrences);
-      const data = {
-        as: "doc" as const,
-        ref: doc(fireStore, `weeks/${values.week}/days`, newDayId),
-        data: {
-          id: newDayId,
-          ...dayData,
-        },
-        subcols: [
-          {
-            as: "collection" as const,
-            children: Object.values(occurrences).map((occurrence) => {
-              const { id: occurrenceId, ...occurrenceData } = occurrence;
-              const newOccurrenceId = uuid();
-              return {
-                as: "doc" as const,
-                ref: doc(
-                  fireStore,
-                  `weeks/${values.week}/days/${newDayId}/occurrences`,
-                  newOccurrenceId,
-                ),
-                data: {
-                  id: newOccurrenceId,
-                  ...occurrenceData,
-                },
-              };
-            }),
-          },
-        ],
+      const dayData: Day = {
+        date: values.date || "",
+        weekId: values.week || "",
       };
-      const result = await setBatch(data);
+      const data = [
+        {
+          docId: newDayId,
+          collectionPath: `weeks/${values.week}/days`,
+          data: dayData,
+        },
+        ...Object.values(occurrences).map((occurrence) => ({
+          collectionPath: `weeks/${values.week}/days/${newDayId}/occurrences`,
+          data: occurrence,
+        })),
+      ];
+      const result = await setBatch({ docs: data });
       if (result.success) {
         onClose();
         reset();
+      } else {
+        setSubmitError([
+          `There was an error duplicating the day: ${result.error || ""}`,
+        ]);
       }
-
-      // deepDuplicateDay({
-      //   weekId,
-      //   dayId: day.id ?? "",
-      //   destWeekId: values.week ?? "",
-      //   destDate: values.date ?? "",
-      // })
-      //   .then((result) => {
-      //     if (result?.data?.success) {
-      //       onClose();
-      //       reset();
-      //       router.push(`/weeks/${values.week}/${result.data.newDayId}`);
-      //     } else {
-      //       console.error("Error from result:", result?.data);
-      //       setSubmitError([
-      //         `There was an error on the server: ${result?.data?.message || ""}`,
-      //       ]);
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error caught:", error);
-      //   });
     },
   });
 
