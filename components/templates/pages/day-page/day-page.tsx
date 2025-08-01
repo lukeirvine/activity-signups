@@ -196,6 +196,8 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
       onClick: handleDeleteDay,
       loading: isDayActionLoading,
     });
+  }
+  if (day && occurrences) {
     actions.push({
       label: "Duplicate Day",
       onClick: handleDuplicateDay,
@@ -253,12 +255,15 @@ const DayPage: React.FC<Readonly<DayPageProps>> = () => {
         {...actionVerification}
         onClose={closeActionVerification}
       />
-      <DuplicateDayModal
-        isOpen={isDuplicateDayModalOpen}
-        onClose={() => setIsDuplicateDayModalOpen(false)}
-        weekId={weekId}
-        dayId={dayId}
-      />
+      {day && occurrences && (
+        <DuplicateDayModal
+          isOpen={isDuplicateDayModalOpen}
+          onClose={() => setIsDuplicateDayModalOpen(false)}
+          weekId={weekId}
+          day={day}
+          occurrences={occurrences}
+        />
+      )}
     </div>
   );
 };
