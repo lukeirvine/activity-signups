@@ -2,6 +2,9 @@
   "name": "activity-signups",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "concurrently \"npm:watch-functions\" \"npm:dev-next\"",
     "dev-next": "firebase emulators:exec --import=./emulator --export-on-exit --ui 'next dev'",
